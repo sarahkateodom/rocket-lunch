@@ -1,0 +1,10 @@
+bin/
+obj/
+*/wwwroot/app/
+.DS_Store
+npm-debug.log
+*/wwwroot/css/scheduler*.css
+*/wwwroot/lib/
+*/wwwroot/emailTemplates/
+.envrc
+*/package-lock.json
