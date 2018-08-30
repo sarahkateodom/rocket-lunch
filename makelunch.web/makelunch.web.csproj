@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\makelunch.domain\makelunch.domain.csproj" />
+    <ProjectReference Include="..\makelunch.data\makelunch.data.csproj" />
   </ItemGroup>
 
 </Project>
