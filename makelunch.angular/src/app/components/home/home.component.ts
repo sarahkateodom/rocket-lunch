@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from '../../services/lunch-lady.service';
 import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
 import { User } from '../../models/user';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector: 'home',
@@ -14,6 +15,7 @@ export class HomeComponent {
   goSrc: string;
   goSrcs: string[];
   users: User[] = [];
+  sessionId: UUID = undefined;
 
   constructor(private lunchLady: LunchLadyService) {
     this.getUsers();
@@ -46,7 +48,8 @@ export class HomeComponent {
   }
 
   getRestaurant(): any {
-    this.lunchLady.getRestaurant().subscribe(x => {
+    if (!this.sessionId) this.sessionId = UUID.UUID();
+    this.lunchLady.getRestaurant(this.sessionId).subscribe(x => {
       this.restaurant = x;
     });
   }

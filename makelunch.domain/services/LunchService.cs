@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using makeLunch.domain.utilities;
+using makelunch.domain.Exceptions;
 
 namespace makelunch.domain.services
 {
@@ -19,13 +20,28 @@ namespace makelunch.domain.services
             _random = new Random();
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync()
+        public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId)
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
                 List<RestaurantDto> restaurants = (await _lunchOptions.GetAvailableRestaurantOptionsAsync().ConfigureAwait(false)).ToList();
-                return restaurants[_random.Next(restaurants.Count - 1)];
+                List<string> seenOptions = RestaurantCash.GetSeenOptions(sessionId.ToString());
+                RestaurantDto result;
+                if (seenOptions == null) 
+                {
+                    result = restaurants[_random.Next(restaurants.Count - 1)];
+                }
+                else
+                {
+                    var filtered = restaurants.Where(x => !seenOptions.Contains(x.Name)).ToList();
+                    if (!filtered.Any()) throw new TooManyRequestsException();
+                    result = filtered[_random.Next(filtered.Count - 1)];
+                }
+
+                RestaurantCash.AddSeenOption(sessionId.ToString(), result.Name);
+                return result;
             }).ConfigureAwait(false);
         }
+
     }
 }

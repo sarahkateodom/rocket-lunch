@@ -59,6 +59,17 @@ describe('HomeComponent', () => {
       expect(mockLunchService.getRestaurant).toHaveBeenCalled();
       expect(component.restaurant).toBeTruthy();
     });
+    it('calls getRestaurant from service and makes new guid', () => {
+      // arrange
+      component.sessionId = undefined;
+      component.restaurant = undefined;
+
+      // act
+      component.getRestaurant();
+
+      // assert
+      expect(component.sessionId).not.toBe(undefined);
+    });
   });
 
   describe('openAddUserModal', () => {

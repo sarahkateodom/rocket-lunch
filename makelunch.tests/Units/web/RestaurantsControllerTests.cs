@@ -25,15 +25,15 @@ namespace makelunch.tests.web
         {
             // Arrange
             Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new RestaurantDto()));
+            mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new RestaurantDto()));
             var target = new RestaurantsController(mockLunch.Object);
-            
+
             // Act
-            var result = await target.GetRestaurant();
-            
+            var result = await target.GetRestaurant(Guid.NewGuid());
+
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantAsync(), Times.Once);
+            mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]
@@ -41,15 +41,15 @@ namespace makelunch.tests.web
         {
             // Arrange
             Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
+            mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
             var target = new RestaurantsController(mockLunch.Object);
-            
+
             // Act
-            var result = await target.GetRestaurant();
-            
+            var result = await target.GetRestaurant(Guid.NewGuid());
+
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantAsync(), Times.Once);
+            mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

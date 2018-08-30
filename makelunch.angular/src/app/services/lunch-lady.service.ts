@@ -4,6 +4,7 @@ import { Restaurant } from '../models/restaurant';
 import { HttpService } from './http.service';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
+import { UUID } from 'angular2-uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class LunchLadyService {
 
   constructor(private http: HttpService) { }
 
-  public getRestaurant(): Observable<Restaurant> {
-    let url = `/api/restaurants/`;
+  public getRestaurant(guid: UUID): Observable<Restaurant> {
+    let url = `/api/restaurants/${guid}`;
     return this.http.get(url).pipe(map(res => <Restaurant>res));
   }
 

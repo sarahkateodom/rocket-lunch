@@ -15,10 +15,10 @@ namespace makelunch.web.controllers
         }
 
         [HttpGet]
-        [Route("api/restaurants")]
-        public async Task<ObjectResult> GetRestaurant()
+        [Route("api/restaurants/{sessionId}")]
+        public async Task<ObjectResult> GetRestaurant(Guid sessionId)
         {
-            var result = await _serveLunch.GetRestaurantAsync();
+            var result = await _serveLunch.GetRestaurantAsync(sessionId);
             return result.Match(err => err.Content(this), r => new OkObjectResult(r));
         }
     }
