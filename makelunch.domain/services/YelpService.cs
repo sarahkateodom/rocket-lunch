@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
+using makeLunch.domain.utilities;
 using Newtonsoft.Json;
 
 namespace makelunch.domain.services
@@ -19,6 +20,8 @@ namespace makelunch.domain.services
 
         public async Task<IEnumerable<RestaurantDto>> GetAvailableRestaurantOptionsAsync()
         {
+            List<RestaurantDto> restaurantList = RestaurantCash.RestaurantList;
+            if (restaurantList != null) return restaurantList;
             List<RestaurantDto> businesses = new List<RestaurantDto>();
             int offset = 0;
             YelpResultDto dto;
@@ -30,7 +33,8 @@ namespace makelunch.domain.services
             }
             while (businesses.Count < dto.Total);
 
-            return businesses;
+            RestaurantCash.RestaurantList = businesses;
+            return RestaurantCash.RestaurantList;
         }
 
         private async Task<YelpResultDto> GetYelpRestaurantsAsync(int offset)

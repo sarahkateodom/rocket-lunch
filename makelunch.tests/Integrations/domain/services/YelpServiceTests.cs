@@ -5,6 +5,7 @@ using Xunit;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System;
 
 namespace makelunch.tests.integrations.domain.services
 {
@@ -28,11 +29,19 @@ namespace makelunch.tests.integrations.domain.services
             }
 
             // act
+            DateTime startTime = DateTime.UtcNow;
             IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync();
+            DateTime endTime = DateTime.UtcNow;
+            TimeSpan firstWatch = endTime - startTime;
+            startTime = DateTime.UtcNow;
+            await target.GetAvailableRestaurantOptionsAsync();
+            endTime = DateTime.UtcNow;
+            TimeSpan secondWatch = endTime - startTime;
 
             // assert
             Assert.Equal(total, result.Count());
-
+            Assert.True(firstWatch.TotalMilliseconds > 1000);
+            Assert.True(secondWatch.TotalMilliseconds < 200);
         }
 
     }
