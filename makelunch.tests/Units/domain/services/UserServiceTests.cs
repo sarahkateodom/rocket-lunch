@@ -6,6 +6,7 @@ using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using makelunch.domain.services;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace makelunch.tests.units.domain.services
@@ -29,14 +30,14 @@ namespace makelunch.tests.units.domain.services
             CreateUserDto dto = new CreateUserDto
             {
                 Name = "Dyl Pickal",
-                AvatarUrl = "https://gph.is/18NWdNy",
+                Nopes = new List<string>{"https://gph.is/18NWdNy"},
             };
 
             // act
             await target.CreateUserAsync(dto);
 
             // assert
-            mockRepo.Verify(r => r.CreateUserAsync(dto.Name, dto.AvatarUrl), Times.Once);
+            mockRepo.Verify(r => r.CreateUserAsync(dto.Name, JsonConvert.SerializeObject(dto.Nopes)), Times.Once);
         }
 
         [Fact]
@@ -51,7 +52,7 @@ namespace makelunch.tests.units.domain.services
             {
 
                 Name = "Dyl Pickal",
-                AvatarUrl = "https://gph.is/18NWdNy",
+                Nopes = new List<string>{"https://gph.is/18NWdNy"},
             };
 
             // act
@@ -93,7 +94,7 @@ namespace makelunch.tests.units.domain.services
             CreateUserDto dto = new CreateUserDto
             {
                 Name = name,
-                AvatarUrl = "https://gph.is/18NWdNy",
+                Nopes = new List<string>{"https://gph.is/18NWdNy"},
             };
 
             // act

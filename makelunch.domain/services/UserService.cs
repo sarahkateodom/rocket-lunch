@@ -5,6 +5,7 @@ using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using makelunch.domain.Exceptions;
 using makeLunch.domain.utilities;
+using Newtonsoft.Json;
 
 namespace makelunch.domain.services
 {
@@ -24,7 +25,7 @@ namespace makelunch.domain.services
                 if (dto == null) throw new ValidationException("CreateUserDto is required");
                 if (String.IsNullOrWhiteSpace(dto.Name)) throw new ValidationException("User name is required");
 
-                return await _repository.CreateUserAsync(dto.Name, dto.AvatarUrl).ConfigureAwait(false);
+                return await _repository.CreateUserAsync(dto.Name, JsonConvert.SerializeObject(dto.Nopes)).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
 

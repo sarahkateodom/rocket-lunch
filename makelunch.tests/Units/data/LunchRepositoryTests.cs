@@ -39,16 +39,16 @@ namespace makelunch.tests.units.data
             LunchRepository target = new LunchRepository(context);
 
             string name = "Tahra Dactyl";
-            string avatarUrl = "https://goo.gl/pUu7he";                          
+            string nopes = "https://goo.gl/pUu7he";                          
 
             // act
-            await target.CreateUserAsync(name, avatarUrl);
+            await target.CreateUserAsync(name, nopes);
 
             // assert
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
             Assert.NotNull(newUser);
             Assert.True(newUser.Id > 0);
-            Assert.Equal(avatarUrl, newUser.Nopes);
+            Assert.Equal(nopes, newUser.Nopes);
         }
 
         [Fact]
@@ -59,10 +59,10 @@ namespace makelunch.tests.units.data
             LunchRepository target = new LunchRepository(context);
 
             string name = "Tahra Dactyl";
-            string avatarUrl = "https://goo.gl/pUu7he";
+            string nopes = "https://goo.gl/pUu7he";
 
             // act
-            int result = await target.CreateUserAsync(name, avatarUrl);
+            int result = await target.CreateUserAsync(name, nopes);
 
             // assert
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
