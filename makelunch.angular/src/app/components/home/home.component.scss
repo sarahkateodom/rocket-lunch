@@ -1,7 +1,25 @@
 .go-for-lunch {
     text-align: center;
-    font-size: 24px;
+    font-size: 30px;
     padding: 20px;
+
+    .result {
+        font-size: 80px;
+        color:rgb(23, 162, 184);
+        height: 128px;
+    }
+
+    .go-button {
+        font-size: 70px;
+        padding: 20px;
+        -webkit-box-shadow: 0 8px 6px -6px black;
+	   -moz-box-shadow: 0 8px 6px -6px black;
+	    box-shadow: 0 8px 6px -6px black;
+    }
+
+    .go-image {
+        width: 128px;
+    }
 }
 
 .users {

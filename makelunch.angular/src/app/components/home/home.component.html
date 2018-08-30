@@ -1,17 +1,18 @@
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col" class="go-for-lunch">
-      <p>
-        <button class="btn btn-primary" (click)="getRestaurant()">GO</button>
-      </p>
-      <p *ngIf="restaurant">{{restaurant.name}}</p>
+      <p class="result"><span *ngIf="restaurant">{{restaurant.name}}</span></p>
+      <button type="button" class="btn btn-info go-button" (click)="getRestaurant()">
+        GO for
+        <img class="go-image" [src]="goSrc" alt="go">       
+      </button>
     </div>
   </div>
   <div class="row justify-content-md-center">
     <div class="col" class="users">
       <p>
         <span *ngFor="let user of users" class="badge badge-pill badge-secondary user"> {{ user.name }} <span class="user-close">x</span></span>
-        <span class="badge badge-pill badge-primary user" (click)="openAddUserModal()">
+        <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
           <i class="fa fa-user-plus"></i> Add user
         </span>
       </p>
