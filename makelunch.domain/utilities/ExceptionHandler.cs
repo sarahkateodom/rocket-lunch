@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using makelunch.domain.Exceptions;
 using makeLunch.domain.utilities;
 namespace makeLunch.domain.utilities
 {
@@ -15,14 +16,14 @@ namespace makeLunch.domain.utilities
 		public static async Task<Either<HttpStatusCodeErrorResponse, T>> HandleExceptionAsync<T>(Func<Task<T>> func)
 		{
 			var either = new EitherFactory<HttpStatusCodeErrorResponse, T>();
-			// try
-			// {
+			try
+			{
 				return either.Create(await func().ConfigureAwait(false));
-			//}
-			// catch (ValidationException ex)
-			// {
-			// 	return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-			// }
+			}
+			catch (ValidationException ex)
+			{
+				return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+			}
 			// catch (FullQueueException ex)
 			// {
 			// 	// todo: what should the HttpStatusCode be here?

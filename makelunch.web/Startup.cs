@@ -33,14 +33,16 @@ namespace makelunch.web
             services.AddTransient<IGetLunchOptions, YelpService>(x => new YelpService(Configuration["YELPAPIKEY"]));
             services.AddTransient<IServeLunch, LunchService>();
             services.AddTransient<IRepository, LunchRepository>();
+            services.AddTransient<IManageUsers, UserService>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            string connectionString = Configuration["POSTGRESDB"];
             services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

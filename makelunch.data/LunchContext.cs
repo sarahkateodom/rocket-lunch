@@ -7,7 +7,7 @@ namespace makelunch.data
 {
     public class LunchContext : DbContext
     {
-        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5432;Database=MakeLunch").Options)
+        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=MakeLunch").Options)
         {
 
         }
@@ -17,7 +17,7 @@ namespace makelunch.data
 
         }
 
-        public DbSet<UserEntity> FeeWorksheets { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
          public string ProviderName => base.Database.ProviderName;
 
@@ -33,8 +33,6 @@ namespace makelunch.data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<UserEntity>();
 
             base.OnModelCreating(modelBuilder);
             foreach (var entity in modelBuilder.Model.GetEntityTypes())

@@ -25,7 +25,7 @@ namespace makelunch.domain.services
             {
                 List<RestaurantDto> restaurants = (await _lunchOptions.GetAvailableRestaurantOptionsAsync().ConfigureAwait(false)).ToList();
                 return restaurants[_random.Next(restaurants.Count - 1)];
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using makelunch.data.entities;
 using makelunch.domain.contracts;
 
 namespace makelunch.data
@@ -12,9 +14,13 @@ namespace makelunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public Task CreateUserAsync(string name, string avatarUrl)
+        public async Task CreateUserAsync(string name, string avatarUrl)
         {
-            throw new System.NotImplementedException();
+            await _lunchContext.Users.AddAsync(new UserEntity {
+                Name = name,
+                AvatarUrl = avatarUrl,
+            }).ConfigureAwait(false);
+            await _lunchContext.SaveChangesAsync();
         }
     }
 }
