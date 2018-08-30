@@ -11,11 +11,11 @@ import { User } from '../../models/user';
 export class HomeComponent {
   @ViewChild(AddUserModalComponent) addUserModal: AddUserModalComponent;
   restaurant: any;
-  goSrc: string = './assets/go-taco.png';
+  goSrc: string;
   goSrcs: string[];
   users: User[] = [];
 
-  constructor(private lunchLady: LunchLadyService) { 
+  constructor(private lunchLady: LunchLadyService) {
     this.getUsers();
 
     this.goSrcs = [
@@ -28,12 +28,21 @@ export class HomeComponent {
       './assets/go-sandwich.png',
       './assets/go-taco.png',
       './assets/go-tea.png',
+      './assets/go-coffee-break.png',
+      './assets/go-cookies.png',
+      './assets/go-pint.png',
+      './assets/go-pancakes.png',
     ];
-    
+
+    this.setRandomGoImage();
     window.setInterval(() => {
-      let randomIndex = Math.floor(Math.random() * this.goSrcs.length);
-      this.goSrc = this.goSrcs[randomIndex];
+      this.setRandomGoImage();
     }, 2000);
+  }
+
+  setRandomGoImage() {
+    let randomIndex = Math.floor(Math.random() * this.goSrcs.length);
+    this.goSrc = this.goSrcs[randomIndex];
   }
 
   getRestaurant(): any {
