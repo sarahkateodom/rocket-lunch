@@ -48,7 +48,7 @@ namespace makelunch.tests.units.data
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
             Assert.NotNull(newUser);
             Assert.True(newUser.Id > 0);
-            Assert.Equal(avatarUrl, newUser.AvatarUrl);
+            Assert.Equal(avatarUrl, newUser.Nopes);
         }
 
         [Fact]

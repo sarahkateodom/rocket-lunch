@@ -17,12 +17,12 @@ namespace makelunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public async Task<int> CreateUserAsync(string name, string avatarUrl)
+        public async Task<int> CreateUserAsync(string name, string nopes)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
             {
                 Name = name,
-                AvatarUrl = avatarUrl,
+                Nopes = nopes,
             }).ConfigureAwait(false)).Entity;
 
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
