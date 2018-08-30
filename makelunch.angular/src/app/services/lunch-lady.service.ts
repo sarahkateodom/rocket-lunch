@@ -14,11 +14,16 @@ export class LunchLadyService {
 
   public getRestaurant(): Observable<Restaurant> {
     let url = `/api/restaurants/`;
-		return this.http.get(url).pipe(map(res => <Restaurant>res));
+    return this.http.get(url).pipe(map(res => <Restaurant>res));
   }
 
   public addUser(user: User): Observable<number> {
     let url = `/api/users/`;
-		return this.http.post(url, user).pipe(map(res => <number>res));
+    return this.http.post(url, user).pipe(map(res => <number>res));
+  }
+
+  public getUsers(): Observable<User[]> {
+    let url = `/api/users/`;
+    return this.http.get(url).pipe(map(res => <User[]>res));
   }
 }

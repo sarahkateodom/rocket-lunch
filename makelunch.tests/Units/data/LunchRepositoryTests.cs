@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using makelunch.data;
 using makelunch.data.entities;
+using makelunch.domain.dtos;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -50,7 +52,7 @@ namespace makelunch.tests.units.data
         }
 
         [Fact]
-        public async void LunchRepository_CreateUserAsyncr_ReturnsId()
+        public async void LunchRepository_CreateUserAsync_ReturnsId()
         {
             // arrange
             LunchContext context = GetContext();
@@ -66,6 +68,26 @@ namespace makelunch.tests.units.data
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
             Assert.Equal(newUser.Id, result);
         }
+
+        [Fact]
+        public async void LunchRepository_GetUsersAsync_ReturnsUsers()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            context.Users.Add(new UserEntity() {
+                Name = "Tahra Dactyl"
+            });
+
+            context.SaveChanges();
+
+            // act
+            List<UserDto> result = (await target.GetUsersAsync()).ToList();
+
+            // assert
+            Assert.Equal(context.Users.Count(), result.Count);
+        }
+
 
         private LunchContext GetContext()
         {

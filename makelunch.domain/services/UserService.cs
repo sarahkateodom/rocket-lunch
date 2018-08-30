@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
@@ -20,10 +21,18 @@ namespace makelunch.domain.services
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
-                if(dto == null) throw new ValidationException("CreateUserDto is required");
-                if(String.IsNullOrWhiteSpace(dto.Name)) throw new ValidationException("User name is required");
+                if (dto == null) throw new ValidationException("CreateUserDto is required");
+                if (String.IsNullOrWhiteSpace(dto.Name)) throw new ValidationException("User name is required");
 
                 return await _repository.CreateUserAsync(dto.Name, dto.AvatarUrl).ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        public async Task<Either<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>> GetUsersAsync()
+        {
+            return await ExceptionHandler.HandleExceptionAsync(async () =>
+            {
+                return await _repository.GetUsersAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
     }

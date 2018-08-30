@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
@@ -102,6 +104,27 @@ namespace makelunch.tests.units.domain.services
                 err => Assert.Equal(HttpStatusCode.BadRequest, err.HttpErrorStatusCode),
                 x => throw new Exception("ValidationException was not thrown.")
             );
+        }
+
+        [Fact]
+        public async void UserService_GetUsersAsync_ReturnsListOfUsers()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(r => r.GetUsersAsync()).ReturnsAsync(new List<UserDto> {
+                new UserDto(), new UserDto()
+            });
+            UserService target = new UserService(mockRepo.Object);
+
+            // act
+            var result = await target.GetUsersAsync();
+
+            // assert
+            result.Match(
+                err => throw new Exception("Unexpected exception."),
+                x => Assert.Equal(2, x.Count())
+            );
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
@@ -20,7 +21,7 @@ namespace makelunch.tests.web
         }
 
         [Fact]
-        public async void  UsersControllerTestsrCreateUser_CallsUserServiceCreateUserAsync()
+        public async void  UsersControllerTests_CreateUser_CallsUserServiceCreateUserAsync()
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
@@ -39,7 +40,7 @@ namespace makelunch.tests.web
         }
 
         [Fact]
-        public async void  UsersControllerTestsrCreateUser_ReturnsHttpErrorOnException()
+        public async void  UsersControllerTests_CreateUser_ReturnsHttpErrorOnException()
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
@@ -53,6 +54,40 @@ namespace makelunch.tests.web
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
             mockUserService.Verify(v => v.CreateUserAsync(dto), Times.Once);
+        }
+
+        [Fact]
+        public async void  UsersControllerTests_GetUsers_ReturnsHttpErrorOnException()
+        {
+            // Arrange
+            Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
+            mockUserService.Setup(s => s.GetUsersAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
+            var target = new UsersController(mockUserService.Object);
+            CreateUserDto dto = new CreateUserDto();
+
+            // Act
+            var result = await target.GetUsers();
+            
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            mockUserService.Verify(v => v.GetUsersAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async void  UsersControllerTests_GetUsers_ReturnsUsersOnSuccess()
+        {
+            // Arrange
+            Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
+            mockUserService.Setup(s => s.GetUsersAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>().Create(new List<UserDto>()));
+            var target = new UsersController(mockUserService.Object);
+            CreateUserDto dto = new CreateUserDto();
+
+            // Act
+            var result = await target.GetUsers();
+            
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            mockUserService.Verify(v => v.GetUsersAsync(), Times.Once);
         }
     }
 }

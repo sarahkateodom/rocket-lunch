@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using makelunch.data.entities;
 using makelunch.domain.contracts;
+using makelunch.domain.dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace makelunch.data
 {
@@ -21,9 +24,18 @@ namespace makelunch.data
                 Name = name,
                 AvatarUrl = avatarUrl,
             }).ConfigureAwait(false)).Entity;
-            
+
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
             return newUser.Id;
+        }
+
+        public async Task<IEnumerable<UserDto>> GetUsersAsync()
+        {
+            return await _lunchContext.Users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+            }).ToListAsync();
         }
     }
 }

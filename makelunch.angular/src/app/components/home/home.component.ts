@@ -13,7 +13,9 @@ export class HomeComponent {
   restaurant: any;
   users: User[] = [];
 
-  constructor(private lunchLady: LunchLadyService) { }
+  constructor(private lunchLady: LunchLadyService) { 
+    this.getUsers();
+  }
 
   getRestaurant(): any {
     this.lunchLady.getRestaurant().subscribe(x => {
@@ -23,6 +25,13 @@ export class HomeComponent {
 
   openAddUserModal() {
     this.addUserModal.show();
+  }
+
+  getUsers() {
+    this.lunchLady.getUsers()
+      .subscribe(x => {
+        this.users = x;
+      });
   }
 
 }
