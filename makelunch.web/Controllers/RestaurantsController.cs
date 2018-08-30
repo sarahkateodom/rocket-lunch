@@ -21,5 +21,13 @@ namespace makelunch.web.controllers
             var result = await _serveLunch.GetRestaurantAsync(sessionId);
             return result.Match(err => err.Content(this), r => new OkObjectResult(r));
         }
+
+        [HttpGet]
+        [Route("api/restaurants")]
+        public async Task<ObjectResult> GetRestaurants()
+        {
+            var result = await _serveLunch.GetRestaurantsAsync();
+            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+        }
     }
 }

@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { Restaurant } from '../../models/restaurant';
 import { LunchLadyService } from '../../services/lunch-lady.service';
 import { HttpService } from '../../services/http.service';
-import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
+import { UserModalComponent } from '../user-modal/user-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user';
@@ -16,11 +16,12 @@ describe('HomeComponent', () => {
   let mockLunchService;
 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
+    mockLunchService.getRestaurants.and.returnValue(of([new Restaurant()]));
     mockLunchService.getUsers.and.returnValue(of([new User()]));
     TestBed.configureTestingModule({
-      declarations: [HomeComponent, AddUserModalComponent, ModalComponent],
+      declarations: [HomeComponent, UserModalComponent, ModalComponent],
       providers: [
         { provide: LunchLadyService, useValue: mockLunchService },
         { provide: HttpService, useClass: HttpService }
@@ -44,6 +45,11 @@ describe('HomeComponent', () => {
     it('gets users', () => {
       component = fixture.componentInstance;
       expect(mockLunchService.getUsers).toHaveBeenCalled();
+    })
+
+    it('gets restaurants', () => {
+      component = fixture.componentInstance;
+      expect(mockLunchService.getRestaurants).toHaveBeenCalled();
     })
   });
 
@@ -74,11 +80,11 @@ describe('HomeComponent', () => {
 
   describe('openAddUserModal', () => {
     it('should show modal', () => {
-      spyOn(component.addUserModal, 'show').and.returnValue(true);
+      spyOn(component.userModal, 'show').and.returnValue(true);
 
       component.openAddUserModal();
 
-      expect(component.addUserModal.show).toHaveBeenCalled();
+      expect(component.userModal.show).toHaveBeenCalled();
     })
   });
 
@@ -103,5 +109,32 @@ describe('HomeComponent', () => {
       // assert
       expect(component.users.length).toBe(1);
     });
+  });
+
+  describe('selectUser', () => {
+    it('sets selectedUser', () => {
+      // arrange
+      component.selectedUser = undefined;
+      let user = new User();
+      user.id = 1;
+
+      // act
+      component.selectUser(user);
+
+      // assert
+      expect(component.selectedUser).toBeTruthy();
+      expect(component.selectedUser.id).toBe(user.id);
+    });
+
+    it('opens users modal', () => {
+      // arrange
+      spyOn(component.userModal, 'show').and.returnValue(true);
+
+      // act
+      component.selectUser(new User());
+
+      // assert
+      expect(component.userModal.show).toHaveBeenCalled();
+    })
   });
 });

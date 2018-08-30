@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from '../../services/lunch-lady.service';
-import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
+import { UserModalComponent } from '../user-modal/user-modal.component';
 import { User } from '../../models/user';
 import { UUID } from 'angular2-uuid';
+import { Restaurant } from '../../models/restaurant';
 
 @Component({
   selector: 'home',
@@ -10,15 +11,18 @@ import { UUID } from 'angular2-uuid';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  @ViewChild(AddUserModalComponent) addUserModal: AddUserModalComponent;
+  @ViewChild(UserModalComponent) userModal: UserModalComponent;
   restaurant: any;
   goSrc: string;
   goSrcs: string[];
   users: User[] = [];
+  selectedUser: User;
+  restaurants: Restaurant[] = [];
   sessionId: UUID = undefined;
 
   constructor(private lunchLady: LunchLadyService) {
     this.getUsers();
+    this.getRestaurants();
 
     this.goSrcs = [
       './assets/go-burger.png',
@@ -55,7 +59,7 @@ export class HomeComponent {
   }
 
   openAddUserModal() {
-    this.addUserModal.show();
+    this.userModal.show();
   }
 
   getUsers() {
@@ -63,6 +67,18 @@ export class HomeComponent {
       .subscribe(x => {
         this.users = x;
       });
+  }
+
+  getRestaurants() {
+    this.lunchLady.getRestaurants()
+      .subscribe(x => {
+        this.restaurants = x;
+      });
+  }
+
+  selectUser(user: User) {
+    this.selectedUser = user;
+    this.userModal.show();
   }
 
 }

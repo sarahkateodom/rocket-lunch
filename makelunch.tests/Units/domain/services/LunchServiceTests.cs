@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using makelunch.domain.services;
@@ -45,15 +46,14 @@ namespace makelunch.tests.units.domain.services
         [Fact]
         public async void LunchService_GetRestaurantAsync_ThrowTooManyRequestsWhenOutOfSuggestions()
         {
-            // arrange
             Mock<IGetLunchOptions> mockOptions = new Mock<IGetLunchOptions>();
-            LunchService target = new LunchService(mockOptions.Object);
             const string expected = "bob's burgers";
             mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync()).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = expected,
                 },
             });
+            LunchService target = new LunchService(mockOptions.Object);
             Guid sessionId = Guid.NewGuid();
 
             // act
@@ -64,6 +64,30 @@ namespace makelunch.tests.units.domain.services
             result.Match(
                 err => Assert.Equal(HttpStatusCode.TooManyRequests, err.HttpErrorStatusCode),
                 x => throw new Exception("no exception thrown")
+            );
+        }
+
+        public async void LunchService_GetRestaurantsAsync_ReturnsRestaurantDtos()
+        {
+            // arrange
+            Mock<IGetLunchOptions> mockOptions = new Mock<IGetLunchOptions>();
+            LunchService target = new LunchService(mockOptions.Object);
+            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync()).ReturnsAsync(new List<RestaurantDto> {
+                new RestaurantDto {
+                    Name = "Bob's Burgers",
+                },
+                new RestaurantDto {
+                    Name = "Jimmy Pesto's Pizzaria",
+                },
+            });
+
+            // act
+            var result = await target.GetRestaurantsAsync();
+
+            // assert
+            result.Match(
+                err => throw new Exception("Unexpected exception."),
+                x => Assert.Equal(2, x.Count())
             );
         }
 

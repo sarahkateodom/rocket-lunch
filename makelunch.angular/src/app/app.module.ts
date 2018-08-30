@@ -11,7 +11,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ModalComponent } from './components/modal/modal.component';
-import { AddUserModalComponent } from './components/add-user-modal/add-user-modal.component';
+import { UserModalComponent } from './components/user-modal/user-modal.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { AddUserModalComponent } from './components/add-user-modal/add-user-moda
     NavbarComponent,
     FooterComponent,
     ModalComponent,
-    AddUserModalComponent
+    UserModalComponent
   ],
   imports: [
     BrowserModule,

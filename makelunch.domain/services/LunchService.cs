@@ -43,5 +43,12 @@ namespace makelunch.domain.services
             }).ConfigureAwait(false);
         }
 
+        public async Task<Either<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>> GetRestaurantsAsync()
+        {
+            return await ExceptionHandler.HandleExceptionAsync(async () =>
+            {
+                return await _lunchOptions.GetAvailableRestaurantOptionsAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
     }
 }

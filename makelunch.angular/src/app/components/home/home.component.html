@@ -11,7 +11,7 @@
   <div class="row justify-content-md-center">
     <div class="col" class="users">
       <p>
-        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user"> {{ user.name }} <span class="user-close">x</span></span>
+        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user"> <span (click)="selectUser(user)">{{ user.name }} </span><span class="user-close">x</span></span>
         <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
           <i class="fa fa-user-plus"></i> Add user
         </span>
@@ -19,4 +19,4 @@
     </div>
   </div>
 </div>
-<app-add-user-modal #addUsermodal [users]="users"></app-add-user-modal>
+<app-user-modal #userModal [users]="users" [user]="selectedUser"></app-user-modal>
