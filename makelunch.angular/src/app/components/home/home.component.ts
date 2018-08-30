@@ -31,7 +31,7 @@ export class HomeComponent {
       './assets/go-coffee-break.png',
       './assets/go-cookies.png',
       './assets/go-pint.png',
-      './assets/go-pancakes.png',
+      './assets/go-pancake.png',
     ];
 
     this.setRandomGoImage();
