@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from '../../services/lunch-lady.service';
+import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'home',
@@ -7,7 +9,9 @@ import { LunchLadyService } from '../../services/lunch-lady.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  @ViewChild(AddUserModalComponent) addUserModal: AddUserModalComponent;
   restaurant: any;
+  users: User[] = [];
 
   constructor(private lunchLady: LunchLadyService) { }
 
@@ -15,6 +19,10 @@ export class HomeComponent {
     this.lunchLady.getRestaurant().subscribe(x => {
       this.restaurant = x;
     });
+  }
+
+  openAddUserModal() {
+    this.addUserModal.show();
   }
 
 }

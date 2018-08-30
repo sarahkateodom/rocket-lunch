@@ -1,6 +1,21 @@
-<p>
-  <button (click)="getRestaurant()">GO</button>
-</p>
-<p *ngIf="restaurant">{{restaurant.name}}</p>
-
-<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col" class="go-for-lunch">
+      <p>
+        <button class="btn btn-primary" (click)="getRestaurant()">GO</button>
+      </p>
+      <p *ngIf="restaurant">{{restaurant.name}}</p>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col" class="users">
+      <p>
+        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user"> {{ user.name }} <span class="user-close">x</span></span>
+        <span class="badge badge-pill badge-primary user" (click)="openAddUserModal()">
+          <i class="fa fa-user-plus"></i> Add user
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+<app-add-user-modal #addUsermodal [users]="users"></app-add-user-modal>

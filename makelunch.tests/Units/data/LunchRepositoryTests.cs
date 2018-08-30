@@ -37,7 +37,7 @@ namespace makelunch.tests.units.data
             LunchRepository target = new LunchRepository(context);
 
             string name = "Tahra Dactyl";
-            string avatarUrl = "https://goo.gl/pUu7he";
+            string avatarUrl = "https://goo.gl/pUu7he";                          
 
             // act
             await target.CreateUserAsync(name, avatarUrl);
@@ -47,6 +47,24 @@ namespace makelunch.tests.units.data
             Assert.NotNull(newUser);
             Assert.True(newUser.Id > 0);
             Assert.Equal(avatarUrl, newUser.AvatarUrl);
+        }
+
+        [Fact]
+        public async void LunchRepository_CreateUserAsyncr_ReturnsId()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+
+            string name = "Tahra Dactyl";
+            string avatarUrl = "https://goo.gl/pUu7he";
+
+            // act
+            int result = await target.CreateUserAsync(name, avatarUrl);
+
+            // assert
+            UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
+            Assert.Equal(newUser.Id, result);
         }
 
         private LunchContext GetContext()

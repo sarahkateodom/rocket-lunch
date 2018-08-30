@@ -24,7 +24,8 @@ namespace makelunch.tests.web
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
-            mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<CreateUserDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, bool>().Create(true));
+            const int id = 1;
+            mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<CreateUserDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, int>().Create(id));
             var target = new UsersController(mockUserService.Object);
             CreateUserDto dto = new CreateUserDto();
 
@@ -33,6 +34,7 @@ namespace makelunch.tests.web
             
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(id, result.Value);
             mockUserService.Verify(v => v.CreateUserAsync(dto), Times.Once);
         }
 
@@ -41,7 +43,7 @@ namespace makelunch.tests.web
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
-            mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<CreateUserDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, bool>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
+            mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<CreateUserDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, int>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
             var target = new UsersController(mockUserService.Object);
             CreateUserDto dto = new CreateUserDto();
 

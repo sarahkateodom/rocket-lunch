@@ -14,13 +14,16 @@ namespace makelunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public async Task CreateUserAsync(string name, string avatarUrl)
+        public async Task<int> CreateUserAsync(string name, string avatarUrl)
         {
-            await _lunchContext.Users.AddAsync(new UserEntity {
+            UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
+            {
                 Name = name,
                 AvatarUrl = avatarUrl,
-            }).ConfigureAwait(false);
-            await _lunchContext.SaveChangesAsync();
+            }).ConfigureAwait(false)).Entity;
+            
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+            return newUser.Id;
         }
     }
 }

@@ -6,6 +6,6 @@ namespace makelunch.domain.contracts
 {
     public interface IManageUsers
     {
-        Task<Either<HttpStatusCodeErrorResponse, bool>> CreateUserAsync(CreateUserDto dto);
+        Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto);
     }
 }

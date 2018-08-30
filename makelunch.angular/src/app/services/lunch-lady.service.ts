@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Restaurant } from '../models/restaurant';
 import { HttpService } from './http.service';
 import { map } from 'rxjs/operators';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +15,10 @@ export class LunchLadyService {
   public getRestaurant(): Observable<Restaurant> {
     let url = `/api/restaurants/`;
 		return this.http.get(url).pipe(map(res => <Restaurant>res));
+  }
+
+  public addUser(user: User): Observable<number> {
+    let url = `/api/users/`;
+		return this.http.post(url, user).pipe(map(res => <number>res));
   }
 }

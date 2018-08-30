@@ -38,6 +38,31 @@ namespace makelunch.tests.units.domain.services
         }
 
         [Fact]
+        public async void UserService_CreateUserAsync_ReturnsId()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            const int id = 1;
+            mockRepo.Setup(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(id);
+            UserService target = new UserService(mockRepo.Object);
+            CreateUserDto dto = new CreateUserDto
+            {
+
+                Name = "Dyl Pickal",
+                AvatarUrl = "https://gph.is/18NWdNy",
+            };
+
+            // act
+            var result = await target.CreateUserAsync(dto);
+
+            // assert
+            result.Match(
+                err => throw new Exception("Unexcpected exception was not thrown."),
+                x => Assert.Equal(id, x)
+            );
+        }
+
+        [Fact]
         public async void UserService_CreateUserAsync_ThrowsExceptionWithNullDto()
         {
             // arrange

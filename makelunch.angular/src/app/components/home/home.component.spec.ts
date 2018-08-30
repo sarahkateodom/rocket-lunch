@@ -5,6 +5,9 @@ import { Observable, of } from 'rxjs';
 import { Restaurant } from '../../models/restaurant';
 import { LunchLadyService } from '../../services/lunch-lady.service';
 import { HttpService } from '../../services/http.service';
+import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
+import { ModalComponent } from '../modal/modal.component';
+import { FormsModule } from '@angular/forms';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -15,11 +18,12 @@ describe('HomeComponent', () => {
     mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
     TestBed.configureTestingModule({
-      declarations: [HomeComponent],
+      declarations: [HomeComponent, AddUserModalComponent, ModalComponent],
       providers: [
         { provide: LunchLadyService, useValue: mockLunchService },
         { provide: HttpService, useClass: HttpService }
-      ]
+      ], 
+      imports: [FormsModule]
     })
       .compileComponents();
   }));
@@ -46,5 +50,15 @@ describe('HomeComponent', () => {
       expect(mockLunchService.getRestaurant).toHaveBeenCalled();
       expect(component.restaurant).toBeTruthy();
     });
+  });
+
+  describe('openAddUserModal', () => {
+    it('should show modal', () => {
+      spyOn(component.addUserModal, 'show').and.returnValue(true);
+
+      component.openAddUserModal();
+
+      expect(component.addUserModal.show).toHaveBeenCalled();
+    })
   });
 });

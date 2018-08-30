@@ -1,0 +1,21 @@
+.go-for-lunch {
+    text-align: center;
+    font-size: 24px;
+    padding: 20px;
+}
+
+.users {
+    text-align: center;
+    .user {
+        font-size: 14px;
+        padding: 10px;
+        margin-right: 8px;
+
+        .user-close {
+            margin-left: 5px;
+        }
+    }
+    .user:hover {
+        background-color: #343a40;
+    }
+}

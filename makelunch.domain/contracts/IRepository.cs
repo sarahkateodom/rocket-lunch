@@ -4,6 +4,6 @@ namespace makelunch.domain.contracts
 {
     public interface IRepository
     {
-        Task CreateUserAsync(string name, string avatarUrl);
+        Task<int> CreateUserAsync(string name, string avatarUrl);
     }
 }
