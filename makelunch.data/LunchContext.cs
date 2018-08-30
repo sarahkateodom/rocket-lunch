@@ -7,7 +7,7 @@ namespace makelunch.data
 {
     public class LunchContext : DbContext
     {
-        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=MakeLunch").Options)
+        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5432;Database=MakeLunch").Options)
         {
 
         }
