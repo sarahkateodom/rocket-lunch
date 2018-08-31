@@ -12,6 +12,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
+import { TooManyRequestsComponent } from './components/too-many-requests/too-many-requests.component';
+import { routing } from './app.routes';
 
 @NgModule({
   declarations: [
@@ -20,12 +22,14 @@ import { UserModalComponent } from './components/user-modal/user-modal.component
     NavbarComponent,
     FooterComponent,
     ModalComponent,
-    UserModalComponent
+    UserModalComponent,
+    TooManyRequestsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    routing,
   ],
   providers: [
     LunchLadyService, 

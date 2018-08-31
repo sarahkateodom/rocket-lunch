@@ -3,11 +3,10 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, Subscriber } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 
 @Injectable()
 export class HttpService {
-	constructor(private http: HttpClient) { 
+	constructor(private http: HttpClient, private router: Router) { 
 	}
 
 	private handleError: ((err: any, errorMsg?: string) => Observable<Response>) =
@@ -26,6 +25,8 @@ export class HttpService {
 			return new Observable<Response>((subscriber: Subscriber<Response>) => {
 				subscriber.error(err);
 			});
+		} else if(err.status == 429) {
+			this.router.navigate(['too-many']);
 		} else {
 			if (errMsg) {
 				console.log(errMsg);

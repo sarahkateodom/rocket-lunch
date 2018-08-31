@@ -66,8 +66,14 @@ namespace makelunch.web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            // app.UseHttpsRedirection();
+            app.UseMvc(routes =>
+			{
+				routes.MapRoute(
+					name: "default",
+					template: "{*anything}",
+					defaults: new { controller = "Home", action = "Index" });
+			});
         }
     }
 }
