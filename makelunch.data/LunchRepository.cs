@@ -18,16 +18,26 @@ namespace makelunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public async Task<int> CreateUserAsync(string name, string nopes)
+        public async Task<int> CreateUserAsync(string name, IEnumerable<string> nopes)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
             {
                 Name = name,
-                Nopes = nopes,
+                Nopes = JsonConvert.SerializeObject(nopes),
             }).ConfigureAwait(false)).Entity;
 
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
             return newUser.Id;
+        }
+
+        public async Task<UserDto> GetUserAsync(int id)
+        {
+            UserEntity userEntity = await _lunchContext.Users.FindAsync(id).ConfigureAwait(false);
+            return userEntity != null ? new UserDto {
+                Id = userEntity.Id,
+                Name = userEntity.Name,
+                Nopes = JsonConvert.DeserializeObject<List<string>>(userEntity.Nopes),
+            } : null;
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
@@ -38,6 +48,14 @@ namespace makelunch.data
                 Name = u.Name,
                 Nopes = JsonConvert.DeserializeObject<List<string>>(u.Nopes),
             }).ToListAsync();
+        }
+
+        public async Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes)
+        {
+            UserEntity currentUser = await _lunchContext.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+            currentUser.Name = name;
+            currentUser.Nopes = JsonConvert.SerializeObject(nopes);
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

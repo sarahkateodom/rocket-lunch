@@ -32,4 +32,9 @@ export class LunchLadyService {
     let url = `/api/users/`;
     return this.http.get(url).pipe(map(res => <User[]>res));
   }
+
+  public updateuser(user: User): Observable<boolean> {
+    let url = `/api/users/`;
+    return this.http.put(url, user).pipe(map(res => <boolean>res));
+  }
 }

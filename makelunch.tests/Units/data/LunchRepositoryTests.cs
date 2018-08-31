@@ -5,6 +5,7 @@ using makelunch.data;
 using makelunch.data.entities;
 using makelunch.domain.dtos;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace makelunch.tests.units.data
@@ -39,7 +40,7 @@ namespace makelunch.tests.units.data
             LunchRepository target = new LunchRepository(context);
 
             string name = "Tahra Dactyl";
-            string nopes = "https://goo.gl/pUu7he";                          
+            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
 
             // act
             await target.CreateUserAsync(name, nopes);
@@ -48,7 +49,7 @@ namespace makelunch.tests.units.data
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
             Assert.NotNull(newUser);
             Assert.True(newUser.Id > 0);
-            Assert.Equal(nopes, newUser.Nopes);
+            Assert.Equal(JsonConvert.SerializeObject(nopes), newUser.Nopes);
         }
 
         [Fact]
@@ -59,7 +60,7 @@ namespace makelunch.tests.units.data
             LunchRepository target = new LunchRepository(context);
 
             string name = "Tahra Dactyl";
-            string nopes = "https://goo.gl/pUu7he";
+            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
 
             // act
             int result = await target.CreateUserAsync(name, nopes);
@@ -75,8 +76,11 @@ namespace makelunch.tests.units.data
             // arrange
             LunchContext context = GetContext();
             LunchRepository target = new LunchRepository(context);
-            context.Users.Add(new UserEntity() {
-                Name = "Tahra Dactyl"
+            context.Users.Add(new UserEntity()
+            {
+                Id = 1,
+                Name = "Tahra Dactyl",
+                Nopes = "[]",
             });
 
             context.SaveChanges();
@@ -84,10 +88,71 @@ namespace makelunch.tests.units.data
             // act
             List<UserDto> result = (await target.GetUsersAsync()).ToList();
 
+
             // assert
             Assert.Equal(context.Users.Count(), result.Count);
         }
 
+        [Fact]
+        public async void LunchRepository_UpdateUserAsync_UpdatesUser()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            UserEntity user = context.Users.Add(new UserEntity()
+            {
+                Name = "Tahra Dactyl",
+                Nopes = "[]",
+            }).Entity;
+            await context.SaveChangesAsync();
+
+            string name = "Paul R. Baer";
+            List<string> nopes = new List<string> { "Chum Bucket", "Jimmy Pesto's Pizzaria" };
+
+            // act
+            await target.UpdateUserAsync(user.Id, name, nopes);
+        
+            // assert
+            UserEntity updatedUser = await context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+            Assert.Equal(name, updatedUser.Name);
+            Assert.Equal(JsonConvert.SerializeObject(nopes), updatedUser.Nopes);
+        }
+        
+        [Fact]
+        public async void LunchRepository_GetUserAsync_ReturnsSpecifiedUser()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            UserEntity user = context.Users.Add(new UserEntity()
+            {
+                Name = "Tahra Dactyl",
+                Nopes = "[]",
+            }).Entity;
+            await context.SaveChangesAsync();
+
+            // act
+            UserDto result = await target.GetUserAsync(user.Id);
+        
+            // assert
+            Assert.Equal(user.Name, result.Name);
+            Assert.Equal(user.Nopes, JsonConvert.SerializeObject(result.Nopes));
+        }
+        
+        [Fact]
+        public async void LunchRepository_GetUserAsync_ReturnsNullIfUserDoesNotExist()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+
+            // act
+            UserDto result = await target.GetUserAsync(8888);
+        
+            // assert
+            Assert.Null(result);
+        }
+        
 
         private LunchContext GetContext()
         {

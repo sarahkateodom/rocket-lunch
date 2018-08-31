@@ -30,5 +30,13 @@ namespace makelunch.web.controllers
             var result = await _userService.GetUsersAsync();
             return result.Match(err => err.Content(this), r => new OkObjectResult(r));
         }
+
+        [HttpPut]
+        [Route("api/users")]
+        public async Task<ObjectResult> UpdateUser([FromBody] UserDto dto)
+        {
+            var result = await _userService.UpdateUserAsync(dto);
+            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+        }
     }
 }

@@ -40,6 +40,10 @@ export class UserModalComponent {
   saveUser() {
     if (this.user.id) {
       // edit user
+      this.lunchService.updateuser(this.user)
+        .subscribe(x => {
+          this.hide();
+        });
 
       this.hide();
     } else {

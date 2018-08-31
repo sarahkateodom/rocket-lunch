@@ -30,14 +30,14 @@ namespace makelunch.tests.units.domain.services
             CreateUserDto dto = new CreateUserDto
             {
                 Name = "Dyl Pickal",
-                Nopes = new List<string>{"https://gph.is/18NWdNy"},
+                Nopes = new List<string> { "https://gph.is/18NWdNy" },
             };
 
             // act
             await target.CreateUserAsync(dto);
 
             // assert
-            mockRepo.Verify(r => r.CreateUserAsync(dto.Name, JsonConvert.SerializeObject(dto.Nopes)), Times.Once);
+            mockRepo.Verify(r => r.CreateUserAsync(dto.Name, dto.Nopes), Times.Once);
         }
 
         [Fact]
@@ -46,13 +46,13 @@ namespace makelunch.tests.units.domain.services
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             const int id = 1;
-            mockRepo.Setup(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(id);
+            mockRepo.Setup(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<IEnumerable<string>>())).ReturnsAsync(id);
             UserService target = new UserService(mockRepo.Object);
             CreateUserDto dto = new CreateUserDto
             {
 
                 Name = "Dyl Pickal",
-                Nopes = new List<string>{"https://gph.is/18NWdNy"},
+                Nopes = new List<string> { "https://gph.is/18NWdNy" },
             };
 
             // act
@@ -94,7 +94,7 @@ namespace makelunch.tests.units.domain.services
             CreateUserDto dto = new CreateUserDto
             {
                 Name = name,
-                Nopes = new List<string>{"https://gph.is/18NWdNy"},
+                Nopes = new List<string> { "https://gph.is/18NWdNy" },
             };
 
             // act
@@ -125,7 +125,50 @@ namespace makelunch.tests.units.domain.services
                 err => throw new Exception("Unexpected exception."),
                 x => Assert.Equal(2, x.Count())
             );
-            
         }
+
+        [Fact]
+        public async void UserService_UpdateUserAsync_CallsRepositoryUpdateUser()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
+            UserService target = new UserService(mockRepo.Object);
+            UserDto dto = new UserDto {
+                Id = 1,
+                Name = "Anne Telohp",
+                Nopes = new List<string> { "Chicken Salad Chick" },
+            };
+
+            // act
+            var result = await target.UpdateUserAsync(dto);
+
+            // assert
+            mockRepo.Verify(r => r.UpdateUserAsync(dto.Id, dto.Name, dto.Nopes), Times.Once);
+        }
+
+        [Fact]
+        public async void UserService_UpdateUserAsync_ThrowsNotFoundWhenUserDoesNotExist()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
+            UserService target = new UserService(mockRepo.Object);
+            UserDto dto = new UserDto {
+                Id = 1,
+                Name = "Anne Telohp",
+                Nopes = new List<string> { "Chicken Salad Chick" },
+            };
+
+            // act
+            var result = await target.UpdateUserAsync(dto);
+
+            // assert
+            result.Match(
+                err => Assert.Equal(HttpStatusCode.NotFound, err.HttpErrorStatusCode),
+                x => throw new Exception("NotFoundException not thrown.")
+            );
+        }
+
     }
 }

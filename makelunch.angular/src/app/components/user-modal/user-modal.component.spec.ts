@@ -42,7 +42,7 @@ describe('AddUserModalComponent', () => {
   });
 
   describe('saveUser', () => {
-    it('calls addUser', () => {
+    it('calls addUser on creation', () => {
       // arrange
       let user = new User();
       component.users = [user];
@@ -55,7 +55,7 @@ describe('AddUserModalComponent', () => {
       expect(mockLunchService.addUser).toHaveBeenCalled();
     });
 
-    it('adds user', () => {
+    it('adds user on creation', () => {
       // arrange
       let user = new User();
       component.users = [user];
@@ -67,6 +67,23 @@ describe('AddUserModalComponent', () => {
 
       // assert
       expect(component.users.length).toBe(2);
+    });
+
+    it('calls lunchservice updateUser on edit', () => {
+      // arrange
+      let user = {
+        id: 1,
+        name: 'Dorcas',
+        nopes: ['Tequila Mockingbird', 'Crapitto\'s'],
+      } as User;
+      component.user = user;
+      component.users = [user];
+
+      // act
+      component.saveUser();
+
+      // assert
+      expect(mockLunchService.addUser).toHaveBeenCalled();
     });
   });
 

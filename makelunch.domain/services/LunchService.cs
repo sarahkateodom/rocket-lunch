@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using makeLunch.domain.utilities;
-using makelunch.domain.Exceptions;
+using makelunch.domain.exceptions;
 
 namespace makelunch.domain.services
 {

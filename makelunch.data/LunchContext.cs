@@ -35,6 +35,11 @@ namespace makelunch.data
         {
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserEntity>()
+                .Property(r => r.Nopes)
+                .HasDefaultValue("[]");
+
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 // Replace table names

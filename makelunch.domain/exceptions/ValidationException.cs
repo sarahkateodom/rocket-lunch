@@ -1,6 +1,6 @@
 using System;
 
-namespace makelunch.domain.Exceptions
+namespace makelunch.domain.exceptions
 {
     public class ValidationException: Exception
     {

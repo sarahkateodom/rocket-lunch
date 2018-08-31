@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using makelunch.domain.Exceptions;
+using makelunch.domain.exceptions;
 using makeLunch.domain.utilities;
 namespace makeLunch.domain.utilities
 {
@@ -29,10 +29,10 @@ namespace makeLunch.domain.utilities
                 // todo: what should the HttpStatusCode be here?
                 return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.TooManyRequests, ex.Message));
             }
-            // catch (NotFoundException ex)
-            // {
-            // 	return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.NotFound, ex.Message));
-            // }
+            catch (NotFoundException ex)
+            {
+            	return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.NotFound, ex.Message));
+            }
             // catch (NotAuthorizedException ex)
             // {
             // 	return either.Create(new HttpStatusCodeErrorResponse(HttpStatusCode.Forbidden, ex.Message));

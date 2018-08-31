@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace makelunch.domain.Exceptions
+namespace makelunch.domain.exceptions
 {
     public class TooManyRequestsException : Exception
     {
