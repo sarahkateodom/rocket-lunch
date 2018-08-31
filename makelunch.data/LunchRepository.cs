@@ -6,6 +6,7 @@ using makelunch.data.entities;
 using makelunch.domain.contracts;
 using makelunch.domain.dtos;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace makelunch.data
 {
@@ -35,6 +36,7 @@ namespace makelunch.data
             {
                 Id = u.Id,
                 Name = u.Name,
+                Nopes = JsonConvert.DeserializeObject<List<string>>(u.Nopes),
             }).ToListAsync();
         }
     }

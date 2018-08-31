@@ -2,6 +2,7 @@ import { Component, ViewChild, Input, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { User } from '../../models/user';
 import { LunchLadyService } from '../../services/lunch-lady.service';
+import { Restaurant } from '../../models/restaurant';
 
 @Component({
   selector: 'app-user-modal',
@@ -12,20 +13,28 @@ export class UserModalComponent {
   @ViewChild(ModalComponent) modal: ModalComponent;
   @Input() user: User;
   @Input() users: User[] = [];
+  @Input() restaurants: Restaurant[] = [];
+  selectedRestaurantId: string;
 
   constructor(private lunchService: LunchLadyService) { }
 
   show() {
-    if (!this.user) {
-      this.user = new User();
-    }
-
     this.modal.show();
   }
 
   hide() {
-    this.user = undefined;
     this.modal.hide();
+  }
+
+  nopeRestaurant() {
+    this.user.nopes.push(this.selectedRestaurantId);
+    this.selectedRestaurantId = undefined;
+  }
+
+  getFilteredRestaurants() {
+    return this.restaurants.filter(r => {
+      return this.user.nopes.indexOf(r.id) == -1;
+    });
   }
 
   saveUser() {
@@ -42,5 +51,9 @@ export class UserModalComponent {
           this.hide();
         });
     }
+  }
+
+  getRestaurantNameFromId(id: string): string {
+    return this.restaurants.find(r => r.id == id).name;
   }
 }

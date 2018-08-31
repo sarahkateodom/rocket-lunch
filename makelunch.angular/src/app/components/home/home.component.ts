@@ -59,6 +59,7 @@ export class HomeComponent {
   }
 
   openAddUserModal() {
+    this.selectedUser = new User();
     this.userModal.show();
   }
 

@@ -85,7 +85,24 @@ describe('HomeComponent', () => {
       component.openAddUserModal();
 
       expect(component.userModal.show).toHaveBeenCalled();
-    })
+    });
+
+    it('should set selectedUser new user', () => {
+      // arrange
+      component.selectedUser = {
+        id: 1,
+        name: 'SHmmeve',
+        nopes: ['123'],
+      } as User;
+
+      // act
+      component.openAddUserModal();
+
+      // assert
+      expect(component.selectedUser.id).toBe(undefined);
+      expect(component.selectedUser.name).toBe('');
+      expect(component.selectedUser.nopes.length).toBe(0);
+    });
   });
 
   describe('getUsers', () => {
