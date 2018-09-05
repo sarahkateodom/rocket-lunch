@@ -82,4 +82,8 @@ export class HomeComponent {
     this.userModal.show();
   }
 
+  dismissUser(userId: number) {
+    this.users = this.users.filter(u => u.id != userId);
+  }
+
 }

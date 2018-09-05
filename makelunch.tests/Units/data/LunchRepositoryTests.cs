@@ -66,6 +66,9 @@ namespace makelunch.tests.units.data
             int result = await target.CreateUserAsync(name, nopes);
 
             // assert
+
+
+
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
             Assert.Equal(newUser.Id, result);
         }

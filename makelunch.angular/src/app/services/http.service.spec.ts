@@ -23,7 +23,7 @@ describe("HttpService", () => {
 		
 		locationSpy.path.and.returnValue('/jwt');
         
-        subject = new HttpService(httpSpy);
+        subject = new HttpService(httpSpy, routerSpy);
     });
 
     describe("get", () => {

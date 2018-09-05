@@ -152,6 +152,23 @@ describe('HomeComponent', () => {
 
       // assert
       expect(component.userModal.show).toHaveBeenCalled();
-    })
+    });
+  });
+
+  describe('dismissUser', () => {
+    it('should remove specified user from component.users', () => {
+      // arrange
+      let user = new User();
+      user.id = 1;
+
+      component.users = [user, { id: 2 } as User, { id: 3 } as User];
+      let length = component.users.length;
+
+      // act
+      component.dismissUser(user.id);
+
+      // assert
+      expect(length - 1).toBe(component.users.length);
+    });
   });
 });
