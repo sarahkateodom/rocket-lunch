@@ -37,4 +37,14 @@ export class LunchLadyService {
     let url = `/api/users/`;
     return this.http.put(url, user).pipe(map(res => <boolean>res));
   }
+
+  public createUserSession(users: number[]): Observable<UUID> {
+    let url = `/api/sessions/`;
+    return this.http.post(url, users).pipe(map(res => <UUID>res));
+  }
+
+  public updateUserSession(id: UUID, users: number[]): Observable<boolean> {
+    let url = `/api/sessions/${id}`;
+    return this.http.put(url, users).pipe(map(res => <boolean>res));
+  }
 }

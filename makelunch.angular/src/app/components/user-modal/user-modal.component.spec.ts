@@ -18,8 +18,9 @@ describe('AddUserModalComponent', () => {
     "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>");
 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['addUser'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['addUser', 'updateuser'])
     mockLunchService.addUser.and.returnValue(of(1));
+    mockLunchService.updateuser.and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       declarations: [UserModalComponent, ModalComponent],
@@ -83,7 +84,8 @@ describe('AddUserModalComponent', () => {
       component.saveUser();
 
       // assert
-      expect(mockLunchService.addUser).toHaveBeenCalled();
+      expect(mockLunchService.updateuser).toHaveBeenCalled();
+
     });
   });
 

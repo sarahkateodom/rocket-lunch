@@ -39,7 +39,7 @@ namespace makelunch.tests.integrations.domain.services
             TimeSpan secondWatch = endTime - startTime;
 
             // assert
-            Assert.Equal(total, result.Count());
+            Assert.Equal(total + 1, result.Count()); // btc
             Assert.True(firstWatch.TotalMilliseconds > 1000);
             Assert.True(secondWatch.TotalMilliseconds < 200);
         }

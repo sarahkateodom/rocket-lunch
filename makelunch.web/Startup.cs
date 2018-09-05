@@ -34,6 +34,8 @@ namespace makelunch.web
             services.AddTransient<IServeLunch, LunchService>();
             services.AddTransient<IRepository, LunchRepository>();
             services.AddTransient<IManageUsers, UserService>();
+            services.AddTransient<IManageUserSessions, UserSessionService>();
+            services.AddSingleton<IChaos, RandomService>();
 
             services.AddSwaggerGen(c =>
             {

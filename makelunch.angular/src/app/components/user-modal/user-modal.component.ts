@@ -27,7 +27,7 @@ export class UserModalComponent {
   }
 
   nopeRestaurant() {
-    this.user.nopes.push(this.selectedRestaurantId);
+    if(this.selectedRestaurantId) this.user.nopes.push(this.selectedRestaurantId);
     this.selectedRestaurantId = undefined;
   }
 

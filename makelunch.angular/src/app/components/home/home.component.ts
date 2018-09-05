@@ -18,7 +18,7 @@ export class HomeComponent {
   users: User[] = [];
   selectedUser: User;
   restaurants: Restaurant[] = [];
-  sessionId: UUID = undefined;
+  sessionId: UUID;
 
   constructor(private lunchLady: LunchLadyService) {
     this.getUsers();
@@ -52,6 +52,7 @@ export class HomeComponent {
   }
 
   getRestaurant(): any {
+    
     if (!this.sessionId) this.sessionId = UUID.UUID();
     this.lunchLady.getRestaurant(this.sessionId).subscribe(x => {
       this.restaurant = x;
@@ -67,6 +68,11 @@ export class HomeComponent {
     this.lunchLady.getUsers()
       .subscribe(x => {
         this.users = x;
+        this.lunchLady.createUserSession(x.map(u => u.id))
+        .subscribe(y => {
+          
+          this.sessionId = y;
+        });
       });
   }
 
@@ -84,6 +90,8 @@ export class HomeComponent {
 
   dismissUser(userId: number) {
     this.users = this.users.filter(u => u.id != userId);
+    this.lunchLady.updateUserSession(this.sessionId, this.users.map(u => u.id))
+      .subscribe(x => {});
   }
 
 }

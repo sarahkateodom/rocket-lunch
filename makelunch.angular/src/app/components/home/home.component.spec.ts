@@ -14,12 +14,19 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockLunchService;
+  let users = [
+    { id: 1, name: "Po Labare", nopes: ['fsad', ';lkj']} as User,
+    { id: 2, name: "Pam Dabare", nopes: ['fsad', ';lkj']} as User,
+  ] as User[];
 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
     mockLunchService.getRestaurants.and.returnValue(of([new Restaurant()]));
-    mockLunchService.getUsers.and.returnValue(of([new User()]));
+    mockLunchService.getUsers.and.returnValue(of(users));
+    mockLunchService.createUserSession.and.returnValue(of("12324124-123123-123123"));
+    mockLunchService.updateUserSession.and.returnValue(of(true));
+    mockLunchService.updateuser.and.returnValue(of(true));
     TestBed.configureTestingModule({
       declarations: [HomeComponent, UserModalComponent, ModalComponent],
       providers: [
@@ -50,6 +57,12 @@ describe('HomeComponent', () => {
     it('gets restaurants', () => {
       component = fixture.componentInstance;
       expect(mockLunchService.getRestaurants).toHaveBeenCalled();
+    })
+
+    it('creates user session', () => {
+      component = fixture.componentInstance;
+
+      expect(mockLunchService.createUserSession).toHaveBeenCalledWith(users.map(u => u.id));
     })
   });
 
@@ -124,7 +137,7 @@ describe('HomeComponent', () => {
       component.getUsers();
 
       // assert
-      expect(component.users.length).toBe(1);
+      expect(component.users.length).toBe(2);
     });
   });
 

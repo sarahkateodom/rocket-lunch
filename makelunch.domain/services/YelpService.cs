@@ -32,8 +32,12 @@ namespace makelunch.domain.services
                 offset = businesses.Count;
             }
             while (businesses.Count < dto.Total);
+            businesses.Add(new RestaurantDto {
+                Name = "Be The Change",
+                Id = "BTC"
+            });
 
-            RestaurantCash.RestaurantList = businesses;
+            RestaurantCash.RestaurantList = businesses.OrderBy(x => x.Name).ToList();
             return RestaurantCash.RestaurantList;
         }
 
