@@ -58,6 +58,6 @@ export class UserModalComponent {
   }
 
   getRestaurantNameFromId(id: string): string {
-    return this.restaurants.find(r => r.id == id).name;
+    return this.restaurants.find(r => r.id == id) ? this.restaurants.find(r => r.id == id).name : "";
   }
 }
