@@ -27,11 +27,14 @@ export class UserModalComponent {
   }
 
   nopeRestaurant() {
+    if (!this.user.nopes) this.user.nopes = [];
     if(this.selectedRestaurantId) this.user.nopes.push(this.selectedRestaurantId);
     this.selectedRestaurantId = undefined;
   }
 
   getFilteredRestaurants() {
+    if (!this.user.nopes) return this.restaurants;
+
     return this.restaurants.filter(r => {
       return this.user.nopes.indexOf(r.id) == -1;
     });
@@ -58,6 +61,7 @@ export class UserModalComponent {
   }
 
   getRestaurantNameFromId(id: string): string {
-    return this.restaurants.find(r => r.id == id) ? this.restaurants.find(r => r.id == id).name : "";
+    let restaurant = this.restaurants.find(r => r.id == id);
+    return restaurant ? restaurant.name : '';
   }
 }

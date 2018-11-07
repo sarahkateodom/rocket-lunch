@@ -8,5 +8,5 @@ export class User {
 
     public id: number;
     public name: string;
-    public nopes: string[];
+    public nopes: string[] = [];
 }
