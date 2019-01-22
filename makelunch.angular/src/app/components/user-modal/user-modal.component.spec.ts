@@ -90,7 +90,7 @@ describe('AddUserModalComponent', () => {
   });
 
   describe('nopeRestaurant', () => {
-    it('should add restaurant id to user nope list', () => {
+    it('should add restaurant id to nopesToBeAddedOnSave', () => {
       // arrange
       let user = new User();
       user.nopes = [];
@@ -103,7 +103,7 @@ describe('AddUserModalComponent', () => {
       component.nopeRestaurant();
 
       // assert
-      expect(component.user.nopes.find(n => n == restaurantId)).toBeTruthy();
+      expect(component.nopesToBeAddedOnSave.find(n => n == restaurantId)).toBeTruthy();
     });
 
     it('set selected restaurant to undefined', () => {
@@ -177,4 +177,19 @@ describe('AddUserModalComponent', () => {
       expect(result).toBe(component.restaurants[index].name)
     });
   });
+
+  describe('removeNope', () => {
+    it('removes nope from nopesToBeRemovedOnSave', () => {
+      // arrange
+      component.user = new User();
+      component.user.nopes = ['1', '2'];
+
+      // act
+      component.removeNope('1');
+
+      // assert
+      expect(component.nopesToBeRemovedOnSave.length).toBe(1);
+      expect(component.nopesToBeRemovedOnSave).toContain('1');
+    });
+  })
 });

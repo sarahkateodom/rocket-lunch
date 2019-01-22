@@ -24,7 +24,13 @@
       <button type="button" class="btn btn-info" (click)="nopeRestaurant()"><i class="fa fa-plus"></i></button>
     </form>
     <div>
-      <b>Current Nopes: </b><span *ngFor="let nope of user.nopes">{{ getRestaurantNameFromId(nope) }}. </span>
+      <b>Current Nopes: </b>
+      <span *ngFor="let nope of nopesToDisplay()" class="nopes">
+        <span *ngIf="getRestaurantNameFromId(nope)" class="badge badge-pill badge-secondary nope">
+          <span>{{ getRestaurantNameFromId(nope)}} </span>
+          <span class="nope-remove" (click)="removeNope(nope)">x</span>
+        </span>
+      </span>
     </div>
   </div>
 

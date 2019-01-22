@@ -14,6 +14,8 @@ export class UserModalComponent {
   @Input() user: User;
   @Input() users: User[] = [];
   @Input() restaurants: Restaurant[] = [];
+  nopesToBeRemovedOnSave: string[] = [];
+  nopesToBeAddedOnSave: string[] = [];
   selectedRestaurantId: string;
 
   constructor(private lunchService: LunchLadyService) { }
@@ -24,6 +26,9 @@ export class UserModalComponent {
 
   hide() {
     this.modal.hide();
+    this.nopesToBeRemovedOnSave = [];
+    this.nopesToBeAddedOnSave = [];
+    
   }
 
   nopeRestaurant() {
@@ -36,16 +41,18 @@ export class UserModalComponent {
     if (!this.user.nopes) return this.restaurants;
 
     return this.restaurants.filter(r => {
-      return this.user.nopes.indexOf(r.id) == -1;
+      return this.nopesToDisplay().indexOf(r.id) == -1;
     });
   }
 
   saveUser() {
+    this.user.nopes = this.nopesToDisplay();
     if (this.user.id) {
       // edit user
       this.lunchService.updateuser(this.user)
         .subscribe(x => {
           this.hide();
+          
         });
 
       this.hide();
@@ -60,8 +67,17 @@ export class UserModalComponent {
     }
   }
 
+  nopesToDisplay(): string[] {
+    return this.user.nopes.concat(this.nopesToBeAddedOnSave).filter(n => !this.nopesToBeRemovedOnSave.find(x => x == n));
+  }
+
   getRestaurantNameFromId(id: string): string {
     let restaurant = this.restaurants.find(r => r.id == id);
     return restaurant ? restaurant.name : '';
+  }
+
+  removeNope(id: string) {
+    // this.user.nopes = this.user.nopes.filter(x => x != id);
+    this.nopesToBeRemovedOnSave.push(id);
   }
 }
