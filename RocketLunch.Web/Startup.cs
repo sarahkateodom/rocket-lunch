@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RocketLunch.data;
+﻿using RocketLunch.data;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.Hosting;
 
 namespace RocketLunch.web
 {
@@ -44,11 +37,17 @@ namespace RocketLunch.web
 
             string connectionString = Configuration["POSTGRESDB"];
             services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
+            services.AddControllersWithViews();
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "RocketLunch.Web/wwwroot";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -69,13 +68,15 @@ namespace RocketLunch.web
             });
 
             // app.UseHttpsRedirection();
-            app.UseMvc(routes =>
-			{
-				routes.MapRoute(
-					name: "default",
-					template: "{*anything}",
-					defaults: new { controller = "Home", action = "Index" });
-			});
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
+
         }
     }
 }
