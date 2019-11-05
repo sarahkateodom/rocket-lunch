@@ -7,7 +7,7 @@ namespace RocketLunch.data
 {
     public class LunchContext : DbContext
     {
-        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5432;Database=RocketLunch").Options)
+        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5433;Database=rocketlunch").Options)
         {
 
         }
