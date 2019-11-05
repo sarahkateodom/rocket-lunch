@@ -134,6 +134,7 @@ namespace RocketLunch.tests.units.domain.services
             );
         }
 
+        [Fact]
         public async void LunchService_GetRestaurantsAsync_ReturnsRestaurantDtos()
         {
             // arrange
