@@ -9,8 +9,11 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-
+        
       </ul>
 
     </div>
+    
+    <button *ngIf="!user" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
+    <button *ngIf="user" (click)="signOut()" class="btn btn-sm btn-outline-secondary">Sign Out</button>
   </nav>

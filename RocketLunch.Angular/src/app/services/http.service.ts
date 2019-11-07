@@ -11,7 +11,11 @@ export class HttpService {
 
 	private handleError: ((err: any, errorMsg?: string) => Observable<Response>) =
 	((err, errMsg) => {
-		if (err.status === 401 || err.status === 403) {
+		if (err.status === 401)
+		{
+
+		}
+		else if (err.status === 403) {
 
 			// redirect you to forbidden
 			//this.router.navigate(['forbidden']);
@@ -30,7 +34,6 @@ export class HttpService {
 		} else {
 			if (errMsg) {
 				console.log(errMsg);
-				//this.toastr.error(errMsg, 'Error');
 			}
 
 			return new Observable<Response>((subscriber: Subscriber<Response>) => {

@@ -8,7 +8,7 @@ namespace RocketLunch.domain.contracts
 {
     public interface IManageUsers
     {
-        Task<ClaimsPrincipal> LoginAsync(LoginDto userDto);
+        Task<UserDto> LoginAsync(LoginDto userDto);
         Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto);
         Task<Either<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>> GetUsersAsync();
         Task<Either<HttpStatusCodeErrorResponse, bool>> UpdateUserAsync(UserDto dto);

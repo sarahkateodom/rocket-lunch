@@ -73,8 +73,8 @@ namespace RocketLunch.tests.units.domain.services
             var result = await target.LoginAsync(loginDto);
 
             // assert
-            Assert.Equal(existingUser.Id.ToString(), result.Claims.First(c => c.Type == ClaimTypes.Sid).Value);
-            Assert.Equal(existingUser.Name.ToString(), result.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+            Assert.Equal(existingUser.Id, result.Id);
+            Assert.Equal(existingUser.Name, result.Name);
         }
 
         [Fact]

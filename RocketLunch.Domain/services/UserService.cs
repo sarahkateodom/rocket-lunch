@@ -19,17 +19,11 @@ namespace RocketLunch.domain.services
             _repository = repository ?? throw new ArgumentNullException("repository");
         }
 
-        public async Task<ClaimsPrincipal> LoginAsync(LoginDto userDto)
+        public async Task<UserDto> LoginAsync(LoginDto userDto)
         {
             // if user is new, create User record
-            UserDto user = await _repository.GetUserAsync(userDto.GoogleId)
+            return await _repository.GetUserAsync(userDto.GoogleId)
                 ?? await _repository.CreateUserAsync(userDto.GoogleId, userDto.Email, userDto.Name);
-
-            var identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
-
-            return new ClaimsPrincipal(identity);
         }
 
         public async Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto)

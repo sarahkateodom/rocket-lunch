@@ -21,10 +21,14 @@ namespace RocketLunch.web.controllers
         [Route("api/login")]
         public async Task<ObjectResult> Login([Bind][FromBody]LoginDto userDto)
         {
-            ClaimsPrincipal result = await _userService.LoginAsync(userDto);
+            UserDto result = await _userService.LoginAsync(userDto);
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, "IFixIt", "ADMIN");
+            identity.AddClaim(new Claim(ClaimTypes.Sid, result.Id.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, result.Name));
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                result);
+                new ClaimsPrincipal(identity));
+                
             return new OkObjectResult(userDto);
         }
 

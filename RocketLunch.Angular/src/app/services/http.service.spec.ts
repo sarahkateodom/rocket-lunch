@@ -1,12 +1,12 @@
 import { HttpService } from "./http.service";
-import { Response, ResponseOptions } from "@angular/http";
 import { BehaviorSubject, Subject } from "rxjs";
+import { HttpResponse } from '@angular/common/http';
 
 describe("HttpService", () => {
     let routerSpy: any;
 	let httpSpy: any;
 	let locationSpy: any;
-    let responseSubject: Subject<Response>;
+    let responseSubject: Subject<HttpResponse<any>>;
     let subject: HttpService;
 
     beforeEach(() => {
@@ -14,7 +14,7 @@ describe("HttpService", () => {
 		routerSpy = jasmine.createSpyObj("router", ["navigate"]);
 		locationSpy = jasmine.createSpyObj('location', ['path']);
 
-        responseSubject = new BehaviorSubject<Response>(new Response(new ResponseOptions()));
+        responseSubject = new BehaviorSubject<HttpResponse<any>>(new HttpResponse());
         httpSpy.request.and.returnValue(responseSubject.asObservable());
         httpSpy.get.and.returnValue(responseSubject.asObservable());
         httpSpy.post.and.returnValue(responseSubject.asObservable());

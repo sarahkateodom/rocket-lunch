@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { LunchLadyService } from './services/lunch-lady.service';
@@ -14,7 +13,20 @@ import { ModalComponent } from './components/modal/modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { TooManyRequestsComponent } from './components/too-many-requests/too-many-requests.component';
 import { routing } from './app.routes';
-import { LoginComponent } from './components/login/login.component';
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
+
+ 
+let config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider("330764540748-a2mj7bp7da2mnvk2e9e84ol6c8cbq8dp.apps.googleusercontent.com")
+  },
+]);
+ 
+export function provideConfig() {
+  return config;
+}
 
 @NgModule({
   declarations: [
@@ -25,18 +37,19 @@ import { LoginComponent } from './components/login/login.component';
     ModalComponent,
     UserModalComponent,
     TooManyRequestsComponent,
-    LoginComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     routing,
+    SocialLoginModule,
   ],
   providers: [
     HttpService,
     LunchLadyService, 
     { provide: APP_BASE_HREF, useValue: '/' },
+    { provide: AuthServiceConfig, useFactory: provideConfig },
   ],
   bootstrap: [AppComponent]
 })

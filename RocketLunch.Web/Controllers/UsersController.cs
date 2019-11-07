@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RocketLunch.web.controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private IManageUsers _userService;
