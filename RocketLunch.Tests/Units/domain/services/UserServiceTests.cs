@@ -8,6 +8,7 @@ using RocketLunch.domain.services;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
+using System.Security.Claims;
 
 namespace RocketLunch.tests.units.domain.services
 {
@@ -19,6 +20,116 @@ namespace RocketLunch.tests.units.domain.services
         {
             // Act and Assert
             Assert.Throws<ArgumentNullException>(() => new UserService((IRepository)null));
+        }
+
+        [Fact]
+        public async void UserService_LoginAsync_CallsRepoGetUserAsync()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
+            {
+                Id = 1,
+                Name = "name",
+            });
+            UserService target = new UserService(mockRepo.Object);
+            var dto = new LoginDto()
+            {
+                GoogleId = "google id",
+                Name = "name",
+            };
+
+            // act
+            await target.LoginAsync(dto);
+
+            // assert
+            mockRepo.Verify(r => r.GetUserAsync(dto.GoogleId), Times.Once);
+        }
+
+        [Fact]
+        public async void UserService_LoginAsync_ReturnsClaimsPrincipleWithExistingUserInfo()
+        {
+            // arrange
+            var loginDto = new LoginDto()
+            {
+                GoogleId = "google id",
+                Name = "name",
+            };
+
+            var existingUser = new UserDto
+            {
+                Id = 1,
+                Name = "Bill",
+                Nopes = new List<string> { "salad", "tuna", "tuna-salad", },
+            };
+
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync(existingUser);
+
+            UserService target = new UserService(mockRepo.Object);
+
+            // act
+            var result = await target.LoginAsync(loginDto);
+
+            // assert
+            Assert.Equal(existingUser.Id.ToString(), result.Claims.First(c => c.Type == ClaimTypes.Sid).Value);
+            Assert.Equal(existingUser.Name.ToString(), result.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+        }
+
+        [Fact]
+        public async void UserService_LoginAsync_DoesNotCreateUserIfFound()
+        {
+            // arrange
+            var loginDto = new LoginDto()
+            {
+                GoogleId = "google id",
+                Name = "name",
+            };
+
+            var existingUser = new UserDto
+            {
+                Id = 1,
+                Name = "Bill",
+                Nopes = new List<string> { "salad", "tuna", "tuna-salad", },
+            };
+
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync(existingUser);
+
+            UserService target = new UserService(mockRepo.Object);
+
+            // act
+            var result = await target.LoginAsync(loginDto);
+
+            // assert
+            mockRepo.Verify(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async void UserService_LoginAsync_CreatesUserIfNotFound()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
+            {
+                Id = 1,
+                Name = "name",
+            });
+            UserService target = new UserService(mockRepo.Object);
+            var dto = new LoginDto()
+            {
+                GoogleId = "google id",
+                Name = "name",
+                Email = "email",
+            };
+
+            // act
+            await target.LoginAsync(dto);
+
+            // assert
+            mockRepo.Verify(r => r.CreateUserAsync(dto.GoogleId, dto.Email, dto.Name), Times.Once);
         }
 
         [Fact]
@@ -37,7 +148,7 @@ namespace RocketLunch.tests.units.domain.services
             await target.CreateUserAsync(dto);
 
             // assert
-            mockRepo.Verify(r => r.CreateUserAsync(dto.Name, dto.Nopes), Times.Once);
+            mockRepo.Verify(r => r.CreateUserAsync_Old(dto.Name, dto.Nopes), Times.Once);
         }
 
         [Fact]
@@ -46,7 +157,7 @@ namespace RocketLunch.tests.units.domain.services
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             const int id = 1;
-            mockRepo.Setup(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<IEnumerable<string>>())).ReturnsAsync(id);
+            mockRepo.Setup(r => r.CreateUserAsync_Old(It.IsAny<string>(), It.IsAny<IEnumerable<string>>())).ReturnsAsync(id);
             UserService target = new UserService(mockRepo.Object);
             CreateUserDto dto = new CreateUserDto
             {
@@ -134,7 +245,8 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
             UserService target = new UserService(mockRepo.Object);
-            UserDto dto = new UserDto {
+            UserDto dto = new UserDto
+            {
                 Id = 1,
                 Name = "Anne Telohp",
                 Nopes = new List<string> { "Chicken Salad Chick" },
@@ -154,7 +266,8 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
             UserService target = new UserService(mockRepo.Object);
-            UserDto dto = new UserDto {
+            UserDto dto = new UserDto
+            {
                 Id = 1,
                 Name = "Anne Telohp",
                 Nopes = new List<string> { "Chicken Salad Chick" },

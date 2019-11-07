@@ -10,7 +10,7 @@ import { Restaurant } from '../../models/restaurant';
   styleUrls: ['./user-modal.component.scss']
 })
 export class UserModalComponent {
-  @ViewChild(ModalComponent) modal: ModalComponent;
+  @ViewChild(ModalComponent, { static: true }) modal: ModalComponent;
   @Input() user: User;
   @Input() users: User[] = [];
   @Input() restaurants: Restaurant[] = [];

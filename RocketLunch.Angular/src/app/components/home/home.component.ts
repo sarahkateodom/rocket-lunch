@@ -11,7 +11,7 @@ import { Restaurant } from '../../models/restaurant';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  @ViewChild(UserModalComponent) userModal: UserModalComponent;
+  @ViewChild(UserModalComponent, { static: true }) userModal: UserModalComponent;
   restaurant: any;
   goSrc: string;
   goSrcs: string[];
@@ -52,7 +52,7 @@ export class HomeComponent {
   }
 
   getRestaurant(): any {
-    
+
     if (!this.sessionId) this.sessionId = UUID.UUID();
     this.lunchLady.getRestaurant(this.sessionId).subscribe(x => {
       this.restaurant = x;
@@ -69,10 +69,10 @@ export class HomeComponent {
       .subscribe(x => {
         this.users = x;
         this.lunchLady.createUserSession(x.map(u => u.id))
-        .subscribe(y => {
-          
-          this.sessionId = y;
-        });
+          .subscribe(y => {
+
+            this.sessionId = y;
+          });
       });
   }
 
@@ -91,7 +91,7 @@ export class HomeComponent {
   dismissUser(userId: number) {
     this.users = this.users.filter(u => u.id != userId);
     this.lunchLady.updateUserSession(this.sessionId, this.users.map(u => u.id))
-      .subscribe(x => {});
+      .subscribe(x => { });
   }
 
 }

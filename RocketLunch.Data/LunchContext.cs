@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using RocketLunch.data.entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace RocketLunch.data
 {
@@ -44,7 +43,7 @@ namespace RocketLunch.data
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 // Replace table names
-                entity.SetTableName(entity.GetTableName()); 
+                entity.SetTableName(ToSnakeCase(entity.GetTableName())); 
 
                 // Replace column names            
                 foreach (var property in entity.GetProperties())

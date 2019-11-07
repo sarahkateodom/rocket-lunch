@@ -11,7 +11,8 @@
   <div class="row justify-content-md-center">
     <div class="col" class="users">
       <p>
-        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user" (click)="selectUser(user)"> <span>{{ user.name }} </span><span class="user-close" (click)="dismissUser(user.id)">x</span></span>
+        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user" (click)="selectUser(user)">
+          <span>{{ user.name }} </span><span class="user-close" (click)="dismissUser(user.id)">x</span></span>
         <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
           <i class="fa fa-user-plus"></i> Add Eater
         </span>

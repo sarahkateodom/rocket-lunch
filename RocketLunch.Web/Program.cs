@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,10 +38,6 @@ namespace RocketLunch.web
                 .AddCommandLine(args)
                 .Build();
             return WebHost.CreateDefaultBuilder(args)
-                .UseConfiguration(config)
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
         }

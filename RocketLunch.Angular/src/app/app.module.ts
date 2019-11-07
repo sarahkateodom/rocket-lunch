@@ -14,6 +14,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { TooManyRequestsComponent } from './components/too-many-requests/too-many-requests.component';
 import { routing } from './app.routes';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { routing } from './app.routes';
     FooterComponent,
     ModalComponent,
     UserModalComponent,
-    TooManyRequestsComponent
+    TooManyRequestsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

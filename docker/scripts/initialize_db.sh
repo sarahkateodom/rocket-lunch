@@ -29,14 +29,16 @@ ALTER TABLE public."__EFMigrationsHistory" OWNER TO admin;
 ALTER TABLE ONLY public."__EFMigrationsHistory" ADD CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId");
 
 
-CREATE TABLE public."users"
+CREATE TABLE public.users
 (
     "id" integer NOT NULL,
     "name" text,
-    "nopes" text
+    "nopes" text,
+    "google_id" text,
+    "email" text
 );
-ALTER TABLE public."users" OWNER to admin;
-ALTER TABLE ONLY public."users" ADD CONSTRAINT "pk_users" PRIMARY KEY ("id");
+ALTER TABLE public.users OWNER to admin;
+ALTER TABLE ONLY public.users ADD CONSTRAINT "pk_users" PRIMARY KEY ("id");
 
 CREATE SEQUENCE public.users_id_seq
     START WITH 1
@@ -52,11 +54,14 @@ EOSQL
 
 # Data
 psql rocketlunch <<EOSQL
+
 INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20180830023654_CreateUserTable', '2.1.2-rtm-30932');
 INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20180830220719_Nooooos', '2.1.2-rtm-30932');
+INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20191107150904_AddingGoogleIdAndEmail', '3.0.0');
 
-INSERT INTO public."users" ("name", "nopes") VALUES ('Hamburglar', '["CntO5_U6B1kOlyfjZDuxFA"]');
-INSERT INTO public."users" ("name", "nopes") VALUES ('Cookie Monster', '["XatxqH9k2auTRSKzGKBL0w"]');
-INSERT INTO public."users" ("name", "nopes") VALUES ('Swedish Chef', '["iuS0buU4WW3j_Lk4UCOcQA"]');
+INSERT INTO public.users ("name", "google_id", "email", "nopes") VALUES ('Oxford Labs', '111246303330212276863', 'oxfordlabsclgx@gmail.com', '["CntO5_U6B1kOlyfjZDuxFA"]');
+INSERT INTO public.users ("name", "google_id", "email", "nopes") VALUES ('Hamburglar', 'abc123', 'patty@sizzle.greese', '["CntO5_U6B1kOlyfjZDuxFA"]');
+INSERT INTO public.users ("name", "google_id", "email", "nopes") VALUES ('Cookie Monster', 'pilsbury', 'chips@ahoy.dough', '["XatxqH9k2auTRSKzGKBL0w"]');
+INSERT INTO public.users ("name", "google_id", "email", "nopes") VALUES ('Swedish Chef', 'sweeeeeeeeed', 'meatballs@healthcare.knives', '["iuS0buU4WW3j_Lk4UCOcQA"]');
 
 EOSQL

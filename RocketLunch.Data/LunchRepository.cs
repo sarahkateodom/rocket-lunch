@@ -18,7 +18,24 @@ namespace RocketLunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public async Task<int> CreateUserAsync(string name, IEnumerable<string> nopes)
+        public async Task<UserDto> CreateUserAsync(string googleId, string email, string name)
+        {
+            UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
+            {
+                GoogleId = googleId,
+                Email = email,
+                Name = name,
+            }).ConfigureAwait(false)).Entity;
+
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+            return new UserDto
+            {
+                Id = newUser.Id,
+                Name = name,
+            };
+        }
+
+        public async Task<int> CreateUserAsync_Old(string name, IEnumerable<string> nopes)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
             {
@@ -33,11 +50,23 @@ namespace RocketLunch.data
         public async Task<UserDto> GetUserAsync(int id)
         {
             UserEntity userEntity = await _lunchContext.Users.FindAsync(id).ConfigureAwait(false);
-            return userEntity != null ? new UserDto {
+            return userEntity != null ? new UserDto
+            {
                 Id = userEntity.Id,
                 Name = userEntity.Name,
                 Nopes = JsonConvert.DeserializeObject<List<string>>(userEntity.Nopes),
             } : null;
+        }
+
+        public async Task<UserDto> GetUserAsync(string googleId)
+        {
+            var result = await _lunchContext.Users.SingleOrDefaultAsync(u => u.GoogleId == googleId).ConfigureAwait(false);
+            return result == null ? null : new UserDto
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Nopes = JsonConvert.DeserializeObject<List<string>>(result.Nopes),
+            };
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()

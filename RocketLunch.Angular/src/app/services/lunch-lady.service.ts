@@ -13,6 +13,11 @@ export class LunchLadyService {
 
   constructor(private http: HttpService) { }
 
+  public login(googleId: number, name: string, email: string): Observable<any> {
+    let url = `/api/login`;
+    return this.http.post(url, { googleId: googleId, name: name, email: email }).pipe(map(res => res));
+  }
+
   public getRestaurant(guid: UUID): Observable<Restaurant> {
     let url = `/api/restaurants/${guid}`;
     return this.http.get(url).pipe(map(res => <Restaurant>res));
