@@ -28,7 +28,7 @@ namespace RocketLunch.tests.units.domain.services
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
-            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
+            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
             {
                 Id = 1,
                 Name = "name",
@@ -103,7 +103,7 @@ namespace RocketLunch.tests.units.domain.services
             var result = await target.LoginAsync(loginDto);
 
             // assert
-            mockRepo.Verify(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            mockRepo.Verify(r => r.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -112,10 +112,12 @@ namespace RocketLunch.tests.units.domain.services
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
-            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
+            mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
             {
                 Id = 1,
                 Name = "name",
+                Email = "email",
+                PhotoUrl = "photo",
             });
             UserService target = new UserService(mockRepo.Object);
             var dto = new LoginDto()
@@ -123,13 +125,14 @@ namespace RocketLunch.tests.units.domain.services
                 GoogleId = "google id",
                 Name = "name",
                 Email = "email",
+                PhotoUrl = "photo",
             };
 
             // act
             await target.LoginAsync(dto);
 
             // assert
-            mockRepo.Verify(r => r.CreateUserAsync(dto.GoogleId, dto.Email, dto.Name), Times.Once);
+            mockRepo.Verify(r => r.CreateUserAsync(dto.GoogleId, dto.Email, dto.Name, dto.PhotoUrl), Times.Once);
         }
 
         [Fact]

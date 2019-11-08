@@ -23,7 +23,7 @@ namespace RocketLunch.domain.services
         {
             // if user is new, create User record
             return await _repository.GetUserAsync(userDto.GoogleId)
-                ?? await _repository.CreateUserAsync(userDto.GoogleId, userDto.Email, userDto.Name);
+                ?? await _repository.CreateUserAsync(userDto.GoogleId, userDto.Email, userDto.Name, userDto.PhotoUrl);
         }
 
         public async Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto)

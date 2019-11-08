@@ -119,9 +119,10 @@ namespace RocketLunch.tests.units.data
             string googleId = "googleId";
             string email = "email@e.mail";
             string name = "goodname";
+            string photoUrl = "photo";
 
             // act
-            await target.CreateUserAsync(googleId, email, name);
+            await target.CreateUserAsync(googleId, email, name, photoUrl);
 
             // assert
             UserEntity newUser = context.Users.Where(u => u.GoogleId == googleId).FirstOrDefault();
@@ -140,9 +141,10 @@ namespace RocketLunch.tests.units.data
             string googleId = "googleId";
             string email = "email@e.mail";
             string name = "goodname";
+            string photoUrl = "photo";
 
             // act
-            var result = await target.CreateUserAsync(googleId, email, name);
+            var result = await target.CreateUserAsync(googleId, email, name, photoUrl);
 
             // assert
             UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();

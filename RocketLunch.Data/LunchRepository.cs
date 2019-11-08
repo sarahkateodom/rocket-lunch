@@ -18,13 +18,14 @@ namespace RocketLunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
-        public async Task<UserDto> CreateUserAsync(string googleId, string email, string name)
+        public async Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
             {
                 GoogleId = googleId,
                 Email = email,
                 Name = name,
+                PhotoUrl = photoUrl,
             }).ConfigureAwait(false)).Entity;
 
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
@@ -32,6 +33,8 @@ namespace RocketLunch.data
             {
                 Id = newUser.Id,
                 Name = name,
+                Email = email,
+                PhotoUrl = photoUrl,
             };
         }
 
@@ -55,6 +58,8 @@ namespace RocketLunch.data
                 Id = userEntity.Id,
                 Name = userEntity.Name,
                 Nopes = JsonConvert.DeserializeObject<List<string>>(userEntity.Nopes),
+                Email = userEntity.Email,
+                PhotoUrl = userEntity.PhotoUrl,
             } : null;
         }
 
@@ -66,6 +71,8 @@ namespace RocketLunch.data
                 Id = result.Id,
                 Name = result.Name,
                 Nopes = JsonConvert.DeserializeObject<List<string>>(result.Nopes),
+                Email = result.Email,
+                PhotoUrl = result.PhotoUrl,
             };
         }
 
@@ -76,6 +83,8 @@ namespace RocketLunch.data
                 Id = u.Id,
                 Name = u.Name,
                 Nopes = JsonConvert.DeserializeObject<List<string>>(u.Nopes),
+                Email = u.Email,
+                PhotoUrl = u.PhotoUrl,
             }).ToListAsync();
         }
 

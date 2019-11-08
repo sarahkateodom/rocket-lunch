@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-
+  public loading: boolean = true;
   public user: any;
 
   constructor(private service: LunchLadyService, private authService: AuthService) { }
@@ -16,6 +16,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.user = user;
+      this.loading = false;
+      if (user) console.log(this.user)
     });
   }
 

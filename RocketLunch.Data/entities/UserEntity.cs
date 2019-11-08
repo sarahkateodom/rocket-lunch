@@ -10,6 +10,7 @@ namespace RocketLunch.data.entities
         public string GoogleId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string PhotoUrl { get; set; }
         public string Nopes { get; set; }
     }
 }

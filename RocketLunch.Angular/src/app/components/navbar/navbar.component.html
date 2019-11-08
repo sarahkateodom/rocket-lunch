@@ -1,19 +1,28 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <img class="taco mr-1" src="./assets/taco.png" alt="taco" />
-      <span>Rocket Lunch</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        
-      </ul>
+  <a class="navbar-brand" href="#">
+    <img class="navbar-icon mr-1" src="./assets/taco.png" alt="taco" />
+    <span>Rocket Lunch</span>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+
+  </div>
+  <button *ngIf="!user && !loading" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
+
+  <div class="btn-group" *ngIf="user && !loading">
+    <button type="button" class="btn user-photo" data-toggle="dropdown" aria-haspopup="true"
+      aria-expanded="false">
+      <img class="navbar-icon mr-1" [src]="user.photoUrl" />
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+      <div class="dropdown-item">Account</div>
+      <div class="dropdown-item" (click)="signOut()">Sign Out</div>
     </div>
-    
-    <button *ngIf="!user" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
-    <button *ngIf="user" (click)="signOut()" class="btn btn-sm btn-outline-secondary">Sign Out</button>
-  </nav>
+  </div>
+</nav>

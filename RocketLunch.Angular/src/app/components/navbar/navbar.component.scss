@@ -1,6 +1,12 @@
-.taco {
+.navbar-icon {
     width:50px;
     height:50px;
+    border-radius: 50%;
+}
+
+.user-photo:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .navbar-brand {
