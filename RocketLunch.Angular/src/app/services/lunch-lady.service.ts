@@ -43,6 +43,11 @@ export class LunchLadyService {
     return this.http.get(url).pipe(map(res => <User[]>res));
   }
 
+  public getUser(id: number): Observable<User> {
+    let url = `/api/users/${id}`;
+    return this.http.get(url).pipe(map(res => <User>res));
+  }
+
   public updateuser(user: User): Observable<boolean> {
     let url = `/api/users/`;
     return this.http.put(url, user).pipe(map(res => <boolean>res));

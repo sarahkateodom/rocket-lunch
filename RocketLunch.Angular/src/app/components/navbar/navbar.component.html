@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
+  <a class="navbar-brand">
     <img class="navbar-icon mr-1" src="./assets/taco.png" alt="taco" />
     <span>Rocket Lunch</span>
   </a>
@@ -20,7 +20,7 @@
       <img class="navbar-icon mr-1" [src]="user.photoUrl" />
     </button>
     <div class="dropdown-menu dropdown-menu-right">
-      <div routerLink="/profile" class="dropdown-item">{{user.name}}</div>
+      <div routerLink="/profile/1" class="dropdown-item">{{user.name}}</div>
       <div class="dropdown-item" (click)="signOut()">Sign Out</div>
     </div>
   </div>

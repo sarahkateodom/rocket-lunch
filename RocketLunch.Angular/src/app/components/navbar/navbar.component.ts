@@ -14,11 +14,12 @@ export class NavbarComponent implements OnInit {
   constructor(private service: LunchLadyService, private authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      this.loading = false;
-      if (user) console.log(this.user)
-    });
+    this.authService.authState
+      .subscribe((user) => {
+        this.user = user;
+        this.loading = false;
+        if (user) console.log(this.user)
+      });
   }
 
   signIn(): void {

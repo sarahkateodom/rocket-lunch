@@ -10,7 +10,7 @@ export const routes: Routes = [
 			{ path: '', component: HomeComponent },  // default page
 			{ path: 'home', component: HomeComponent }, 
 			{ path: 'too-many', component: TooManyRequestsComponent },
-			{ path: 'profile', component: ProfileComponent },
+			{ path: 'profile/:id', component: ProfileComponent },
 		],
 	},
 	{ path: '**', component: HomeComponent }

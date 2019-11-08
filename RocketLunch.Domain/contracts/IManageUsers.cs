@@ -12,5 +12,6 @@ namespace RocketLunch.domain.contracts
         Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto);
         Task<Either<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>> GetUsersAsync();
         Task<Either<HttpStatusCodeErrorResponse, bool>> UpdateUserAsync(UserDto dto);
+        Task<UserDto> GetUserAsync(int id);
     }
 }

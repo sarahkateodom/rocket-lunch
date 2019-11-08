@@ -55,5 +55,12 @@ namespace RocketLunch.domain.services
                 return true;
             })).ConfigureAwait(false);
         }
+
+        public async Task<UserDto> GetUserAsync(int id)
+        {
+            UserDto user = await _repository.GetUserAsync(id);
+            if (user == null) throw new NotFoundException();
+            return user;
+        }
     }
 }

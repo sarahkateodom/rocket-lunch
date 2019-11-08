@@ -9,6 +9,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 using System.Security.Claims;
+using RocketLunch.domain.exceptions;
 
 namespace RocketLunch.tests.units.domain.services
 {
@@ -284,6 +285,57 @@ namespace RocketLunch.tests.units.domain.services
                 err => Assert.Equal(HttpStatusCode.NotFound, err.HttpErrorStatusCode),
                 x => throw new Exception("NotFoundException not thrown.")
             );
+        }
+
+        [Fact]
+        public async void UserSerivce_GetUserAsync_CallsRepoGetUserAsync()
+        {
+            //Arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
+            UserService target = new UserService(mockRepo.Object);
+            int param = 1;
+
+            //Act
+            UserDto user = await target.GetUserAsync(param);
+
+            //Assert
+            mockRepo.Verify(x => x.GetUserAsync(param), Times.Once);
+        }
+
+        [Fact]
+        public async void UserSerivce_GetUserAsync_ThrowsNotFoundExceptionWhenUserNotFound()
+        {
+            //Arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
+            UserService target = new UserService(mockRepo.Object);
+            int param = 1;
+
+            //Act
+            await Assert.ThrowsAsync<NotFoundException>(async () => await target.GetUserAsync(param));
+        }
+
+        [Fact]
+        public async void UserSerivce_GetUserAsync_ReturnsUserDto()
+        {
+            //Arrange
+            var dto = new UserDto()
+            {
+                Id = 1,
+                Name = "name"
+            };
+
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync(dto);
+            UserService target = new UserService(mockRepo.Object);
+            int param = 1;
+
+            //Act
+            var result = await target.GetUserAsync(param);
+
+            // Assert
+            Assert.Same(dto, result);
         }
 
     }

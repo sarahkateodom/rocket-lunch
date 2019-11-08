@@ -90,7 +90,7 @@ describe('AddUserModalComponent', () => {
   });
 
   describe('nopeRestaurant', () => {
-    it('should add restaurant id to nopesToBeAddedOnSave', () => {
+    it('should add restaurant id to user nopes', () => {
       // arrange
       let user = new User();
       user.nopes = [];
@@ -103,7 +103,7 @@ describe('AddUserModalComponent', () => {
       component.nopeRestaurant();
 
       // assert
-      expect(component.nopesToBeAddedOnSave.find(n => n == restaurantId)).toBeTruthy();
+      expect(component.user.nopes.find(n => n == restaurantId)).toBeTruthy();
     });
 
     it('set selected restaurant to undefined', () => {

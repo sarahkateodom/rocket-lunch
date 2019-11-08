@@ -33,6 +33,14 @@ namespace RocketLunch.web.controllers
             return result.Match(err => err.Content(this), r => new OkObjectResult(r));
         }
 
+        [HttpGet]
+        [Route("api/users/{id}")]
+        public async Task<ObjectResult> GetUser(int id)
+        {
+            var result = await _userService.GetUserAsync(id);
+            return new OkObjectResult(result);
+        }
+
         [HttpPut]
         [Route("api/users")]
         public async Task<ObjectResult> UpdateUser([FromBody] UserDto dto)
