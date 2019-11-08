@@ -15,6 +15,7 @@ import { TooManyRequestsComponent } from './components/too-many-requests/too-man
 import { routing } from './app.routes';
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
+import { ProfileComponent } from './components/profile/profile.component';
 
  
 let config = new AuthServiceConfig([
@@ -37,6 +38,7 @@ export function provideConfig() {
     ModalComponent,
     UserModalComponent,
     TooManyRequestsComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

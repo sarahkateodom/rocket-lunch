@@ -16,12 +16,11 @@
   <button *ngIf="!user && !loading" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
 
   <div class="btn-group" *ngIf="user && !loading">
-    <button type="button" class="btn user-photo" data-toggle="dropdown" aria-haspopup="true"
-      aria-expanded="false">
+    <button type="button" class="btn user-photo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <img class="navbar-icon mr-1" [src]="user.photoUrl" />
     </button>
     <div class="dropdown-menu dropdown-menu-right">
-      <div class="dropdown-item">Account</div>
+      <div routerLink="/profile" class="dropdown-item">{{user.name}}</div>
       <div class="dropdown-item" (click)="signOut()">Sign Out</div>
     </div>
   </div>
