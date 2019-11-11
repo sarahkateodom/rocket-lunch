@@ -1,0 +1,31 @@
+{
+	"testm": {
+        "prefix": "testm",
+        "body": [
+			"it('should $1', () => {",
+			"\t// Arrange ",
+			"\t$2",
+			"\t// Act",
+			"\t",
+			"\t// Assert",
+			"});"
+        ],
+        "description": "test method for angular"
+	},
+	"desc": {
+        "prefix": "desc",
+        "body": [
+            "describe('$1', () => {",
+			"\t$2",
+			"});"
+        ],
+        "description": "describe for angular"
+	},
+	"clog": {
+        "prefix": "clog",
+        "body": [
+            "console.log($1);"
+        ],
+        "description": "console log"
+	}
+}

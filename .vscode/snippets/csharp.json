@@ -1,0 +1,68 @@
+{
+	"testm": {
+		"prefix": "testm",
+		"body": [
+			"[Trait(\"Category\", \"UnitTest\")]",
+			"[Fact]",
+			"public void ${0:name}()",
+			"{",
+			"\t// arrange",
+			"",
+			"\t// act",
+			"",
+			"\t// assert",
+			"}",
+			""
+		],
+		"description": "test method for xunit"
+	},
+	"testa": {
+		"prefix": "testa",
+		"body": [
+			"[Trait(\"Category\", \"UnitTest\")]",
+			"[Fact]",
+			"public async void ${1:name}()",
+			"{",
+			"\t// arrange",
+			"\t$0",
+			"\t// act",
+			"",
+			"\t// assert",
+			"}",
+			""
+		],
+		"description": "async test method for xunit"
+	},
+	"csharp new file": {
+		"prefix": "csnf",
+		"body": [
+			"namespace $1",
+			"{",
+			"\tpublic class $2",
+			"\t{",
+			"\t\t$3",
+			"\t}",
+			"}"
+		],
+		"description": "Create a namespace block with a class"
+	},
+	"csharp new file2": {
+		"prefix": "newFileWhoDis",
+		"body": [
+			"namespace $1",
+			"{",
+			"\tpublic class $2",
+			"\t{",
+			"\t\t$3",
+			"\t}",
+			"}"
+		],
+		"description": "Create a namespace block with a class"
+	},
+	"lamda" : {
+		"prefix": "lam",
+		"body": [
+			"$1 => $0"
+		]
+	}
+}
