@@ -70,7 +70,7 @@ namespace RocketLunch.data
             {
                 Id = result.Id,
                 Name = result.Name,
-                Nopes = JsonConvert.DeserializeObject<List<string>>(result.Nopes),
+                Nopes = (result.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(result.Nopes) : new List<string>(),
                 Email = result.Email,
                 PhotoUrl = result.PhotoUrl,
             };
@@ -82,7 +82,7 @@ namespace RocketLunch.data
             {
                 Id = u.Id,
                 Name = u.Name,
-                Nopes = JsonConvert.DeserializeObject<List<string>>(u.Nopes),
+                Nopes = (u.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(u.Nopes) : new List<string>(),
                 Email = u.Email,
                 PhotoUrl = u.PhotoUrl,
             }).ToListAsync();
