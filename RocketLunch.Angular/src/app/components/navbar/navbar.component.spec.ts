@@ -14,15 +14,15 @@ describe('NavbarComponent', () => {
   beforeEach(async(() => {
     mockLunchService = jasmine.createSpyObj('LunchLadyService', ['login', 'logout']);
     mockAuthService = jasmine.createSpyObj('AuthService', ['authState']);
-    mockAuthService.authState.and.returnValue(of({ id: 1, name: 'test' } as User));
+    mockAuthService.authState = (of({ id: 1, name: 'test' } as User));
     TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ],
+      declarations: [NavbarComponent],
       providers: [
         { provide: LunchLadyService, useValue: mockLunchService },
         { provide: AuthService, useValue: mockAuthService },
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
