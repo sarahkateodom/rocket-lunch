@@ -30,7 +30,7 @@ namespace RocketLunch.web.controllers
         public async Task<ObjectResult> GetUsers()
         {
             var result = await _userService.GetUsersAsync();
-            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+            return result.Match(err => err.Content(this), r => new OkObjectResult(r ));
         }
 
         [HttpGet]

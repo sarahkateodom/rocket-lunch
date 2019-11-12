@@ -6,6 +6,7 @@ using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
 using RocketLunch.domain.utilities;
 using Newtonsoft.Json;
+using System;
 
 namespace RocketLunch.domain.services
 {
@@ -18,9 +19,9 @@ namespace RocketLunch.domain.services
            _apiKey = apiKey;
         }
 
-        public async Task<IEnumerable<RestaurantDto>> GetAvailableRestaurantOptionsAsync()
+        public async Task<IEnumerable<RestaurantDto>> GetAvailableRestaurantOptionsAsync(Guid sessionId)
         {
-            List<RestaurantDto> restaurantList = RestaurantCash.RestaurantList;
+            List<RestaurantDto> restaurantList = RestaurantCash.GetRestaurantList(sessionId);
             if (restaurantList != null) return restaurantList;
             List<RestaurantDto> businesses = new List<RestaurantDto>();
             int offset = 0;
@@ -37,8 +38,9 @@ namespace RocketLunch.domain.services
                 Id = "BTC"
             });
 
-            RestaurantCash.RestaurantList = businesses.OrderBy(x => x.Name).ToList();
-            return RestaurantCash.RestaurantList;
+            List<RestaurantDto> restaurants = businesses.OrderBy(x => x.Name).ToList();
+            RestaurantCash.SetRestaurantList(sessionId, restaurants);
+            return restaurants;
         }
 
         private async Task<YelpResultDto> GetYelpRestaurantsAsync(int offset)
