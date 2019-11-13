@@ -16,16 +16,16 @@ namespace RocketLunch.web.controllers
 
         [HttpPost]
         [Route("api/sessions")]
-        public Guid CreateSession([FromBody] List<int> userIds)
+        public async Task<Guid> CreateSession([FromBody] List<int> userIds)
         {
-            return _sessionService.CreateUserSession(userIds);
+            return await _sessionService.CreateUserSession(userIds);
         }
 
         [HttpPut]
         [Route("api/sessions/{sessionId}")]
-        public bool UpdateSession(Guid sessionId, [FromBody] List<int> userIds)
+        public async Task<bool> UpdateSession(Guid sessionId, [FromBody] List<int> userIds)
         {
-            _sessionService.UpdateUserSession(sessionId, userIds);
+            await _sessionService.UpdateUserSession(sessionId, userIds);
             return true;
         }
     }

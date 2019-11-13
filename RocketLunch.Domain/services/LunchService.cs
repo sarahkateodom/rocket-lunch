@@ -11,25 +11,27 @@ namespace RocketLunch.domain.services
 {
     public class LunchService : IServeLunch
     {
-        private IGetLunchOptions _lunchOptions;
-        private IChaos _random;
-        private IRepository _repo;
+        private IGetLunchOptions lunchOptions;
+        private IChaos random;
+        private IRepository repo;
+        private IRestaurantCache cache;
 
-        public LunchService(IGetLunchOptions lunchOptions, IRepository repo, IChaos random)
+        public LunchService(IGetLunchOptions lunchOptions, IRepository repo, IChaos random, IRestaurantCache cache)
         {
-            _lunchOptions = lunchOptions ?? throw new ArgumentNullException("lunchOptions");
-            _random = random ?? throw new ArgumentNullException("RandomService");
-            _repo = repo ?? throw new ArgumentNullException("repo");
+            this.lunchOptions = lunchOptions ?? throw new ArgumentNullException("lunchOptions");
+            this.random = random ?? throw new ArgumentNullException("RandomService");
+            this.repo = repo ?? throw new ArgumentNullException("repo");
+            this.cache = cache ?? throw new ArgumentNullException("cache");
         }
 
         public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId)
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
-                List<int> userIds = RestaurantCash.GetUserSession(sessionId.ToString());
-                var sessions = await _repo.GetUsersAsync();
+                List<int> userIds = await cache.GetUserSessionAsync(sessionId);
+                var sessions = await repo.GetUsersAsync();
                 List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
-                List<RestaurantDto> restaurants = (await _lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId).ConfigureAwait(false)).ToList();
+                List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId).ConfigureAwait(false)).ToList();
 
                 // Filter by user nopes
                 List<string> nopes = users.SelectMany(u => u.Nopes).ToList();
@@ -37,20 +39,20 @@ namespace RocketLunch.domain.services
 
                 RestaurantDto result;
                 // Filter by "soft" nopes
-                List<string> seenOptions = RestaurantCash.GetSeenOptions(sessionId.ToString());
+                List<string> seenOptions = await cache.GetSeenOptionsAsync(sessionId);
                 if (seenOptions == null)
                 {
-                    result = restaurants[_random.Next(restaurants.Count - 1)];
+                    result = restaurants[random.Next(restaurants.Count - 1)];
                 }
                 else
                 {
                     restaurants = restaurants.Where(x => !seenOptions.Contains(x.Name)).ToList();
                     if (!restaurants.Any()) throw new TooManyRequestsException();
-                    result = restaurants[_random.Next(restaurants.Count - 1)];
+                    result = restaurants[random.Next(restaurants.Count - 1)];
                 }
 
                 // Add result to "soft" nopes
-                RestaurantCash.AddSeenOption(sessionId.ToString(), result.Name);
+                await cache.AddSeenOptionAsync(sessionId, result.Name);
 
                 return result;
             }).ConfigureAwait(false);
@@ -60,7 +62,7 @@ namespace RocketLunch.domain.services
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
-                return (await _lunchOptions.GetAvailableRestaurantOptionsAsync(Guid.Empty).ConfigureAwait(false));
+                return (await lunchOptions.GetAvailableRestaurantOptionsAsync(Guid.Empty).ConfigureAwait(false));
             }).ConfigureAwait(false);
         }
     }

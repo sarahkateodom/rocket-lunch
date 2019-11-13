@@ -6,6 +6,9 @@ using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System;
+using RocketLunch.domain.contracts;
+using Moq;
+using RocketLunch.domain.services.mocks;
 
 namespace RocketLunch.tests.integrations.domain.services
 {
@@ -19,7 +22,8 @@ namespace RocketLunch.tests.integrations.domain.services
         {
             // arrange
             int total = 0;
-            YelpService target = new YelpService(_apiKey);
+            RestaurantCacheMock mockCache = new RestaurantCacheMock();
+            YelpService target = new YelpService(_apiKey, mockCache );
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _apiKey);
@@ -30,11 +34,11 @@ namespace RocketLunch.tests.integrations.domain.services
 
             // act
             DateTime startTime = DateTime.UtcNow;
-            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync();
+            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty);
             DateTime endTime = DateTime.UtcNow;
             TimeSpan firstWatch = endTime - startTime;
             startTime = DateTime.UtcNow;
-            await target.GetAvailableRestaurantOptionsAsync();
+            await target.GetAvailableRestaurantOptionsAsync(Guid.Empty);
             endTime = DateTime.UtcNow;
             TimeSpan secondWatch = endTime - startTime;
 

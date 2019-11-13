@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,12 +24,20 @@ namespace RocketLunch.web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IGetLunchOptions, YelpService>(x => new YelpService(Configuration["YELPAPIKEY"]));
+            services.AddTransient<IGetLunchOptions, YelpService>(x => new YelpService(Configuration["YELPAPIKEY"], x.GetService<IRestaurantCache>()));
             services.AddTransient<IServeLunch, LunchService>();
             services.AddTransient<IRepository, LunchRepository>();
             services.AddTransient<IManageUsers, UserService>();
             services.AddTransient<IManageUserSessions, UserSessionService>();
             services.AddSingleton<IChaos, RandomService>();
+            services.AddDistributedRedisCache(option =>
+            {
+                option.Configuration = "localhost:6379";
+                option.InstanceName = "master";
+            });
+            services.AddTransient<ICache, CacheService>();
+            services.AddTransient<IRestaurantCache, RestaurantCache>();
+
 
             string connectionString = Configuration["POSTGRESDB"];
             services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
@@ -63,7 +69,7 @@ namespace RocketLunch.web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
-            
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

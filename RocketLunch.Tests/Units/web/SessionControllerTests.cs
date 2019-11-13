@@ -19,25 +19,25 @@ namespace RocketLunch.tests.units.web
         }
 
         [Fact]
-        public void SessionController_CreateSession_CallsUserSessionService()
+        public async void SessionController_CreateSession_CallsUserSessionService()
         {
             //arrange
             Mock<IManageUserSessions> mockSessions = new Mock<IManageUserSessions>();
-            mockSessions.Setup(x => x.CreateUserSession(It.IsAny<IEnumerable<int>>())).Returns(Guid.NewGuid());
+            mockSessions.Setup(x => x.CreateUserSession(It.IsAny<IEnumerable<int>>())).ReturnsAsync(Guid.NewGuid());
             SessionController target = new SessionController(mockSessions.Object);
             List<int> users = new List<int> {
                 1, 2, 3
             };
 
             // Act
-            Guid result = target.CreateSession(users);
+            Guid result = await target.CreateSession(users);
 
             // Assert
             mockSessions.Verify(x => x.CreateUserSession(users), Times.Once);
         }
 
         [Fact]
-        public void SessionController_UpdateSession_CallsUserSessionService()
+        public async void SessionController_UpdateSession_CallsUserSessionService()
         {
             //arrange
             Mock<IManageUserSessions> mockSessions = new Mock<IManageUserSessions>();
@@ -48,7 +48,7 @@ namespace RocketLunch.tests.units.web
             };
 
             // Act
-            target.UpdateSession(sessionGuid, users);
+            await target.UpdateSession(sessionGuid, users);
 
             // Assert
             mockSessions.Verify(x => x.UpdateUserSession(sessionGuid, users), Times.Once);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Moq;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
 using RocketLunch.domain.utilities;
@@ -11,47 +12,43 @@ namespace RocketLunch.tests.units.domain.services
     public class UserSessionServiceTests
     {
         [Fact]
-        public void SessionService_CreateUserSession_AddsUserIdsToCash()
+        public async void SessionService_CreateUserSession_AddsUserIdsToCash()
         {
             //arrange
             List<int> userIds = new List<int> {
                 1,2,3 // ha ha ha
             };
-            UserSessionService target = new UserSessionService();
+            Mock<IRestaurantCache> mockCache = new Mock<IRestaurantCache>();
+            UserSessionService target = new UserSessionService(mockCache.Object);
 
             //act
-            Guid result = target.CreateUserSession(userIds);
+            Guid result = await target.CreateUserSession(userIds);
 
             //assert
-            List<int> returnedUsers = RestaurantCash.GetUserSession(result.ToString());
-            Assert.Equal(userIds[0], returnedUsers[0]);
-            Assert.Equal(userIds[1], returnedUsers[1]);
-            Assert.Equal(userIds[2], returnedUsers[2]);
+            mockCache.Verify(x => x.SetUserSessionAsync(result, userIds), Times.Once);
 
         }
 
         [Fact]
-        public void SessionService_UpdateUserSession_UpdatesUserIdsInCash()
+        public async void SessionService_UpdateUserSession_UpdatesUserIdsInCash()
         {
             //arrange
             List<int> userIds = new List<int> {
                 1,2,3 // ha ha ha
             };
+            Mock<IRestaurantCache> mockCache = new Mock<IRestaurantCache>();
             Guid sessionGuid = Guid.NewGuid();
-            RestaurantCash.CreateUpdateUserSession(sessionGuid, userIds);
+            mockCache.Setup(x => x.GetUserSessionAsync(sessionGuid)).ReturnsAsync(userIds);
             List<int> newUserIds = new List<int> {
                 7,8,9 // ha ha ha
             };
-            UserSessionService target = new UserSessionService();
+            UserSessionService target = new UserSessionService(mockCache.Object);
 
             //act
-            target.UpdateUserSession(sessionGuid, newUserIds);
+            await target.UpdateUserSession(sessionGuid, newUserIds);
 
             //assert
-            List<int> returnedUsers = RestaurantCash.GetUserSession(sessionGuid.ToString());
-            Assert.Equal(newUserIds[0], returnedUsers[0]);
-            Assert.Equal(newUserIds[1], returnedUsers[1]);
-            Assert.Equal(newUserIds[2], returnedUsers[2]);
+            mockCache.Verify(x => x.SetUserSessionAsync(sessionGuid, newUserIds), Times.Once);
 
         }
     }
