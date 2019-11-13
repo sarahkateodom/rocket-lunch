@@ -15,13 +15,14 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let mockLunchService;
   let users = [
-    { id: 1, name: "Po Labare", nopes: ['fsad', ';lkj']} as User,
-    { id: 2, name: "Pam Dabare", nopes: ['fsad', ';lkj']} as User,
+    { id: 1, name: "Po Labare", nopes: ['fsad', ';lkj'] } as User,
+    { id: 2, name: "Pam Dabare", nopes: ['fsad', ';lkj'] } as User,
   ] as User[];
 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'getRestaurantByTime', 'createUserSession', 'updateUserSession', 'updateuser'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
+    mockLunchService.getRestaurantByTime.and.returnValue(of(new Restaurant()));
     mockLunchService.getRestaurants.and.returnValue(of([new Restaurant()]));
     mockLunchService.getUsers.and.returnValue(of(users));
     mockLunchService.createUserSession.and.returnValue(of("12324124-123123-123123"));
@@ -32,7 +33,7 @@ describe('HomeComponent', () => {
       providers: [
         { provide: LunchLadyService, useValue: mockLunchService },
         { provide: HttpService, useClass: HttpService }
-      ], 
+      ],
       imports: [FormsModule]
     })
       .compileComponents();
@@ -75,7 +76,7 @@ describe('HomeComponent', () => {
       component.getRestaurant();
 
       // assert
-      expect(mockLunchService.getRestaurant).toHaveBeenCalled();
+      expect(mockLunchService.getRestaurantByTime).toHaveBeenCalled();
       expect(component.restaurant).toBeTruthy();
     });
     it('calls getRestaurant from service and makes new guid', () => {

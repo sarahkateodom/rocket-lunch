@@ -1,40 +1,120 @@
 .go-for-lunch {
-    text-align: center;
-    font-size: 30px;
+  text-align: center;
+  font-size: 30px;
+  padding: 20px;
+
+  .result {
+    font-size: 80px;
+    color: rgb(23, 162, 184);
+    height: 128px;
+  }
+
+  .go-button {
+    font-size: 70px;
     padding: 20px;
+    -webkit-box-shadow: 0 8px 6px -6px black;
+    -moz-box-shadow: 0 8px 6px -6px black;
+    box-shadow: 0 8px 6px -6px black;
+  }
 
-    .result {
-        font-size: 80px;
-        color:rgb(23, 162, 184);
-        height: 128px;
-    }
-
-    .go-button {
-        font-size: 70px;
-        padding: 20px;
-        -webkit-box-shadow: 0 8px 6px -6px black;
-	   -moz-box-shadow: 0 8px 6px -6px black;
-	    box-shadow: 0 8px 6px -6px black;
-    }
-
-    .go-image {
-        width: 128px;
-    }
+  .go-image {
+    width: 128px;
+  }
 }
 
 .users {
-    text-align: center;
-    .user {
-        font-size: 14px;
-        padding: 10px;
-        margin-right: 8px;
+  text-align: center;
+  .user {
+    font-size: 14px;
+    padding: 10px;
+    margin-right: 8px;
 
-        .user-close {
-            margin-left: 5px;
-            cursor: pointer;
-        }
+    .user-close {
+      margin-left: 5px;
+      cursor: pointer;
     }
-    .user:hover {
-        background-color: #343a40;
-    }
+  }
+  .user:hover {
+    background-color: #343a40;
+  }
+}
+// breakfast lunch dinner toggle
+.switch input {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+  z-index: 100;
+  position: absolute;
+  width: 360px;
+  height: 55px;
+  cursor: pointer;
+}
+
+.switch {
+  width: 360px;
+  height: 55px;
+  margin-left: 63px;
+  top: 150px;
+}
+
+.switch label {
+  display: block;
+  width: 80%;
+  height: 95%;
+  position: relative;
+  background: #ffffff;
+  background: linear-gradient(#f3f2f2, #e4e3e3);
+  border-radius: 30px 30px 30px 30px;
+  box-shadow: inset 0 3px 8px 1px rgba(135, 135, 136, 0.5), inset 0 1px 0 rgba(135, 135, 136, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.2);
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.switch input ~ label i {
+  display: block;
+  height: 51px;
+  width: 51px;
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  z-index: 2;
+  border-radius: inherit;
+  background: #f8f9fa;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 8px rgba(0, 0, 0, 0.3), 0 12px 12px rgba(0, 0, 0, 0.4);
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+/* Toggle */
+.slide {
+  position: absolute;
+  z-index: 6;
+  top: 10px;
+  left: 9px;
+  font-size: 35px;
+  color: white;
+}
+
+.slide-img {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  left: 1px;
+}
+
+.switch input:nth-child(1):checked ~ label i {
+  left: auto;
+  left: 42%;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.switch input:nth-child(2):checked ~ label i {
+  left: auto;
+  left: 82%;
+
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }

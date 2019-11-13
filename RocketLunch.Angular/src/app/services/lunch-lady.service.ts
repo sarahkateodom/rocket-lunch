@@ -5,6 +5,7 @@ import { HttpService } from './http.service';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import { UUID } from 'angular2-uuid';
+import { MealTime } from '../models/enums/MealTime';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,11 @@ export class LunchLadyService {
 
   public getRestaurant(guid: UUID): Observable<Restaurant> {
     let url = `/api/restaurants/${guid}`;
+    return this.http.get(url).pipe(map(res => <Restaurant>res));
+  }
+
+  public getRestaurantByTime(guid: UUID, meal: MealTime): Observable<Restaurant> {
+    let url = `/api/restaurants/${guid}/${meal}`;
     return this.http.get(url).pipe(map(res => <Restaurant>res));
   }
 

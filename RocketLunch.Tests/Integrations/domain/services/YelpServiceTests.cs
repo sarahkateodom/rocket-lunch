@@ -9,6 +9,7 @@ using System;
 using RocketLunch.domain.contracts;
 using Moq;
 using RocketLunch.domain.services.mocks;
+using RocketLunch.domain.enumerations;
 
 namespace RocketLunch.tests.integrations.domain.services
 {
@@ -16,14 +17,14 @@ namespace RocketLunch.tests.integrations.domain.services
     public class YelpServiceTests
     {
         private string _apiKey = System.Environment.GetEnvironmentVariable("YELPAPIKEY");
-        
+
         [Fact]
         public async void YelpService_GetAvailableRestaurantOptionsAsync_ReturnsTotalNumberOfAvailableResults()
         {
             // arrange
             int total = 0;
             RestaurantCacheMock mockCache = new RestaurantCacheMock();
-            YelpService target = new YelpService(_apiKey, mockCache );
+            YelpService target = new YelpService(_apiKey, mockCache);
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _apiKey);
@@ -34,18 +35,33 @@ namespace RocketLunch.tests.integrations.domain.services
 
             // act
             DateTime startTime = DateTime.UtcNow;
-            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty);
+            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.all });
             DateTime endTime = DateTime.UtcNow;
             TimeSpan firstWatch = endTime - startTime;
             startTime = DateTime.UtcNow;
-            await target.GetAvailableRestaurantOptionsAsync(Guid.Empty);
+            await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.all });
             endTime = DateTime.UtcNow;
             TimeSpan secondWatch = endTime - startTime;
 
             // assert
-            Assert.Equal(total + 1, result.Count()); // btc
+            Assert.Equal(total, result.Count());
             Assert.True(firstWatch.TotalMilliseconds > 1000);
             Assert.True(secondWatch.TotalMilliseconds < 200);
+        }
+
+        [Fact]
+        public async void YelpService_GetAvailableRestaurantOptionsAsync_ReturnsLessResultWhenSpecifyingMeal()
+        {
+            // arrange
+            RestaurantCacheMock mockCache = new RestaurantCacheMock();
+            YelpService target = new YelpService(_apiKey, new Mock<IRestaurantCache>().Object);
+
+            // act
+            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.all });
+            IEnumerable<RestaurantDto> result2 = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.breakfast });
+
+            // assert
+            Assert.True(result.Count() > result2.Count());
         }
 
     }

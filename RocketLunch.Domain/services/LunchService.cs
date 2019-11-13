@@ -24,14 +24,14 @@ namespace RocketLunch.domain.services
             this.cache = cache ?? throw new ArgumentNullException("cache");
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId)
+        public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId, SearchOptions options)
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
                 List<int> userIds = await cache.GetUserSessionAsync(sessionId);
                 var sessions = await repo.GetUsersAsync();
                 List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
-                List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId).ConfigureAwait(false)).ToList();
+                List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId, options).ConfigureAwait(false)).ToList();
 
                 // Filter by user nopes
                 List<string> nopes = users.SelectMany(u => u.Nopes).ToList();
@@ -62,7 +62,7 @@ namespace RocketLunch.domain.services
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
-                return (await lunchOptions.GetAvailableRestaurantOptionsAsync(Guid.Empty).ConfigureAwait(false));
+                return (await lunchOptions.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions()).ConfigureAwait(false));
             }).ConfigureAwait(false);
         }
     }

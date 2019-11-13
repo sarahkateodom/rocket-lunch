@@ -54,14 +54,14 @@ namespace RocketLunch.tests.units.domain.services
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, mockCache.Object);
             const string expected = "bob's burgers";
             Guid sessionId = Guid.NewGuid();
-            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionId)).ReturnsAsync(new List<RestaurantDto> {
+            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionId, It.IsAny<SearchOptions>())).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = expected,
                 },
             });
 
             // act
-            var result = await target.GetRestaurantAsync(sessionId);
+            var result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
 
             // assert
             result.Match(
@@ -79,7 +79,7 @@ namespace RocketLunch.tests.units.domain.services
             IRestaurantCache cache = new RestaurantCacheMock();
             const string expected = "bob's burgers";
             Guid sessionId = Guid.NewGuid();
-            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionId)).ReturnsAsync(new List<RestaurantDto> {
+            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionId, It.IsAny<SearchOptions>())).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = expected,
                 },
@@ -87,8 +87,8 @@ namespace RocketLunch.tests.units.domain.services
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, cache);
 
             // act
-            var result = await target.GetRestaurantAsync(sessionId);
-            result = await target.GetRestaurantAsync(sessionId);
+            var result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
+            result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
 
             // assert
             result.Match(
@@ -107,7 +107,7 @@ namespace RocketLunch.tests.units.domain.services
             IRestaurantCache cache = new RestaurantCacheMock();
             mockRandom.Setup(m => m.Next(It.IsAny<int>())).Returns(0);
             Guid sessionGuid = Guid.NewGuid();
-            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionGuid)).ReturnsAsync(new List<RestaurantDto> {
+            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(sessionGuid, It.IsAny<SearchOptions>())).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = "COok OOout",
                     Id = "rest3"
@@ -137,7 +137,7 @@ namespace RocketLunch.tests.units.domain.services
             await cache.SetUserSessionAsync(sessionGuid, users);
 
             // act
-            var result = await target.GetRestaurantAsync(sessionGuid);
+            var result = await target.GetRestaurantAsync(sessionGuid, new SearchOptions());
 
             // assert
             result.Match(
@@ -155,7 +155,7 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IChaos> mockRandom = new Mock<IChaos>();
             Mock<IRestaurantCache> mockCache = new Mock<IRestaurantCache>();
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, mockCache.Object);
-            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(Guid.Empty)).ReturnsAsync(new List<RestaurantDto> {
+            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(Guid.Empty, It.IsAny<SearchOptions>())).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = "Bob's Burgers",
                 },

@@ -4,6 +4,7 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
 import { User } from '../../models/user';
 import { UUID } from 'angular2-uuid';
 import { Restaurant } from '../../models/restaurant';
+import { MealTime } from '../../models/enums/MealTime';
 
 @Component({
   selector: 'home',
@@ -19,6 +20,10 @@ export class HomeComponent {
   selectedUser: User;
   restaurants: Restaurant[] = [];
   sessionId: UUID;
+  sliderSrc: string = './assets/sun.png';
+  meal: MealTime;
+  isLunch: boolean = false;
+  isDinner: boolean = false;
 
   constructor(private lunchLady: LunchLadyService) {
     this.getUsers();
@@ -44,6 +49,8 @@ export class HomeComponent {
     window.setInterval(() => {
       this.setRandomGoImage();
     }, 2000);
+
+    this.setBreakfast();
   }
 
   setRandomGoImage() {
@@ -54,7 +61,7 @@ export class HomeComponent {
   getRestaurant(): any {
 
     if (!this.sessionId) this.sessionId = UUID.UUID();
-    this.lunchLady.getRestaurant(this.sessionId).subscribe(x => {
+    this.lunchLady.getRestaurantByTime(this.sessionId, this.meal).subscribe(x => {
       this.restaurant = x;
     });
   }
@@ -92,6 +99,39 @@ export class HomeComponent {
     this.users = this.users.filter(u => u.id != userId);
     this.lunchLady.updateUserSession(this.sessionId, this.users.map(u => u.id))
       .subscribe(x => { });
+  }
+
+  toggleMeal() {
+    if (this.meal == MealTime.breakfast) {
+      this.setLunch();
+    }
+    else if (this.meal == MealTime.lunch) {
+      this.setDinner();
+    }
+    else if (this.meal == MealTime.dinner) {
+      this.setBreakfast();
+    }
+  }
+
+  setBreakfast() {
+    this.meal = MealTime.breakfast;
+    this.isLunch = false;
+    this.isDinner = false;
+    this.sliderSrc = './assets/morning.png';
+  }
+
+  setLunch() {
+    this.meal = MealTime.lunch;
+    this.isLunch = true;
+    this.isDinner = false;
+    this.sliderSrc = './assets/day.png';
+  }
+
+  setDinner() {
+    this.meal = MealTime.dinner;
+    this.isLunch = false;
+    this.isDinner = true;
+    this.sliderSrc = './assets/night.png';
   }
 
 }
