@@ -7,5 +7,6 @@ namespace RocketLunch.domain.contracts
     {
         Task<T> GetAsync<T>(string key);
         Task SetAsync<T>(string key, T value, TimeSpan? expirationSpan = null);
+        Task ClearKey(string key);
     }
 }

@@ -42,11 +42,17 @@ namespace RocketLunch.tests.integrations.domain.services
             await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.all });
             endTime = DateTime.UtcNow;
             TimeSpan secondWatch = endTime - startTime;
+            startTime = DateTime.UtcNow;
+            await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Meal = MealTime.dinner });
+            endTime = DateTime.UtcNow;
+            TimeSpan thirdWatch = endTime - startTime;
 
             // assert
             Assert.Equal(total, result.Count());
             Assert.True(firstWatch.TotalMilliseconds > 1000);
             Assert.True(secondWatch.TotalMilliseconds < 200);
+            Assert.True(thirdWatch.TotalMilliseconds > 1000);
+
         }
 
         [Fact]

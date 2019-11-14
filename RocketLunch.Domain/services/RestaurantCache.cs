@@ -17,6 +17,7 @@ namespace RocketLunch.domain.services
         private string seenOptionsSuffix = "_seenoptions";
         private string sessionSuffix = "_usersessions";
         private string sessionSearchSuffix = "_sessionsearch";
+        private string sessionSearchOptions = "_sessionsearchoptions";
         public RestaurantCache(ICache cache)
         {
             this.cache = cache;
@@ -53,5 +54,21 @@ namespace RocketLunch.domain.services
         {
             await this.cache.SetAsync($"{sessionId.ToString()}{sessionSearchSuffix}", restaurants);
         }
+
+        public async Task SetSessionSearchOptionsAsync(Guid sessionId, SearchOptions options)
+        {
+            await cache.SetAsync($"{sessionId.ToString()}{sessionSearchOptions}", options);
+        }
+
+        public async Task<SearchOptions> GetSessionSearchOptionsAsync(Guid sessionId)
+        {
+            return await cache.GetAsync<SearchOptions>($"{sessionId.ToString()}{sessionSearchOptions}");
+        }
+
+        public async Task ClearSessionSearchAsync(Guid sessionId)
+        {
+            await cache.ClearKey($"{sessionId.ToString()}{sessionSearchSuffix}");
+        }
+
     }
 }

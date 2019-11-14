@@ -27,5 +27,10 @@ namespace RocketLunch.domain.services
                 AbsoluteExpirationRelativeToNow = expirationSpan
             });
         }
+
+        public async Task ClearKey(string key)
+        {
+            await this.cache.RemoveAsync(key);
+        }
     }
 }

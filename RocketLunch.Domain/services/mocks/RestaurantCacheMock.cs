@@ -42,5 +42,23 @@ namespace RocketLunch.domain.services.mocks
             await Task.Delay(0);
             userSession = userIds;
         }
+
+        private SearchOptions userSessionSearchOptions;
+        public async Task SetSessionSearchOptionsAsync(Guid sessionId, SearchOptions options)
+        {
+            await Task.Delay(0);
+            userSessionSearchOptions = options;
+        }
+
+        public async Task<SearchOptions> GetSessionSearchOptionsAsync(Guid sessionId)
+        {
+            return await Task.FromResult(userSessionSearchOptions);
+        }
+
+        public async Task ClearSessionSearchAsync(Guid sessionId)
+        {
+            await Task.Delay(0);
+            restaurants = null;
+        }
     }
 }

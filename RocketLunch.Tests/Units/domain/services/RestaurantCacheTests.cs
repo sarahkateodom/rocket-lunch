@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using Moq;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
+using RocketLunch.domain.enumerations;
 using RocketLunch.tests.builders;
 using Xunit;
 
 namespace RocketLunch.tests.units.domain.services
 {
-    public class RedisServiceTests
+    public class RestaurantCacheTests
     {
 
         [Fact]
-        public async void RedisService_GetSeenOptions_ReturnsEmptyListWhenNotCached()
+        public async void RestaurantCache_GetSeenOptions_ReturnsEmptyListWhenNotCached()
         {
             // // arrange
             Guid sessionId = Guid.NewGuid();
@@ -31,7 +32,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_GetSeenOptions_ReturnsOptionsWhenCached()
+        public async void RestaurantCache_GetSeenOptions_ReturnsOptionsWhenCached()
         {
             // // arrange
             Guid sessionId = Guid.NewGuid();
@@ -55,7 +56,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_AddSeenOptionAsync_CallsCacheSetWithSIngleOption()
+        public async void RestaurantCache_AddSeenOptionAsync_CallsCacheSetWithSIngleOption()
         {
             // // arrange
             Guid sessionId = Guid.NewGuid();
@@ -75,7 +76,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_AddSeenOptionAsync_CallsCacheSetWhenCacheIsNonEmpty()
+        public async void RestaurantCache_AddSeenOptionAsync_CallsCacheSetWhenCacheIsNonEmpty()
         {
             // arrange
             Guid sessionId = Guid.NewGuid();
@@ -101,7 +102,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_SetUserSessionAsync_CallsSetCacheWithoutPreviousUserSession()
+        public async void RestaurantCache_SetUserSessionAsync_CallsSetCacheWithoutPreviousUserSession()
         {
             // arrange
             Guid sessionId = Guid.NewGuid();
@@ -121,7 +122,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_GetUserSessionAsync_ReturnNullWhenNotCached()
+        public async void RestaurantCache_GetUserSessionAsync_ReturnNullWhenNotCached()
         {
             // arrange
             Guid sessionId = Guid.NewGuid();
@@ -141,7 +142,7 @@ namespace RocketLunch.tests.units.domain.services
         }
         
         [Fact]
-        public async void RedisService_GetUserSessionAsync_ReturnListWhenCached()
+        public async void RestaurantCache_GetUserSessionAsync_ReturnListWhenCached()
         {
             // arrange
             Guid sessionId = Guid.NewGuid();
@@ -207,7 +208,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void RedisService_SetRestaurantListAsync_CallsSetCache()
+        public async void RestaurantCache_SetRestaurantListAsync_CallsSetCache()
         {
             // arrange
             Guid sessionId = Guid.NewGuid();
@@ -232,6 +233,53 @@ namespace RocketLunch.tests.units.domain.services
 
             // assert
             cache.Verify(c => c.SetAsync<List<RestaurantDto>>($"{sessionId.ToString()}_sessionsearch", restaurants, null), Times.Once);
+        }
+
+        [Fact]
+        public async void RestaurantCache_SetSessionSearchOptionsAsync_CallsSetCache()
+        {
+            // arrange
+            Guid sessionId = Guid.NewGuid();
+            Mock<ICache> cache = new Mock<ICache>();
+            var options = new SearchOptions {
+                Meal = MealTime.breakfast
+            };
+
+            var target = new RestaurantCacheBuilder()
+                .SetCache(cache.Object)
+                .Build();
+
+            // act
+            await target.SetSessionSearchOptionsAsync(sessionId, options);
+
+            // assert
+            cache.Verify(c => c.SetAsync<SearchOptions>($"{sessionId.ToString()}_sessionsearchoptions", options, null), Times.Once);
+        }
+
+        [Fact]
+        public async void RestaurantCache_GetSessionSearchOptionsAsync_CallsGetAsync()
+        {
+            // arrange
+            Guid sessionId = Guid.NewGuid();
+            Mock<ICache> cache = new Mock<ICache>();
+
+            var options = new SearchOptions {
+                Meal = MealTime.breakfast
+            };
+
+            cache.Setup(x => x.GetAsync<SearchOptions>($"{sessionId.ToString()}_sessionsearchoptions")).ReturnsAsync(options);
+
+           
+
+            var target = new RestaurantCacheBuilder()
+                .SetCache(cache.Object)
+                .Build();
+
+            // act
+            SearchOptions result = await target.GetSessionSearchOptionsAsync(sessionId);
+
+            // assert
+            Assert.Equal(options, result);
         }
     }
 }

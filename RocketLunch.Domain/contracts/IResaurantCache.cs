@@ -13,5 +13,8 @@ namespace RocketLunch.domain.contracts
         Task<List<string>> GetSeenOptionsAsync(Guid sessionId);
         Task SetUserSessionAsync(Guid sessionId, List<int> userIds);
         Task<List<int>> GetUserSessionAsync(Guid sessionId);
+        Task SetSessionSearchOptionsAsync(Guid sessionId, SearchOptions options);
+        Task<SearchOptions> GetSessionSearchOptionsAsync(Guid sessionId);
+        Task ClearSessionSearchAsync(Guid sessionId);
     }
 }
