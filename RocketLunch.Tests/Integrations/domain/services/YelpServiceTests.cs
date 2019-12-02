@@ -93,8 +93,8 @@ namespace RocketLunch.tests.integrations.domain.services
             YelpService target = new YelpService(_apiKey, new Mock<IRestaurantCache>().Object);
 
             // act
-            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Location = "38655" });
-            IEnumerable<RestaurantDto> result2 = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Location = "38834" });
+            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Zip = "38655" });
+            IEnumerable<RestaurantDto> result2 = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Zip = "38834" });
 
             // assert
             Assert.NotEqual(result, result2);

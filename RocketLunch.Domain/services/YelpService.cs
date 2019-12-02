@@ -59,9 +59,9 @@ namespace RocketLunch.domain.services
                 categories = $"categories={options.Category.ToString()}";
             }
             string location = "&location=38655";
-            if (options.Location != null)
+            if (options.Zip != null)
             {
-                location = $"&location={options.Location}";
+                location = $"&location={options.Zip}";
             }
             using (HttpClient client = new HttpClient())
             {
