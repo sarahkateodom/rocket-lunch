@@ -53,10 +53,20 @@ namespace RocketLunch.domain.services
             {
                 openAt = "&open_at=" + DateTime.Now.Date.AddHours(options.Meal.GetHoursFromMidnight()).GetUnixTime().ToString();
             }
+            string categories = "categories=restaurants";
+            if (options.Category != Category.restaurants)
+            {
+                categories = $"categories={options.Category.ToString()}";
+            }
+            string location = "&location=38655";
+            if (options.Location != null)
+            {
+                location = $"&location={options.Location}";
+            }
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
-                HttpResponseMessage message = await client.GetAsync("https://api.yelp.com/v3/businesses/search?categories=restaurants,!hotdogs&location=38655&radius=20000&limit=50&sort_by=best_match&offset=" + offset + openAt);
+                HttpResponseMessage message = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&radius=20000&limit=50&sort_by=best_match&offset={offset}{openAt}"); //categories search is OR 
                 return JsonConvert.DeserializeObject<YelpResultDto>(await message.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
         }
