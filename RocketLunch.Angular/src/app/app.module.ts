@@ -10,7 +10,6 @@ import { APP_BASE_HREF } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ModalComponent } from './components/modal/modal.component';
-import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { TooManyRequestsComponent } from './components/too-many-requests/too-many-requests.component';
 import { routing } from './app.routes';
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
@@ -36,7 +35,6 @@ export function provideConfig() {
     NavbarComponent,
     FooterComponent,
     ModalComponent,
-    UserModalComponent,
     TooManyRequestsComponent,
     ProfileComponent,
   ],

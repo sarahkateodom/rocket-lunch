@@ -70,20 +70,20 @@ namespace RocketLunch.tests.integrations.domain.services
             Assert.True(result.Count() > result2.Count());
         }
 
-        [Fact]
-        public async void YelpService_GetAvailableRestaurantOptionsAsync_ReturnsFewerResultsWhenSpecifyingCategory()
-        {
-            // arrange
-            RestaurantCacheMock mockCache = new RestaurantCacheMock();
-            YelpService target = new YelpService(_apiKey, new Mock<IRestaurantCache>().Object);
+        // [Fact]
+        // public async void YelpService_GetAvailableRestaurantOptionsAsync_ReturnsFewerResultsWhenSpecifyingCategory()
+        // {
+        //     // arrange
+        //     RestaurantCacheMock mockCache = new RestaurantCacheMock();
+        //     YelpService target = new YelpService(_apiKey, new Mock<IRestaurantCache>().Object);
 
-            // act
-            IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions());
-            IEnumerable<RestaurantDto> result2 = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Category = Category.vegetarian });
+        //     // act
+        //     IEnumerable<RestaurantDto> result = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions());
+        //     IEnumerable<RestaurantDto> result2 = await target.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions { Category = Category.vegetarian });
 
-            // assert
-            Assert.True(result.Count() > result2.Count());
-        }
+        //     // assert
+        //     Assert.True(result.Count() > result2.Count());
+        // }
 
         [Fact]
         public async void YelpService_GetAvailableRestaurantOptionsAsync_ReturnsDifferentRestaurantsWhenGivenDifferentLocations()

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RocketLunch.web.controllers
 {
@@ -18,7 +20,9 @@ namespace RocketLunch.web.controllers
         }
 
         [HttpPost]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Logs user in", typeof(UserDto))]
         [Route("api/login")]
+        /// <response code="200">Login successful</response>
         public async Task<ObjectResult> Login([Bind][FromBody]LoginDto userDto)
         {
             UserDto result = await _userService.LoginAsync(userDto);
@@ -34,6 +38,7 @@ namespace RocketLunch.web.controllers
 
     
         [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Logs user out", typeof(bool))]
         [Route("api/logout")]
         public async Task<bool> Logout()
         {

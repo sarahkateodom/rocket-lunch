@@ -28,14 +28,14 @@ export class ProfileComponent implements OnInit {
   }
 
   getRestaurants() {
-    this.lunchLady.getRestaurants()
+    this.lunchLady.getRestaurants("38655")
       .subscribe(x => {
         this.restaurants = x;
       });
   }
 
   getFilteredRestaurants() {
-    if (!this.user || !this.user.nopes) return this.restaurants;
+    if (!this.user || !this.user.nopes || !this.restaurants) return this.restaurants;
     return this.restaurants.filter(r => {
       return this.nopesToDisplay().indexOf(r.id) == -1;
     });

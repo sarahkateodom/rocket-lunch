@@ -4,6 +4,8 @@ using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RocketLunch.web.controllers
 {
@@ -17,23 +19,24 @@ namespace RocketLunch.web.controllers
             _userService = userService ?? throw new ArgumentNullException("userService");
         }
 
-        [HttpPost]
-        [Route("api/users")]
-        public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto dto)
-        {
-            var result = await _userService.CreateUserAsync(dto);
-            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
-        }
+        // [HttpPost]
+        // [Route("api/users")]
+        // public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto dto)
+        // {
+        //     var result = await _userService.CreateUserAsync(dto);
+        //     return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+        // }
+
+        // [HttpGet]
+        // [Route("api/users")]
+        // public async Task<ObjectResult> GetUsers()
+        // {
+        //     var result = await _userService.GetUsersAsync();
+        //     return result.Match(err => err.Content(this), r => new OkObjectResult(r ));
+        // }
 
         [HttpGet]
-        [Route("api/users")]
-        public async Task<ObjectResult> GetUsers()
-        {
-            var result = await _userService.GetUsersAsync();
-            return result.Match(err => err.Content(this), r => new OkObjectResult(r ));
-        }
-
-        [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Get User by internal identifier", typeof(UserDto))]
         [Route("api/users/{id}")]
         public async Task<ObjectResult> GetUser(int id)
         {
@@ -42,10 +45,11 @@ namespace RocketLunch.web.controllers
         }
 
         [HttpPut]
-        [Route("api/users")]
-        public async Task<ObjectResult> UpdateUser([FromBody] UserDto dto)
+        [SwaggerResponse((int)HttpStatusCode.OK, "Update User", typeof(bool))]
+        [Route("api/users/{id}")]
+        public async Task<ObjectResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
-            var result = await _userService.UpdateUserAsync(dto);
+            var result = await _userService.UpdateUserAsync(id, dto);
             return result.Match(err => err.Content(this), r => new OkObjectResult(r));
         }
     }

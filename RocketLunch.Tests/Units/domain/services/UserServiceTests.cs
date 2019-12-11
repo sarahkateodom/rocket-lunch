@@ -137,92 +137,6 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void UserService_CreateUserAsync_CallsRepositoryWithCorrectValues()
-        {
-            // arrange
-            Mock<IRepository> mockRepo = new Mock<IRepository>();
-            UserService target = new UserService(mockRepo.Object);
-            CreateUserDto dto = new CreateUserDto
-            {
-                Name = "Dyl Pickal",
-                Nopes = new List<string> { "https://gph.is/18NWdNy" },
-            };
-
-            // act
-            await target.CreateUserAsync(dto);
-
-            // assert
-            mockRepo.Verify(r => r.CreateUserAsync_Old(dto.Name, dto.Nopes), Times.Once);
-        }
-
-        [Fact]
-        public async void UserService_CreateUserAsync_ReturnsId()
-        {
-            // arrange
-            Mock<IRepository> mockRepo = new Mock<IRepository>();
-            const int id = 1;
-            mockRepo.Setup(r => r.CreateUserAsync_Old(It.IsAny<string>(), It.IsAny<IEnumerable<string>>())).ReturnsAsync(id);
-            UserService target = new UserService(mockRepo.Object);
-            CreateUserDto dto = new CreateUserDto
-            {
-
-                Name = "Dyl Pickal",
-                Nopes = new List<string> { "https://gph.is/18NWdNy" },
-            };
-
-            // act
-            var result = await target.CreateUserAsync(dto);
-
-            // assert
-            result.Match(
-                err => throw new Exception("Unexcpected exception was not thrown."),
-                x => Assert.Equal(id, x)
-            );
-        }
-
-        [Fact]
-        public async void UserService_CreateUserAsync_ThrowsExceptionWithNullDto()
-        {
-            // arrange
-            Mock<IRepository> mockRepo = new Mock<IRepository>();
-            UserService target = new UserService(mockRepo.Object);
-
-            // act
-            var result = await target.CreateUserAsync((CreateUserDto)null);
-
-            // assert
-            result.Match(
-                err => Assert.Equal(HttpStatusCode.BadRequest, err.HttpErrorStatusCode),
-                x => throw new Exception("ValidationException was not thrown.")
-            );
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public async void UserService_CreateUserAsync_ThrowsExceptionWithNullOrEmptyName(string name)
-        {
-            // arrange
-            Mock<IRepository> mockRepo = new Mock<IRepository>();
-            UserService target = new UserService(mockRepo.Object);
-            CreateUserDto dto = new CreateUserDto
-            {
-                Name = name,
-                Nopes = new List<string> { "https://gph.is/18NWdNy" },
-            };
-
-            // act
-            var result = await target.CreateUserAsync(dto);
-
-            // assert
-            result.Match(
-                err => Assert.Equal(HttpStatusCode.BadRequest, err.HttpErrorStatusCode),
-                x => throw new Exception("ValidationException was not thrown.")
-            );
-        }
-
-        [Fact]
         public async void UserService_GetUsersAsync_ReturnsListOfUsers()
         {
             // arrange
@@ -249,18 +163,18 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
             UserService target = new UserService(mockRepo.Object);
-            UserDto dto = new UserDto
+            int userId = 1;
+            UserUpdateDto dto = new UserUpdateDto
             {
-                Id = 1,
                 Name = "Anne Telohp",
                 Nopes = new List<string> { "Chicken Salad Chick" },
             };
 
             // act
-            var result = await target.UpdateUserAsync(dto);
+            var result = await target.UpdateUserAsync(userId, dto);
 
             // assert
-            mockRepo.Verify(r => r.UpdateUserAsync(dto.Id, dto.Name, dto.Nopes), Times.Once);
+            mockRepo.Verify(r => r.UpdateUserAsync(userId, dto.Name, dto.Nopes), Times.Once);
         }
 
         [Fact]
@@ -270,15 +184,15 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IRepository> mockRepo = new Mock<IRepository>();
             mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
             UserService target = new UserService(mockRepo.Object);
-            UserDto dto = new UserDto
+            int userId = 1;
+            UserUpdateDto dto = new UserUpdateDto
             {
-                Id = 1,
                 Name = "Anne Telohp",
                 Nopes = new List<string> { "Chicken Salad Chick" },
             };
 
             // act
-            var result = await target.UpdateUserAsync(dto);
+            var result = await target.UpdateUserAsync(userId, dto);
 
             // assert
             result.Match(

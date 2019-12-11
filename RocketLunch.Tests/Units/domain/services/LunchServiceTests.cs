@@ -134,10 +134,9 @@ namespace RocketLunch.tests.units.domain.services
             });
             List<int> users = new List<int> { 1, 2 };
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, cache);
-            await cache.SetUserSessionAsync(sessionGuid, users);
 
             // act
-            var result = await target.GetRestaurantAsync(sessionGuid, new SearchOptions());
+            var result = await target.GetRestaurantAsync(sessionGuid, new SearchOptions() { UserIds = users });
 
             // assert
             result.Match(

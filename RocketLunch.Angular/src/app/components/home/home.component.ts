@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from '../../services/lunch-lady.service';
-import { UserModalComponent } from '../user-modal/user-modal.component';
 import { User } from '../../models/user';
 import { UUID } from 'angular2-uuid';
 import { Restaurant } from '../../models/restaurant';
 import { MealTime } from '../../models/enums/MealTime';
+import { RestaurantSearch } from 'src/app/models/restaurant-search';
 
 @Component({
   selector: 'home',
@@ -12,7 +12,6 @@ import { MealTime } from '../../models/enums/MealTime';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  @ViewChild(UserModalComponent, { static: true }) userModal: UserModalComponent;
   restaurant: any;
   goSrc: string;
   goSrcs: string[];
@@ -26,8 +25,6 @@ export class HomeComponent {
   isDinner: boolean = false;
 
   constructor(private lunchLady: LunchLadyService) {
-    this.getUsers();
-    this.getRestaurants();
 
     this.goSrcs = [
       './assets/go-burger.png',
@@ -50,7 +47,7 @@ export class HomeComponent {
       this.setRandomGoImage();
     }, 2000);
 
-    this.setBreakfast();
+    // this.setBreakfast();
   }
 
   setRandomGoImage() {
@@ -61,77 +58,42 @@ export class HomeComponent {
   getRestaurant(): any {
 
     if (!this.sessionId) this.sessionId = UUID.UUID();
-    this.lunchLady.getRestaurantByTime(this.sessionId, this.meal).subscribe(x => {
+    this.lunchLady.getRestaurant(this.sessionId, new RestaurantSearch()).subscribe(x => {
       this.restaurant = x;
     });
   }
 
-  openAddUserModal() {
-    this.selectedUser = new User();
-    this.userModal.show();
-  }
+  // toggleMeal() {
+  //   if (this.meal == MealTime.breakfast) {
+  //     this.setLunch();
+  //   }
+  //   else if (this.meal == MealTime.lunch) {
+  //     this.setDinner();
+  //   }
+  //   else if (this.meal == MealTime.dinner) {
+  //     this.setBreakfast();
+  //   }
+  // }
 
-  getUsers() {
-    this.lunchLady.getUsers()
-      .subscribe(x => {
-        this.users = x;
-        this.lunchLady.createUserSession(x.map(u => u.id))
-          .subscribe(y => {
+  // setBreakfast() {
+  //   this.meal = MealTime.breakfast;
+  //   this.isLunch = false;
+  //   this.isDinner = false;
+  //   this.sliderSrc = './assets/morning.png';
+  // }
 
-            this.sessionId = y;
-          });
-      });
-  }
+  // setLunch() {
+  //   this.meal = MealTime.lunch;
+  //   this.isLunch = true;
+  //   this.isDinner = false;
+  //   this.sliderSrc = './assets/day.png';
+  // }
 
-  getRestaurants() {
-    this.lunchLady.getRestaurants()
-      .subscribe(x => {
-        this.restaurants = x;
-      });
-  }
-
-  selectUser(user: User) {
-    this.selectedUser = user;
-    this.userModal.show();
-  }
-
-  dismissUser(userId: number) {
-    this.users = this.users.filter(u => u.id != userId);
-    this.lunchLady.updateUserSession(this.sessionId, this.users.map(u => u.id))
-      .subscribe(x => { });
-  }
-
-  toggleMeal() {
-    if (this.meal == MealTime.breakfast) {
-      this.setLunch();
-    }
-    else if (this.meal == MealTime.lunch) {
-      this.setDinner();
-    }
-    else if (this.meal == MealTime.dinner) {
-      this.setBreakfast();
-    }
-  }
-
-  setBreakfast() {
-    this.meal = MealTime.breakfast;
-    this.isLunch = false;
-    this.isDinner = false;
-    this.sliderSrc = './assets/morning.png';
-  }
-
-  setLunch() {
-    this.meal = MealTime.lunch;
-    this.isLunch = true;
-    this.isDinner = false;
-    this.sliderSrc = './assets/day.png';
-  }
-
-  setDinner() {
-    this.meal = MealTime.dinner;
-    this.isLunch = false;
-    this.isDinner = true;
-    this.sliderSrc = './assets/night.png';
-  }
+  // setDinner() {
+  //   this.meal = MealTime.dinner;
+  //   this.isLunch = false;
+  //   this.isDinner = true;
+  //   this.sliderSrc = './assets/night.png';
+  // }
 
 }

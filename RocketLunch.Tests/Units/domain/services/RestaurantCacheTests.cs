@@ -9,6 +9,7 @@ using Xunit;
 
 namespace RocketLunch.tests.units.domain.services
 {
+    [Trait("Category", "Unit")]
     public class RestaurantCacheTests
     {
 
@@ -101,66 +102,66 @@ namespace RocketLunch.tests.units.domain.services
             cache.Verify(c => c.SetAsync<List<string>>($"{sessionId.ToString()}_seenoptions", It.Is<List<string>>(x => x.Contains(option) && x.Contains(existingOption) && x.Count == 2), null), Times.Once);
         }
 
-        [Fact]
-        public async void RestaurantCache_SetUserSessionAsync_CallsSetCacheWithoutPreviousUserSession()
-        {
-            // arrange
-            Guid sessionId = Guid.NewGuid();
-            List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
+        // [Fact]
+        // public async void RestaurantCache_SetUserSessionAsync_CallsSetCacheWithoutPreviousUserSession()
+        // {
+        //     // arrange
+        //     Guid sessionId = Guid.NewGuid();
+        //     List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
 
-            Mock<ICache> cache = new Mock<ICache>();
+        //     Mock<ICache> cache = new Mock<ICache>();
 
-            var target = new RestaurantCacheBuilder()
-                .SetCache(cache.Object)
-                .Build();
+        //     var target = new RestaurantCacheBuilder()
+        //         .SetCache(cache.Object)
+        //         .Build();
 
-            // act
-            await target.SetUserSessionAsync(sessionId, userIds);
+        //     // act
+        //     await target.SetUserSessionAsync(sessionId, userIds);
 
-            // assert
-            cache.Verify(c => c.SetAsync<List<int>>($"{sessionId.ToString()}_usersessions", userIds, null), Times.Once);
-        }
+        //     // assert
+        //     cache.Verify(c => c.SetAsync<List<int>>($"{sessionId.ToString()}_usersessions", userIds, null), Times.Once);
+        // }
 
-        [Fact]
-        public async void RestaurantCache_GetUserSessionAsync_ReturnNullWhenNotCached()
-        {
-            // arrange
-            Guid sessionId = Guid.NewGuid();
-            List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
+        // [Fact]
+        // public async void RestaurantCache_GetUserSessionAsync_ReturnNullWhenNotCached()
+        // {
+        //     // arrange
+        //     Guid sessionId = Guid.NewGuid();
+        //     List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
 
-            Mock<ICache> cache = new Mock<ICache>();
+        //     Mock<ICache> cache = new Mock<ICache>();
 
-            var target = new RestaurantCacheBuilder()
-                .SetCache(cache.Object)
-                .Build();
+        //     var target = new RestaurantCacheBuilder()
+        //         .SetCache(cache.Object)
+        //         .Build();
 
-            // act
-            List<int> result = await target.GetUserSessionAsync(sessionId);
+        //     // act
+        //     List<int> result = await target.GetUserSessionAsync(sessionId);
 
-            // assert
-            Assert.Null(result);
-        }
+        //     // assert
+        //     Assert.Null(result);
+        // }
         
-        [Fact]
-        public async void RestaurantCache_GetUserSessionAsync_ReturnListWhenCached()
-        {
-            // arrange
-            Guid sessionId = Guid.NewGuid();
-            List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
+        // [Fact]
+        // public async void RestaurantCache_GetUserSessionAsync_ReturnListWhenCached()
+        // {
+        //     // arrange
+        //     Guid sessionId = Guid.NewGuid();
+        //     List<int> userIds = new List<int> { 8, 6, 7, 5, 3, 0, 9, };
 
-            Mock<ICache> cache = new Mock<ICache>();
-            cache.Setup(x => x.GetAsync<List<int>>($"{sessionId.ToString()}_usersessions")).ReturnsAsync(userIds);
+        //     Mock<ICache> cache = new Mock<ICache>();
+        //     cache.Setup(x => x.GetAsync<List<int>>($"{sessionId.ToString()}_usersessions")).ReturnsAsync(userIds);
 
-            var target = new RestaurantCacheBuilder()
-                .SetCache(cache.Object)
-                .Build();
+        //     var target = new RestaurantCacheBuilder()
+        //         .SetCache(cache.Object)
+        //         .Build();
 
-            // act
-            List<int> result = await target.GetUserSessionAsync(sessionId);
+        //     // act
+        //     List<int> result = await target.GetUserSessionAsync(sessionId);
 
-            // assert
-            Assert.Equal(userIds, result);
-        }
+        //     // assert
+        //     Assert.Equal(userIds, result);
+        // }
 
         [Fact]
         public async void RestaurantCache_GetRestaurantListAsync_ReturnsNullIfNotPresent()

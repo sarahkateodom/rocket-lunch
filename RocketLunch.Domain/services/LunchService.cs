@@ -28,7 +28,7 @@ namespace RocketLunch.domain.services
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
             {
-                List<int> userIds = await cache.GetUserSessionAsync(sessionId);
+                List<int> userIds = options.UserIds.ToList();
                 var sessions = await repo.GetUsersAsync();
                 List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
                 List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId, options).ConfigureAwait(false)).ToList();

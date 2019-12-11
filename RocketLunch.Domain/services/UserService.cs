@@ -26,17 +26,6 @@ namespace RocketLunch.domain.services
                 ?? await _repository.CreateUserAsync(userDto.GoogleId, userDto.Email, userDto.Name, userDto.PhotoUrl);
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, int>> CreateUserAsync(CreateUserDto dto)
-        {
-            return await ExceptionHandler.HandleExceptionAsync(async () =>
-            {
-                if (dto == null) throw new ValidationException("CreateUserDto is required");
-                if (String.IsNullOrWhiteSpace(dto.Name)) throw new ValidationException("User name is required");
-
-                return await _repository.CreateUserAsync_Old(dto.Name, dto.Nopes).ConfigureAwait(false);
-            }).ConfigureAwait(false);
-        }
-
         public async Task<Either<HttpStatusCodeErrorResponse, IEnumerable<UserDto>>> GetUsersAsync()
         {
             return await ExceptionHandler.HandleExceptionAsync(async () =>
@@ -45,13 +34,13 @@ namespace RocketLunch.domain.services
             }).ConfigureAwait(false);
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, bool>> UpdateUserAsync(UserDto dto)
+        public async Task<Either<HttpStatusCodeErrorResponse, bool>> UpdateUserAsync(int userId, UserUpdateDto dto)
         {
             return await ExceptionHandler.HandleExceptionAsync((Func<Task<bool>>)(async () =>
             {
-                UserDto user = await _repository.GetUserAsync((int)dto.Id).ConfigureAwait(false) ?? throw new NotFoundException("Specified user not found.");
+                UserDto user = await _repository.GetUserAsync(userId).ConfigureAwait(false) ?? throw new NotFoundException("Specified user not found.");
 
-                await _repository.UpdateUserAsync(dto.Id, dto.Name, dto.Nopes).ConfigureAwait(false);
+                await _repository.UpdateUserAsync(userId, dto.Name, dto.Nopes).ConfigureAwait(false);
                 return true;
             })).ConfigureAwait(false);
         }

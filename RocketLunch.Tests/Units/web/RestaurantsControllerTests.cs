@@ -22,37 +22,37 @@ namespace RocketLunch.tests.web
             Assert.Throws<ArgumentNullException>(() => new RestaurantsController((IServeLunch)null));
         }
 
-        [Fact]
-        public async void RestaurantsController_GetRestaurant_CallsServeLunchGetRestaurantAsync()
-        {
-            // Arrange
-            Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new RestaurantDto()));
-            var target = new RestaurantsController(mockLunch.Object);
+        // [Fact]
+        // public async void RestaurantsController_GetRestaurant_CallsServeLunchGetRestaurantAsync()
+        // {
+        //     // Arrange
+        //     Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
+        //     mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new RestaurantDto()));
+        //     var target = new RestaurantsController(mockLunch.Object);
 
-            // Act
-            var result = await target.GetRestaurant(Guid.NewGuid(), MealTime.all);
+        //     // Act
+        //     var result = await target.GetRestaurant(Guid.NewGuid(), MealTime.all);
 
-            //Assert
-            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>()), Times.Once);
-        }
+        //     //Assert
+        //     Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        //     mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>()), Times.Once);
+        // }
 
-        [Fact]
-        public async void RestaurantsController_GetRestaurant_ReturnsErrorStatusOnException()
-        {
-            // Arrange
-            Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
-            var target = new RestaurantsController(mockLunch.Object);
+        // [Fact]
+        // public async void RestaurantsController_GetRestaurant_ReturnsErrorStatusOnException()
+        // {
+        //     // Arrange
+        //     Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
+        //     mockLunch.Setup(s => s.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, RestaurantDto>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
+        //     var target = new RestaurantsController(mockLunch.Object);
 
-            // Act
-            var result = await target.GetRestaurant(Guid.NewGuid(), MealTime.all);
+        //     // Act
+        //     var result = await target.GetRestaurant(Guid.NewGuid(), MealTime.all);
 
-            //Assert
-            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>()), Times.Once);
-        }
+        //     //Assert
+        //     Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+        //     mockLunch.Verify(v => v.GetRestaurantAsync(It.IsAny<Guid>(), It.IsAny<SearchOptions>()), Times.Once);
+        // }
 
         [Fact]
         public async void RestaurantsController_GetRestaurants_ReturnsErrorStatusOnException()
@@ -61,9 +61,10 @@ namespace RocketLunch.tests.web
             Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
             mockLunch.Setup(s => s.GetRestaurantsAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
             var target = new RestaurantsController(mockLunch.Object);
+            var zip = "38655";
 
             // Act
-            var result = await target.GetRestaurants();
+            var result = await target.GetRestaurantsForZip(zip);
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
@@ -77,9 +78,10 @@ namespace RocketLunch.tests.web
             Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
             mockLunch.Setup(s => s.GetRestaurantsAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>().Create(new List<RestaurantDto>()));
             var target = new RestaurantsController(mockLunch.Object);
+            var zip = "38655";
 
             // Act
-            var result = await target.GetRestaurants();
+            var result = await target.GetRestaurantsForZip(zip);
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);

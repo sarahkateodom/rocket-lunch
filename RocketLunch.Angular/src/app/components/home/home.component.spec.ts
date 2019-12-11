@@ -5,7 +5,6 @@ import { Observable, of } from 'rxjs';
 import { Restaurant } from '../../models/restaurant';
 import { LunchLadyService } from '../../services/lunch-lady.service';
 import { HttpService } from '../../services/http.service';
-import { UserModalComponent } from '../user-modal/user-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user';
@@ -20,16 +19,16 @@ describe('HomeComponent', () => {
   ] as User[];
 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'getRestaurantByTime', 'createUserSession', 'updateUserSession', 'updateuser'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
-    mockLunchService.getRestaurantByTime.and.returnValue(of(new Restaurant()));
+    mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
     mockLunchService.getRestaurants.and.returnValue(of([new Restaurant()]));
     mockLunchService.getUsers.and.returnValue(of(users));
     mockLunchService.createUserSession.and.returnValue(of("12324124-123123-123123"));
     mockLunchService.updateUserSession.and.returnValue(of(true));
     mockLunchService.updateuser.and.returnValue(of(true));
     TestBed.configureTestingModule({
-      declarations: [HomeComponent, UserModalComponent, ModalComponent],
+      declarations: [HomeComponent, ModalComponent],
       providers: [
         { provide: LunchLadyService, useValue: mockLunchService },
         { provide: HttpService, useClass: HttpService }
@@ -76,7 +75,7 @@ describe('HomeComponent', () => {
       component.getRestaurant();
 
       // assert
-      expect(mockLunchService.getRestaurantByTime).toHaveBeenCalled();
+      expect(mockLunchService.getRestaurant).toHaveBeenCalled();
       expect(component.restaurant).toBeTruthy();
     });
     it('calls getRestaurant from service and makes new guid', () => {
@@ -89,100 +88,6 @@ describe('HomeComponent', () => {
 
       // assert
       expect(component.sessionId).not.toBe(undefined);
-    });
-  });
-
-  describe('openAddUserModal', () => {
-    it('should show modal', () => {
-      spyOn(component.userModal, 'show').and.returnValue(true);
-
-      component.openAddUserModal();
-
-      expect(component.userModal.show).toHaveBeenCalled();
-    });
-
-    it('should set selectedUser new user', () => {
-      // arrange
-      component.selectedUser = {
-        id: 1,
-        name: 'SHmmeve',
-        nopes: ['123'],
-      } as User;
-
-      // act
-      component.openAddUserModal();
-
-      // assert
-      expect(component.selectedUser.id).toBe(undefined);
-      expect(component.selectedUser.name).toBe('');
-      expect(component.selectedUser.nopes.length).toBe(0);
-    });
-  });
-
-  describe('getUsers', () => {
-    it('calls getUsers from service', () => {
-      // arrange
-      component.users = [];
-
-      // act
-      component.getUsers();
-
-      // assert
-      expect(mockLunchService.getUsers).toHaveBeenCalled();
-    });
-    it('adds users to component', () => {
-      // arrange
-      component.users = [];
-
-      // act
-      component.getUsers();
-
-      // assert
-      expect(component.users.length).toBe(2);
-    });
-  });
-
-  describe('selectUser', () => {
-    it('sets selectedUser', () => {
-      // arrange
-      component.selectedUser = undefined;
-      let user = new User();
-      user.id = 1;
-
-      // act
-      component.selectUser(user);
-
-      // assert
-      expect(component.selectedUser).toBeTruthy();
-      expect(component.selectedUser.id).toBe(user.id);
-    });
-
-    it('opens users modal', () => {
-      // arrange
-      spyOn(component.userModal, 'show').and.returnValue(true);
-
-      // act
-      component.selectUser(new User());
-
-      // assert
-      expect(component.userModal.show).toHaveBeenCalled();
-    });
-  });
-
-  describe('dismissUser', () => {
-    it('should remove specified user from component.users', () => {
-      // arrange
-      let user = new User();
-      user.id = 1;
-
-      component.users = [user, { id: 2 } as User, { id: 3 } as User];
-      let length = component.users.length;
-
-      // act
-      component.dismissUser(user.id);
-
-      // assert
-      expect(length - 1).toBe(component.users.length);
     });
   });
 });

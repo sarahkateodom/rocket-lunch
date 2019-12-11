@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using RocketLunch.data;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace RocketLunch.web
 {
@@ -63,6 +65,12 @@ namespace RocketLunch.web
                     return Task.CompletedTask;
                 };
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                // c.DescribeAllEnumsAsStrings();
+                c.SwaggerDoc("RocketLunch", new OpenApiInfo { Title = "RocketLunch API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,6 +93,13 @@ namespace RocketLunch.web
                 app.UseHsts();
             }
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/RocketLunch/swagger.json", "RocketLunch");
+            });
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -94,7 +109,6 @@ namespace RocketLunch.web
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-
 
             app.UseSpa(spa => { });
         }

@@ -54,10 +54,10 @@ namespace RocketLunch.domain.services
                 openAt = "&open_at=" + DateTime.Now.Date.AddHours(options.Meal.GetHoursFromMidnight()).GetUnixTime().ToString();
             }
             string categories = "categories=restaurants";
-            if (options.Category != Category.restaurants)
-            {
-                categories = $"categories={options.Category.ToString()}";
-            }
+            // if (options.Category != Category.restaurants)
+            // {
+            //     categories = $"categories={options.Category.ToString()}";
+            // }
             string location = "&location=38655";
             if (options.Zip != null)
             {
