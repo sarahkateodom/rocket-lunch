@@ -25,7 +25,7 @@ namespace RocketLunch.web.controllers
         public async Task<ObjectResult> GetRestaurant(Guid sessionId, SearchOptions options)
         {
             var result = await _serveLunch.GetRestaurantAsync(sessionId, options);
-            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+            return new OkObjectResult(result);
         }
 
         [HttpGet]
@@ -33,8 +33,8 @@ namespace RocketLunch.web.controllers
         [Route("api/restaurants/{zip}")]
         public async Task<ObjectResult> GetRestaurantsForZip(string zip)
         {
-            // This collection is used to populate the Nope list in user profile
-            return new OkObjectResult(new List<RestaurantDto>());
+            var result = await _serveLunch.GetRestaurantsAsync(zip);
+            return new OkObjectResult(result);
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using RocketLunch.data;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
+using RocketLunch.web.middleware;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace RocketLunch.web
@@ -100,6 +101,7 @@ namespace RocketLunch.web
                 c.SwaggerEndpoint("/swagger/RocketLunch/swagger.json", "RocketLunch");
             });
 
+            app.ConfigureCustomExceptionMiddleware();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

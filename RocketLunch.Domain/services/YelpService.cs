@@ -46,6 +46,14 @@ namespace RocketLunch.domain.services
             return restaurants;
         }
 
+        public async Task<IEnumerable<RestaurantDto>> GetAllRestaurantsInZipAsync(string zip)
+        {
+            // todo: Refactor
+            var options = new SearchOptions();
+            options.Zip = zip;
+            return await GetAvailableRestaurantOptionsAsync(Guid.Empty, options);
+        }
+
         private async Task<YelpResultDto> GetYelpRestaurantsAsync(int offset, SearchOptions options)
         {
             string openAt = "";

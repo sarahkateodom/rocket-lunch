@@ -9,6 +9,7 @@ using Moq;
 using Xunit;
 using RocketLunch.domain.utilities;
 using RocketLunch.domain.services.mocks;
+using RocketLunch.domain.exceptions;
 
 namespace RocketLunch.tests.units.domain.services
 {
@@ -64,10 +65,7 @@ namespace RocketLunch.tests.units.domain.services
             var result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
 
             // assert
-            result.Match(
-                err => throw new Exception("Unexpected exception."),
-                x => Assert.Equal(expected, x.Name)
-            );
+            Assert.Equal(expected, result.Name);
         }
 
         [Fact]
@@ -88,13 +86,9 @@ namespace RocketLunch.tests.units.domain.services
 
             // act
             var result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
-            result = await target.GetRestaurantAsync(sessionId, new SearchOptions());
 
             // assert
-            result.Match(
-                err => Assert.Equal(HttpStatusCode.TooManyRequests, err.HttpErrorStatusCode),
-                x => throw new Exception("no exception thrown")
-            );
+            await Assert.ThrowsAsync<TooManyRequestsException>(async() => await target.GetRestaurantAsync(sessionId, new SearchOptions()));
         }
 
         [Fact]
@@ -139,10 +133,7 @@ namespace RocketLunch.tests.units.domain.services
             var result = await target.GetRestaurantAsync(sessionGuid, new SearchOptions() { UserIds = users });
 
             // assert
-            result.Match(
-                err => throw new Exception("Unexpected exception."),
-                x => Assert.Equal("Bob's Burgers", x.Name)
-            );
+            Assert.Equal("Bob's Burgers", result.Name);
         }
 
         [Fact]
@@ -154,7 +145,7 @@ namespace RocketLunch.tests.units.domain.services
             Mock<IChaos> mockRandom = new Mock<IChaos>();
             Mock<IRestaurantCache> mockCache = new Mock<IRestaurantCache>();
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, mockCache.Object);
-            mockOptions.Setup(x => x.GetAvailableRestaurantOptionsAsync(Guid.Empty, It.IsAny<SearchOptions>())).ReturnsAsync(new List<RestaurantDto> {
+            mockOptions.Setup(x => x.GetAllRestaurantsInZipAsync(It.IsAny<string>())).ReturnsAsync(new List<RestaurantDto> {
                 new RestaurantDto {
                     Name = "Bob's Burgers",
                 },
@@ -162,15 +153,13 @@ namespace RocketLunch.tests.units.domain.services
                     Name = "Jimmy Pesto's Pizzaria",
                 },
             });
+            string zip = "38655";
 
             // act
-            var result = await target.GetRestaurantsAsync();
+            var result = await target.GetRestaurantsAsync(zip);
 
             // assert
-            result.Match(
-                err => throw new Exception("Unexpected exception."),
-                x => Assert.Equal(2, x.Count())
-            );
+            Assert.Equal(2, result.Count());
         }
     }
 }

@@ -8,7 +8,7 @@ namespace RocketLunch.domain.contracts
 {
     public interface IServeLunch
     {
-        Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId, SearchOptions options);
-        Task<Either<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>> GetRestaurantsAsync();
+        Task<RestaurantDto> GetRestaurantAsync(Guid sessionId, SearchOptions options);
+        Task<IEnumerable<RestaurantDto>> GetRestaurantsAsync(string zip);
     }
 }

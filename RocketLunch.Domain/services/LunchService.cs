@@ -24,46 +24,40 @@ namespace RocketLunch.domain.services
             this.cache = cache ?? throw new ArgumentNullException("cache");
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, RestaurantDto>> GetRestaurantAsync(Guid sessionId, SearchOptions options)
+        public async Task<RestaurantDto> GetRestaurantAsync(Guid sessionId, SearchOptions options)
         {
-            return await ExceptionHandler.HandleExceptionAsync(async () =>
+            List<int> userIds = options.UserIds.ToList();
+            var sessions = await repo.GetUsersAsync();
+            List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
+            List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId, options).ConfigureAwait(false)).ToList();
+
+            // Filter by user nopes
+            List<string> nopes = users.SelectMany(u => u.Nopes).ToList();
+            restaurants = restaurants.Where(r => !nopes.Contains(r.Id)).ToList();
+
+            RestaurantDto result;
+            // Filter by "soft" nopes
+            List<string> seenOptions = await cache.GetSeenOptionsAsync(sessionId);
+            if (seenOptions == null)
             {
-                List<int> userIds = options.UserIds.ToList();
-                var sessions = await repo.GetUsersAsync();
-                List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
-                List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId, options).ConfigureAwait(false)).ToList();
+                result = restaurants[random.Next(restaurants.Count - 1)];
+            }
+            else
+            {
+                restaurants = restaurants.Where(x => !seenOptions.Contains(x.Name)).ToList();
+                if (!restaurants.Any()) throw new TooManyRequestsException();
+                result = restaurants[random.Next(restaurants.Count - 1)];
+            }
 
-                // Filter by user nopes
-                List<string> nopes = users.SelectMany(u => u.Nopes).ToList();
-                restaurants = restaurants.Where(r => !nopes.Contains(r.Id)).ToList();
+            // Add result to "soft" nopes
+            await cache.AddSeenOptionAsync(sessionId, result.Name);
 
-                RestaurantDto result;
-                // Filter by "soft" nopes
-                List<string> seenOptions = await cache.GetSeenOptionsAsync(sessionId);
-                if (seenOptions == null)
-                {
-                    result = restaurants[random.Next(restaurants.Count - 1)];
-                }
-                else
-                {
-                    restaurants = restaurants.Where(x => !seenOptions.Contains(x.Name)).ToList();
-                    if (!restaurants.Any()) throw new TooManyRequestsException();
-                    result = restaurants[random.Next(restaurants.Count - 1)];
-                }
-
-                // Add result to "soft" nopes
-                await cache.AddSeenOptionAsync(sessionId, result.Name);
-
-                return result;
-            }).ConfigureAwait(false);
+            return result;
         }
 
-        public async Task<Either<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>> GetRestaurantsAsync()
+        public async Task<IEnumerable<RestaurantDto>> GetRestaurantsAsync(string zip)
         {
-            return await ExceptionHandler.HandleExceptionAsync(async () =>
-            {
-                return (await lunchOptions.GetAvailableRestaurantOptionsAsync(Guid.Empty, new SearchOptions()).ConfigureAwait(false));
-            }).ConfigureAwait(false);
+            return (await lunchOptions.GetAllRestaurantsInZipAsync(zip).ConfigureAwait(false));
         }
     }
 }

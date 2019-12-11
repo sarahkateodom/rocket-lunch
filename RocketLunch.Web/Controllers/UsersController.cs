@@ -50,7 +50,7 @@ namespace RocketLunch.web.controllers
         public async Task<ObjectResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
             var result = await _userService.UpdateUserAsync(id, dto);
-            return result.Match(err => err.Content(this), r => new OkObjectResult(r));
+            return new OkObjectResult(result);
         }
     }
 }

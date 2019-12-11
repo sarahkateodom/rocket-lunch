@@ -7,6 +7,7 @@ using RocketLunch.web.controllers;
 using RocketLunch.domain.utilities;
 using Moq;
 using Xunit;
+using RocketLunch.domain.exceptions;
 
 namespace RocketLunch.tests.web
 {
@@ -59,7 +60,7 @@ namespace RocketLunch.tests.web
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
-            mockUserService.Setup(s => s.UpdateUserAsync(It.IsAny<int>(), It.IsAny<UserUpdateDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, bool>().Create(true));
+            mockUserService.Setup(s => s.UpdateUserAsync(It.IsAny<int>(), It.IsAny<UserUpdateDto>())).ReturnsAsync(true);
             var target = new UsersController(mockUserService.Object);
             UserUpdateDto dto = new UserUpdateDto();
             int userId = 1;
@@ -70,24 +71,6 @@ namespace RocketLunch.tests.web
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(true, result.Value);
-            mockUserService.Verify(v => v.UpdateUserAsync(userId, dto), Times.Once);
-        }
-
-        [Fact]
-        public async void UsersControllerTests_UpdateUser_ReturnsHttpErrorOnException()
-        {
-            // Arrange
-            Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
-            mockUserService.Setup(s => s.UpdateUserAsync(It.IsAny<int>(), It.IsAny<UserUpdateDto>())).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, bool>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
-            var target = new UsersController(mockUserService.Object);
-            UserUpdateDto dto = new UserUpdateDto();
-            int userId = 1;
-
-            // Act
-            var result = await target.UpdateUser(userId, dto);
-
-            //Assert
-            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
             mockUserService.Verify(v => v.UpdateUserAsync(userId, dto), Times.Once);
         }
     }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using RocketLunch.domain.enumerations;
+using RocketLunch.domain.exceptions;
 
 namespace RocketLunch.tests.web
 {
@@ -55,28 +56,11 @@ namespace RocketLunch.tests.web
         // }
 
         [Fact]
-        public async void RestaurantsController_GetRestaurants_ReturnsErrorStatusOnException()
-        {
-            // Arrange
-            Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantsAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>().Create(new HttpStatusCodeErrorResponse(HttpStatusCode.BadRequest, "testing")));
-            var target = new RestaurantsController(mockLunch.Object);
-            var zip = "38655";
-
-            // Act
-            var result = await target.GetRestaurantsForZip(zip);
-
-            //Assert
-            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantsAsync(), Times.Once);
-        }
-
-        [Fact]
         public async void RestaurantsController_GetRestaurants_CallsServeLunchGetRestaurantsAsync()
         {
             // Arrange
             Mock<IServeLunch> mockLunch = new Mock<IServeLunch>();
-            mockLunch.Setup(s => s.GetRestaurantsAsync()).ReturnsAsync(new EitherFactory<HttpStatusCodeErrorResponse, IEnumerable<RestaurantDto>>().Create(new List<RestaurantDto>()));
+            mockLunch.Setup(s => s.GetRestaurantsAsync(It.IsAny<string>())).ReturnsAsync(new List<RestaurantDto>());
             var target = new RestaurantsController(mockLunch.Object);
             var zip = "38655";
 
@@ -85,7 +69,7 @@ namespace RocketLunch.tests.web
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            mockLunch.Verify(v => v.GetRestaurantsAsync(), Times.Once);
+            mockLunch.Verify(v => v.GetRestaurantsAsync(zip), Times.Once);
         }
     }
 }

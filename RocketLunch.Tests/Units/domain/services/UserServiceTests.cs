@@ -150,10 +150,7 @@ namespace RocketLunch.tests.units.domain.services
             var result = await target.GetUsersAsync();
 
             // assert
-            result.Match(
-                err => throw new Exception("Unexpected exception."),
-                x => Assert.Equal(2, x.Count())
-            );
+            Assert.Equal(2, result.Count());
         }
 
         [Fact]
@@ -191,14 +188,8 @@ namespace RocketLunch.tests.units.domain.services
                 Nopes = new List<string> { "Chicken Salad Chick" },
             };
 
-            // act
-            var result = await target.UpdateUserAsync(userId, dto);
-
-            // assert
-            result.Match(
-                err => Assert.Equal(HttpStatusCode.NotFound, err.HttpErrorStatusCode),
-                x => throw new Exception("NotFoundException not thrown.")
-            );
+            // act & assert
+            await Assert.ThrowsAsync<NotFoundException>(async() => await target.UpdateUserAsync(userId, dto));
         }
 
         [Fact]
