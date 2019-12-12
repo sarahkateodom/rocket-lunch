@@ -2,10 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RocketLunch.data;
 
-namespace RocketLunch.data.Migrations
+namespace RocketLunch.Data.Migrations
 {
     [DbContext(typeof(LunchContext))]
     partial class LunchContextModelSnapshot : ModelSnapshot
@@ -14,39 +13,28 @@ namespace RocketLunch.data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity("RocketLunch.data.entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnName("id");
 
                     b.Property<string>("Email")
-                        .HasColumnName("email")
-                        .HasColumnType("text");
+                        .HasColumnName("email");
 
                     b.Property<string>("GoogleId")
-                        .HasColumnName("google_id")
-                        .HasColumnType("text");
+                        .HasColumnName("google_id");
 
                     b.Property<string>("Name")
-                        .HasColumnName("name")
-                        .HasColumnType("text");
+                        .HasColumnName("name");
 
                     b.Property<string>("Nopes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("nopes")
-                        .HasColumnType("text")
-                        .HasDefaultValue("[]");
+                        .HasColumnName("nopes");
 
                     b.Property<string>("PhotoUrl")
-                        .HasColumnName("photo_url")
-                        .HasColumnType("text");
+                        .HasColumnName("photo_url");
 
                     b.HasKey("Id")
                         .HasName("pk_users");

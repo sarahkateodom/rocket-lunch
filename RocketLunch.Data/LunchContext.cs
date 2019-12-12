@@ -7,7 +7,7 @@ namespace RocketLunch.data
 {
     public class LunchContext : DbContext
     {
-        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5433;Database=rocketlunch").Options)
+        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseMySQL("Uid=admin;Pwd=admin;Server=localhost;Port=5433;Database=rocketlunch").Options)
         {
 
         }
@@ -23,6 +23,7 @@ namespace RocketLunch.data
 
         public void Migrate()
         {
+            this.Database.EnsureCreated();
             this.Database.Migrate();
         }
 
@@ -36,9 +37,9 @@ namespace RocketLunch.data
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserEntity>()
-                .Property(r => r.Nopes)
-                .HasDefaultValue("[]");
+            // modelBuilder.Entity<UserEntity>()
+            //     .Property(r => r.Nopes)
+            //     .HasDefaultValue("[]");
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {

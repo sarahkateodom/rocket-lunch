@@ -3,22 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RocketLunch.data;
 
-namespace RocketLunch.data.Migrations
+namespace RocketLunch.Data.Migrations
 {
     [DbContext(typeof(LunchContext))]
-    [Migration("20180830023654_CreateUserTable")]
-    partial class CreateUserTable
+    [Migration("20191212173057_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity("RocketLunch.data.entities.UserEntity", b =>
                 {
@@ -26,11 +23,20 @@ namespace RocketLunch.data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<string>("AvatarUrl")
-                        .HasColumnName("avatar_url");
+                    b.Property<string>("Email")
+                        .HasColumnName("email");
+
+                    b.Property<string>("GoogleId")
+                        .HasColumnName("google_id");
 
                     b.Property<string>("Name")
                         .HasColumnName("name");
+
+                    b.Property<string>("Nopes")
+                        .HasColumnName("nopes");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnName("photo_url");
 
                     b.HasKey("Id")
                         .HasName("pk_users");

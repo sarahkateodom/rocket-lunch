@@ -42,7 +42,7 @@ namespace RocketLunch.web
 
 
             string connectionString = Configuration["POSTGRESDB"];
-            services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
+            services.AddDbContext<LunchContext>(options => options.UseMySQL(Configuration["POSTGRESDB"]));
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

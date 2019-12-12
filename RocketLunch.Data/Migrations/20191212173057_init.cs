@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace RocketLunch.data.Migrations
+namespace RocketLunch.Data.Migrations
 {
-    public partial class CreateUserTable : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,9 +11,12 @@ namespace RocketLunch.data.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("MySQL:AutoIncrement", true),
+                    google_id = table.Column<string>(nullable: true),
                     name = table.Column<string>(nullable: true),
-                    avatar_url = table.Column<string>(nullable: true)
+                    email = table.Column<string>(nullable: true),
+                    photo_url = table.Column<string>(nullable: true),
+                    nopes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
