@@ -43,27 +43,27 @@ namespace RocketLunch.data
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 // Replace table names
-                entity.SetTableName(ToSnakeCase(entity.GetTableName())); 
+                entity.Relational().TableName = ToSnakeCase(entity.Relational().TableName);
 
                 // Replace column names            
                 foreach (var property in entity.GetProperties())
                 {
-                    property.SetColumnName(ToSnakeCase(property.Name));
+                    property.Relational().ColumnName = ToSnakeCase(property.Name);
                 }
 
                 foreach (var key in entity.GetKeys())
                 {
-                    key.SetName(ToSnakeCase(key.GetName()));
+                    key.Relational().Name = ToSnakeCase(key.Relational().Name);
                 }
 
                 foreach (var key in entity.GetForeignKeys())
                 {
-                    key.SetConstraintName(ToSnakeCase(key.GetConstraintName()));
+                    key.Relational().Name = ToSnakeCase(key.Relational().Name);
                 }
 
                 foreach (var index in entity.GetIndexes())
                 {
-                    index.SetName(ToSnakeCase(index.GetName()));
+                    index.Relational().Name = ToSnakeCase(index.Relational().Name);
                 }
             }
         }

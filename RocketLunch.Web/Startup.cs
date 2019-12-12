@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using RocketLunch.data;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
@@ -45,12 +44,6 @@ namespace RocketLunch.web
             string connectionString = Configuration["POSTGRESDB"];
             services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
 
-            services.AddControllersWithViews();
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "wwwroot";
-            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -70,19 +63,20 @@ namespace RocketLunch.web
             services.AddSwaggerGen(c =>
             {
                 // c.DescribeAllEnumsAsStrings();
-                c.SwaggerDoc("RocketLunch", new OpenApiInfo { Title = "RocketLunch API", Version = "v1" });
+                c.SwaggerDoc("RocketLunch", new Info { Title = "RocketLunch API", Version = "v1" });
+                c.EnableAnnotations();
             });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseRouting();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseAuthorization();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -95,7 +89,6 @@ namespace RocketLunch.web
             }
 
             app.UseSwagger();
-
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/RocketLunch/swagger.json", "RocketLunch");
@@ -103,16 +96,15 @@ namespace RocketLunch.web
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-
-            app.UseEndpoints(endpoints =>
+            app.UseDefaultFiles();
+            
+            app.UseMvc(routes =>
             {
-                endpoints.MapControllerRoute(
+                routes.MapRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    template: "{*anything}",
+                    defaults: new { controller = "Home", action = "Index" });
             });
-
-            app.UseSpa(spa => { });
         }
     }
 }

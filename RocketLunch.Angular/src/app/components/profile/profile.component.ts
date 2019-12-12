@@ -46,11 +46,13 @@ export class ProfileComponent implements OnInit {
   }
 
   getRestaurantNameFromId(id: string): string {
+    if (!this.restaurants) return '';
     let restaurant = this.restaurants.find(r => r.id == id);
     return restaurant ? restaurant.name : '';
   }
 
   removeNope(id: string) {
+    if (!this.user) return;
     this.user.nopes = this.user.nopes.filter(x => x != id);
     this.updateUser();
   }

@@ -51,7 +51,7 @@ export class LunchLadyService {
   }
 
   public updateuser(user: User): Observable<boolean> {
-    let url = `/api/users/`;
+    let url = `/api/users/${user.id}`;
     return this.http.put(url, user).pipe(map(res => <boolean>res));
   }
 

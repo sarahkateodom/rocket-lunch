@@ -20,9 +20,9 @@ namespace RocketLunch.web.controllers
         }
 
         [HttpPost]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Logs user in", typeof(UserDto))]
+        [SwaggerOperation(Summary = "Logs user in")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Successful login", typeof(UserDto))]
         [Route("api/login")]
-        /// <response code="200">Login successful</response>
         public async Task<ObjectResult> Login([Bind][FromBody]LoginDto userDto)
         {
             UserDto result = await _userService.LoginAsync(userDto);
@@ -32,13 +32,14 @@ namespace RocketLunch.web.controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity));
-                
+
             return new OkObjectResult(userDto);
         }
 
-    
+
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Logs user out", typeof(bool))]
+        [SwaggerOperation(Summary = "Logs user out")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Successful logout", typeof(bool))]
         [Route("api/logout")]
         public async Task<bool> Logout()
         {
