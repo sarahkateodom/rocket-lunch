@@ -13,14 +13,14 @@
     </ul>
 
   </div>
-  <button *ngIf="!user && !loading" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
+  <button *ngIf="!internalUser && !loading" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
 
-  <div class="btn-group" *ngIf="user && !loading">
+  <div class="btn-group" *ngIf="internalUser && !loading">
     <button type="button" class="btn user-photo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img class="navbar-icon mr-1" [src]="user.photoUrl" />
+      <img class="navbar-icon mr-1" [src]="internalUser.photoUrl" />
     </button>
     <div class="dropdown-menu dropdown-menu-right">
-      <div routerLink="/profile/1" class="dropdown-item">{{user.name}}</div>
+      <div routerLink="/profile/{{internalUser.id}}" class="dropdown-item">{{internalUser.name}}</div>
       <div class="dropdown-item" (click)="signOut()">Sign Out</div>
     </div>
   </div>

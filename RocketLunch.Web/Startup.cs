@@ -30,6 +30,7 @@ namespace RocketLunch.web
             services.AddTransient<IServeLunch, LunchService>();
             services.AddTransient<IRepository, LunchRepository>();
             services.AddTransient<IManageUsers, UserService>();
+            services.AddTransient<IManageClaims, ClaimsService>();
             services.AddTransient<IManageUserSessions, UserSessionService>();
             services.AddSingleton<IChaos, RandomService>();
             services.AddDistributedRedisCache(option =>

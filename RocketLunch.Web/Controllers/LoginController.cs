@@ -23,12 +23,12 @@ namespace RocketLunch.web.controllers
         [SwaggerOperation(Summary = "Logs user in")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Successful login", typeof(UserDto))]
         [Route("api/login")]
-        public async Task<ObjectResult> Login([Bind][FromBody]LoginDto userDto)
+        public async Task<ObjectResult> Login([Bind][FromBody]LoginDto loginDto)
         {
-            UserDto result = await _userService.LoginAsync(userDto);
+            UserDto userDto = await _userService.LoginAsync(loginDto);
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, "IFixIt", "ADMIN");
-            identity.AddClaim(new Claim(ClaimTypes.Sid, result.Id.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.Name, result.Name));
+            identity.AddClaim(new Claim(ClaimTypes.Sid, userDto.Id.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, userDto.Name));
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity));

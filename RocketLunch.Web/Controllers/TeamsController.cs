@@ -1,11 +1,14 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RocketLunch.domain.dtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RocketLunch.web.controllers
 {
+    [Authorize]
     public class TeamsController : Controller
     {
         [HttpPost]
@@ -30,6 +33,14 @@ namespace RocketLunch.web.controllers
         public async Task<ObjectResult> RemoveUserFromTeam(int userId, int teamId)
         {
             return new OkObjectResult(true);
+        }
+
+        [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Get Users in Team", typeof(IEnumerable<UserDto>))]
+        [Route("api/teams/{teamId}/users")]
+        public async Task<ObjectResult> GetTeamUsers(int teamId)
+        {
+            return new OkObjectResult(new List<UserDto>());
         }
     }
 }

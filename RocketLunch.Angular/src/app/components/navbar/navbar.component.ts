@@ -1,6 +1,7 @@
 import { LunchLadyService } from './../../services/lunch-lady.service';
-import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
+import { AuthService, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'navbar',
@@ -9,24 +10,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
   public loading: boolean = true;
-  public user: any;
+  public internalUser: User;
 
   constructor(private service: LunchLadyService, private authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.authState
-      .subscribe((user) => {
-        this.user = user;
+    this.service.getCurrentUser()
+      .subscribe(i => {
+        this.internalUser = i;
         this.loading = false;
-        if (user) console.log(this.user)
       });
   }
 
   signIn(): void {
     let signInPromise = this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-    signInPromise.then(x => {
-      this.service.login(x.id, x.name, x.email)
-        .subscribe(() => { });
+    signInPromise.then(socialUser => {
+      this.service.login(socialUser)
+        .subscribe(u => {
+          this.internalUser = u;
+          console.log('Internal User', u);
+        });
     });
   }
 
@@ -34,7 +37,9 @@ export class NavbarComponent implements OnInit {
     let signOutPromise = this.authService.signOut();
     signOutPromise.then(x => {
       this.service.logout()
-        .subscribe(y => { });
+        .subscribe(success => {
+          if (success) this.internalUser = undefined;
+        });
     });
   }
 }

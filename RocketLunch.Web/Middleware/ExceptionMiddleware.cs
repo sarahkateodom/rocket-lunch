@@ -42,7 +42,10 @@ namespace RocketLunch.web.middleware
                     break;
                 case TooManyRequestsException ex2 :
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
-                    break;                
+                    break;   
+                case NotAuthorizedException ex2 :
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    break;              
             }
 
             return context.Response.WriteAsync(ex.Message);

@@ -38,18 +38,6 @@ namespace RocketLunch.data
             };
         }
 
-        public async Task<int> CreateUserAsync_Old(string name, IEnumerable<string> nopes)
-        {
-            UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
-            {
-                Name = name,
-                Nopes = JsonConvert.SerializeObject(nopes),
-            }).ConfigureAwait(false)).Entity;
-
-            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
-            return newUser.Id;
-        }
-
         public async Task<UserDto> GetUserAsync(int id)
         {
             UserEntity userEntity = await _lunchContext.Users.FindAsync(id).ConfigureAwait(false);

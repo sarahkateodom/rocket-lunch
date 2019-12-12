@@ -7,7 +7,6 @@ namespace RocketLunch.domain.contracts
     public interface IRepository
     {
         Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl);
-        Task<int> CreateUserAsync_Old(string name, IEnumerable<string> nopes);
         Task<IEnumerable<UserDto>> GetUsersAsync();
         Task<UserDto> GetUserAsync(string googleId);
         Task<UserDto> GetUserAsync(int id);

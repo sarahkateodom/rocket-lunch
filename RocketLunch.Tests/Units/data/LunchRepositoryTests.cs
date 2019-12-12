@@ -72,44 +72,6 @@ namespace RocketLunch.tests.units.data
         }
 
         [Fact]
-        public async void LunchRepository_CreateUserAsync_Old_AddsEntryToTable()
-        {
-            // arrange
-            LunchContext context = GetContext();
-            LunchRepository target = new LunchRepository(context);
-
-            string name = "Tahra Dactyl";
-            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
-
-            // act
-            await target.CreateUserAsync_Old(name, nopes);
-
-            // assert
-            UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
-            Assert.NotNull(newUser);
-            Assert.True(newUser.Id > 0);
-            Assert.Equal(JsonConvert.SerializeObject(nopes), newUser.Nopes);
-        }
-
-        [Fact]
-        public async void LunchRepository_CreateUserAsync_Old_ReturnsId()
-        {
-            // arrange
-            LunchContext context = GetContext();
-            LunchRepository target = new LunchRepository(context);
-
-            string name = "Tahra Dactyl";
-            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
-
-            // act
-            int result = await target.CreateUserAsync_Old(name, nopes);
-
-            // assert
-            UserEntity newUser = context.Users.Where(u => u.Name == name).FirstOrDefault();
-            Assert.Equal(newUser.Id, result);
-        }
-
-        [Fact]
         public async void LunchRepository_CreateUserAsync_AddsEntryToTable()
         {
             // arrange

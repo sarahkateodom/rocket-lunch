@@ -10,30 +10,24 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace RocketLunch.web.controllers
 {
     [Authorize]
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
         private IManageUsers _userService;
+        private IManageClaims _claims;
 
-        public UsersController(IManageUsers userService)
+        public UsersController(IManageUsers userService, IManageClaims claimsService): base(claimsService)
         {
             _userService = userService ?? throw new ArgumentNullException("userService");
         }
 
-        // [HttpPost]
-        // [Route("api/users")]
-        // public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto dto)
-        // {
-        //     var result = await _userService.CreateUserAsync(dto);
-        //     return result.Match(err => err.Content(this), r => new OkObjectResult(r));
-        // }
-
-        // [HttpGet]
-        // [Route("api/users")]
-        // public async Task<ObjectResult> GetUsers()
-        // {
-        //     var result = await _userService.GetUsersAsync();
-        //     return result.Match(err => err.Content(this), r => new OkObjectResult(r ));
-        // }
+        [HttpGet]
+        [Route("api/users/current")]
+        public async Task<ObjectResult> GetCurrentUser()
+        {
+            var userFromClaims = GetIdentityFromClaims();
+            var result = await _userService.GetUserAsync(userFromClaims.Id);
+            return new OkObjectResult(result);
+        }
 
         [HttpGet]
         [SwaggerResponse((int)HttpStatusCode.OK, "Get User by internal identifier", typeof(UserDto))]

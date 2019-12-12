@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { Restaurant } from '../models/restaurant';
 import { HttpService } from './http.service';
 import { map } from 'rxjs/operators';
-import { User } from '../models/user';
+import { SocialLogin } from '../models/social-login';
 import { UUID } from 'angular2-uuid';
-import { MealTime } from '../models/enums/MealTime';
 import { RestaurantSearch } from '../models/restaurant-search';
+import { SocialUser, SocialLoginModule } from 'angularx-social-login';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,9 @@ export class LunchLadyService {
 
   constructor(private http: HttpService) { }
 
-  public login(googleId: string, name: string, email: string): Observable<any> {
+  public login(socialUser: SocialUser): Observable<any> {
     let url = `/api/login`;
-    return this.http.post(url, { googleId: googleId, name: name, email: email }).pipe(map(res => res));
+    return this.http.post(url, { googleId: socialUser.id, name: socialUser.name, email: socialUser.email, photoUrl: socialUser.photoUrl } as SocialLogin).pipe(map(res => res));
   }
 
   public logout(): Observable<any> {
@@ -35,15 +36,10 @@ export class LunchLadyService {
     return this.http.get(url).pipe(map(res => <Restaurant[]>res));
   }
 
-  // public addUser(user: User): Observable<number> {
-  //   let url = `/api/users/`;
-  //   return this.http.post(url, user).pipe(map(res => <number>res));
-  // }
-
-  // public getUsers(): Observable<User[]> {
-  //   let url = `/api/users/`;
-  //   return this.http.get(url).pipe(map(res => <User[]>res));
-  // }
+  public getCurrentUser(): Observable<User> {
+    let url = `/api/users/current`;
+    return this.http.get(url).pipe(map(res => <User>res));
+  }
 
   public getUser(id: number): Observable<User> {
     let url = `/api/users/${id}`;

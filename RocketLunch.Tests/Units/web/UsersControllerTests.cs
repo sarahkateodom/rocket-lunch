@@ -18,7 +18,7 @@ namespace RocketLunch.tests.web
         public void UsersControllerTests_Ctor_RequiresuserService()
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => new UsersController((IManageUsers)null));
+            Assert.Throws<ArgumentNullException>(() => new UsersController((IManageUsers)null, (IManageClaims)null));
         }
 
         // [Fact]
@@ -60,8 +60,9 @@ namespace RocketLunch.tests.web
         {
             // Arrange
             Mock<IManageUsers> mockUserService = new Mock<IManageUsers>();
+            Mock<IManageClaims> mockClaimsService = new Mock<IManageClaims>();
             mockUserService.Setup(s => s.UpdateUserAsync(It.IsAny<int>(), It.IsAny<UserUpdateDto>())).ReturnsAsync(true);
-            var target = new UsersController(mockUserService.Object);
+            var target = new UsersController(mockUserService.Object, mockClaimsService.Object);
             UserUpdateDto dto = new UserUpdateDto();
             int userId = 1;
 

@@ -3,6 +3,7 @@ import { Restaurant } from './../../models/restaurant';
 import { Component, OnInit } from '@angular/core';
 import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -14,17 +15,22 @@ export class ProfileComponent implements OnInit {
   selectedRestaurantId: string;
   user: User;
   loading = true;
+  subscription;
 
-  constructor(private lunchLady: LunchLadyService) {
+  constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute) {
     this.getRestaurants();
   }
 
   ngOnInit() {
-    this.lunchLady.getUser(1)
-      .subscribe(x => {
-        this.user = x;
-        console.log(this.user)
-      });
+    this.subscription = this.activatedRoute.params.subscribe(params => {
+      let userId = +params['id']; // (+) converts string 'id' to a number
+      this.lunchLady.getUser(userId)
+        .subscribe(x => {
+          this.user = x;
+          console.log(this.user)
+        });
+    });
+
   }
 
   getRestaurants() {
@@ -60,7 +66,7 @@ export class ProfileComponent implements OnInit {
   nopeRestaurant() {
     if (!this.selectedRestaurantId) return;
     if (!this.user.nopes) this.user.nopes = [];
-    
+
     this.user.nopes.push(this.selectedRestaurantId);
     this.selectedRestaurantId = undefined;
     this.updateUser();
