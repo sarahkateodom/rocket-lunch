@@ -32,15 +32,15 @@ namespace RocketLunch.data
 
         public async Task<int> CreateTeamAsync(string name, string zip)
         {
-            int teamId = (await _lunchContext.Teams.AddAsync(new TeamEntity
+            var team = (await _lunchContext.Teams.AddAsync(new TeamEntity
             {
                 Name = name,
                 Zip = zip,
-            }).ConfigureAwait(false)).Entity.Id;
+            }).ConfigureAwait(false)).Entity;
 
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return teamId;
+            return team.Id;
         }
 
         public async Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl)
