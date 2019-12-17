@@ -1,0 +1,22 @@
+---
+memory: 1G
+disk_quota: 1G
+instances: 1
+domain: apps.pcfusw1sbx.solutions.corelogic.com
+buildpack: dotnet_core_buildpack
+stack: cflinuxfs3
+services:
+  - RocketRedis
+  - clvt-config-svr
+timeout: 180
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  CACHE_NUGET_PACKAGES: false
+  PUBLISH_RELEASE_CONFIG: true
+  ASPNETCORE_ENVIRONMENT: sbx
+  YELPAPIKEY: "3TXnjAojUjyc4ra_mKQMzrr5UKXm4kx4qpBefbb9DuIcpji03eS-YQ5xhQp1dkI0iXlO8X36DAo924_cX9vX56UFCB1B_RNDUsAWji2xLUIklrbwyBjWKdsP6rKGW3Yx"
+  POSTGRESDB: "User ID=rlaunch;Password=415vGIPH;Host=10.39.41.20;Port=5432;Database=rocketlaunch_sbx"
+applications:
+- name: rocketlunch
+  host: rocketlunch
+  path: ../RocketLunch.Web/bin/Debug/netcoreapp2.2/publish/

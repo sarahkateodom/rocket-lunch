@@ -33,20 +33,23 @@ namespace RocketLunch.web.middleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             // dynamically set HttpStatusCode based on exception type 
-            switch(ex) {
-                case BadRequestException ex1 :
+            switch (ex)
+            {
+                case BadRequestException ex1:
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
-                case NotFoundException ex2 :
+                case NotFoundException ex2:
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
-                case TooManyRequestsException ex2 :
+                case TooManyRequestsException ex2:
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
-                    break;   
-                case NotAuthorizedException ex2 :
+                    break;
+                case NotAuthorizedException ex2:
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    break;              
+                    break;
             }
+            if (context.Response.StatusCode == (int)HttpStatusCode.InternalServerError)
+                throw ex;
 
             return context.Response.WriteAsync(ex.Message);
         }

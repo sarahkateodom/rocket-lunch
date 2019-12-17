@@ -7,10 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RocketLunch.data;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.services;
+using RocketLunch.domain.Services;
 using RocketLunch.web.middleware;
+using StackExchange.Redis;
+using Steeltoe.Extensions.Configuration.CloudFoundry;
+using Steeltoe.Extensions.Configuration.ConfigServer;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace RocketLunch.web
@@ -26,6 +33,22 @@ namespace RocketLunch.web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
+            services.ConfigureConfigServerClientOptions(Configuration);
+
+            services.ConfigureCloudFoundryOptions(Configuration);
+
+
+            ConfigDumper dumper = new ConfigDumper();
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
+            serviceCollection.AddLogging(builder => builder.AddConsole((opts) =>
+            { }));
+            serviceCollection.AddLogging(builder => builder.AddDebug());
+            var factory = serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
+            dumper.Run(factory.CreateLogger("config"), Configuration);
+
             services.AddTransient<IGetLunchOptions, YelpService>(x => new YelpService(Configuration["YELPAPIKEY"], x.GetService<IRestaurantCache>()));
             services.AddTransient<IServeLunch, LunchService>();
             services.AddTransient<IRepository, LunchRepository>();
@@ -33,11 +56,37 @@ namespace RocketLunch.web
             services.AddTransient<IManageClaims, ClaimsService>();
             services.AddTransient<IManageUserSessions, UserSessionService>();
             services.AddSingleton<IChaos, RandomService>();
-            services.AddDistributedRedisCache(option =>
+
+
+            string vcapServices = Configuration["VCAP_SERVICES"];
+            if (vcapServices != null)
             {
-                option.Configuration = "localhost:6379";
-                option.InstanceName = "master";
-            });
+                var vcap = JsonConvert.DeserializeObject<vcapservices>(vcapServices);
+
+                Console.WriteLine("using pcf redis");
+                Console.WriteLine(JsonConvert.SerializeObject(vcap));
+                var redis = vcap.redis[0];
+                var redisConfig = new ConfigurationOptions
+                {
+                    Password = redis.credentials.password
+                };
+                redisConfig.EndPoints.Add($"{redis.credentials.host}:{redis.credentials.port}");
+                services.AddDistributedRedisCache(option =>
+                {
+                    option.InstanceName = "RocketRedis";
+                    option.ConfigurationOptions = redisConfig;
+                });
+            }
+            else
+            {
+                services.AddDistributedRedisCache(option =>
+                {
+                    option.Configuration = "localhost:6379";
+                    option.InstanceName = "master";
+                });
+            }
+
+
             services.AddTransient<ICache, CacheService>();
             services.AddTransient<IRestaurantCache, RestaurantCache>();
 
@@ -98,7 +147,7 @@ namespace RocketLunch.web
             app.ConfigureCustomExceptionMiddleware();
             app.UseStaticFiles();
             app.UseDefaultFiles();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -106,6 +155,24 @@ namespace RocketLunch.web
                     template: "{*anything}",
                     defaults: new { controller = "Home", action = "Index" });
             });
+        }
+        internal class vcapservices
+        {
+            [JsonProperty("p-redis")]
+            public Redis[] redis { get; set; }
+
+        }
+
+        internal class Redis
+        {
+            public RedisCreds credentials { get; set; }
+        }
+
+        internal class RedisCreds
+        {
+            public string host { get; set; }
+            public string password { get; set; }
+            public string port { get; set; }
         }
     }
 }
