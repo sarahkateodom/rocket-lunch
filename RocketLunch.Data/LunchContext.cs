@@ -18,6 +18,8 @@ namespace RocketLunch.data
         }
 
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<TeamEntity> Teams { get; set; }
+        public DbSet<UserTeamEntity> UserTeams { get; set; }
 
         public string ProviderName => base.Database.ProviderName;
 
@@ -45,6 +47,13 @@ namespace RocketLunch.data
                 .ValueGeneratedOnAdd()
                 .UseNpgsqlIdentityByDefaultColumn();
 
+            modelBuilder.Entity<TeamEntity>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd()
+                .UseNpgsqlIdentityByDefaultColumn();
+
+            modelBuilder.Entity<UserTeamEntity>()
+                .HasKey(p => new { p.TeamId, p.UserId });
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
