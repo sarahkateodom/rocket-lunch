@@ -11,10 +11,11 @@ import { RestaurantSearch } from 'src/app/models/restaurant-search';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   restaurant: any;
   goSrc: string;
   goSrcs: string[];
+  internalUser: User;
   users: User[] = [];
   selectedUser: User;
   restaurants: Restaurant[] = [];
@@ -23,9 +24,9 @@ export class HomeComponent {
   meal: MealTime;
   isLunch: boolean = false;
   isDinner: boolean = false;
+  zip: string;
 
   constructor(private lunchLady: LunchLadyService) {
-
     this.goSrcs = [
       './assets/go-burger.png',
       './assets/go-chicken-leg.png',
@@ -50,17 +51,40 @@ export class HomeComponent {
     // this.setBreakfast();
   }
 
+  ngOnInit() {
+    this.lunchLady.getCurrentUser()
+      .subscribe(i => {
+        this.internalUser = i;
+        this.zip = this.internalUser.zip;
+      }, err => {
+        this.lunchLady.getPosition()
+          .then((x) => {
+            // get geocode location
+            this.lunchLady.getGeocodeResult(x.lng, x.lat)
+              .subscribe(geocode => {
+                this.zip = geocode.features.filter(feature => feature.place_type.find(place => place == "postcode"))[0].text;
+              });
+          });
+      });
+  }
+
+
   setRandomGoImage() {
     let randomIndex = Math.floor(Math.random() * this.goSrcs.length);
     this.goSrc = this.goSrcs[randomIndex];
   }
 
   getRestaurant(): any {
+    let searchOptions = new RestaurantSearch();
+    searchOptions.zip = this.zip;
+    if (!this.sessionId) {
+      this.sessionId = UUID.UUID();
+    }
 
-    if (!this.sessionId) this.sessionId = UUID.UUID();
-    this.lunchLady.getRestaurant(this.sessionId, new RestaurantSearch()).subscribe(x => {
-      this.restaurant = x;
-    });
+    this.lunchLady.getRestaurant(this.sessionId, searchOptions)
+      .subscribe(x => {
+        this.restaurant = x;
+      });
   }
 
   // toggleMeal() {

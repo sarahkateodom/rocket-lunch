@@ -27,7 +27,20 @@ export class LunchLadyService {
     return this.http.get(url).pipe(map(res => res));
   }
 
-  public getGeocodeResult(lng: string,lat: string): Observable<GeocodeResult> {
+  public getPosition(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resp => {
+        resolve({
+          lng: resp.coords.longitude, lat: resp.coords.latitude
+        });
+      },
+        err => {
+          reject(err);
+        });
+    });
+  }
+
+  public getGeocodeResult(lng: string, lat: string): Observable<GeocodeResult> {
     let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng}%2C%20${lat}.json?access_token=pk.eyJ1Ijoib3hmb3JkbGFic2NsZ3giLCJhIjoiY2s0MXc5c2lpMDU3eTNvcDlleGYzZXVwNSJ9.1WoZ9Vkzpu8dzztCZYT53g`;
     return this.http.get(url).pipe(map(res => <GeocodeResult>res));
   }

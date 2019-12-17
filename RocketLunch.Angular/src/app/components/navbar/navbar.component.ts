@@ -36,13 +36,12 @@ export class NavbarComponent implements OnInit {
           console.log('SignIn User', u);
           if (!self.internalUser.zip) {
             // get lng/lat from browser
-            self.getPosition()
+            self.service.getPosition()
               .then((x) => {
                 // get geocode location
                 self.service.getGeocodeResult(x.lng, x.lat)
                   .subscribe(geocode => {
                     let zip = geocode.features.filter(feature => feature.place_type.find(place => place == "postcode"))[0].text;
-                    console.log('zip', zip);
 
                     // update user with zip
                     self.internalUser.zip = zip;
@@ -66,17 +65,4 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  getPosition(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resp => {
-        resolve({
-          lng: resp.coords.longitude, lat: resp.coords.latitude
-        });
-      },
-        err => {
-          reject(err);
-        });
-    });
-
-  }
 }
