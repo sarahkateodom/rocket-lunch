@@ -16,7 +16,7 @@ namespace RocketLunch.web.controllers
         [Route("api/users/{userId}/teams")]
         public async Task<ObjectResult> CreateTeam(int userId, [FromBody] TeamDto teamDto)
         {
-            return new OkObjectResult(new TeamDto());
+            return new OkObjectResult(teamDto);
         }
 
         [HttpPost]

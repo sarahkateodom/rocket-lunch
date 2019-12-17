@@ -9,6 +9,7 @@ import { RestaurantSearch } from '../models/restaurant-search';
 import { SocialUser, SocialLoginModule } from 'angularx-social-login';
 import { User } from '../models/user';
 import { GeocodeResult } from '../models/geocode-result';
+import { Team } from '../models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -57,17 +58,22 @@ export class LunchLadyService {
 
   public getCurrentUser(): Observable<User> {
     let url = `/api/users/current`;
-    return this.http.get(url).pipe(map(res => <User>res));
+    return this.http.get(url).pipe(map(res => Object.assign(new User(), <User>res)));
   }
 
   public getUser(id: number): Observable<User> {
     let url = `/api/users/${id}`;
-    return this.http.get(url).pipe(map(res => <User>res));
+    return this.http.get(url).pipe(map(res => Object.assign(new User(), <User>res)));
   }
 
   public updateuser(user: User): Observable<boolean> {
     let url = `/api/users/${user.id}`;
     return this.http.put(url, user).pipe(map(res => <boolean>res));
+  }
+
+  public createTeam(userId: number, team: Team): Observable<Team> {
+    let url = `/api/users/${userId}/teams`;
+    return this.http.post(url, team).pipe(map(res => <Team>res));
   }
 
   // public createUserSession(users: number[]): Observable<UUID> {

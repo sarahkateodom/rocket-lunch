@@ -1,3 +1,4 @@
+import { TeamModalComponent } from './components/team-modal/team-modal.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +38,7 @@ export function provideConfig() {
     ModalComponent,
     TooManyRequestsComponent,
     ProfileComponent,
+    TeamModalComponent,
   ],
   imports: [
     BrowserModule,

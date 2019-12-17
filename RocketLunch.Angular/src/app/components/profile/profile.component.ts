@@ -1,9 +1,10 @@
 import { AuthService, SocialUser } from 'angularx-social-login';
 import { Restaurant } from './../../models/restaurant';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
 import { ActivatedRoute } from '@angular/router';
+import { TeamModalComponent } from '../team-modal/team-modal.component';
 
 @Component({
   selector: 'app-profile',
@@ -11,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild(TeamModalComponent, { static: true }) teamModal: TeamModalComponent;
   restaurants: Restaurant[];
   selectedRestaurantId: string;
   user: User;
@@ -27,7 +29,7 @@ export class ProfileComponent implements OnInit {
       this.lunchLady.getUser(userId)
         .subscribe(x => {
           this.user = x;
-          console.log(this.user);
+          console.log('Profile user', this.user);
           this.getRestaurants();
         });
     });
@@ -81,5 +83,7 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-
+  openCreateTeamModal() {
+    this.teamModal.show();
+  }
 }

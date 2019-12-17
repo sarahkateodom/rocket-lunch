@@ -20,4 +20,14 @@
       </span>
     </div>
   </div>
+
+  <hr>
+  <button *ngIf="user" type="button" class="btn btn-info" (click)="openCreateTeamModal()"><i
+      class="fa fa-user-plus"></i> Create Team</button>
+
+  <ul>
+    <li *ngFor="let team of user?.teams">{{team.name}}</li>
+  </ul>
 </div>
+
+<app-team-modal #teamModal [user]="user" [zip]="user?.zip"></app-team-modal>
