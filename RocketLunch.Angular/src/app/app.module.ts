@@ -1,3 +1,4 @@
+import { EventService } from './services/event.service';
 import { TeamModalComponent } from './components/team-modal/team-modal.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -50,6 +51,7 @@ export function provideConfig() {
   providers: [
     HttpService,
     LunchLadyService, 
+    EventService,
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: AuthServiceConfig, useFactory: provideConfig },
   ],

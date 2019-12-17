@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { LunchLadyService } from '../../services/lunch-lady.service';
 import { User } from '../../models/user';
 import { UUID } from 'angular2-uuid';
 import { Restaurant } from '../../models/restaurant';
 import { MealTime } from '../../models/enums/MealTime';
 import { RestaurantSearch } from 'src/app/models/restaurant-search';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   restaurant: any;
@@ -26,7 +27,7 @@ export class HomeComponent implements OnInit {
   isDinner: boolean = false;
   zip: string;
 
-  constructor(private lunchLady: LunchLadyService) {
+  constructor(private lunchLady: LunchLadyService, private eventService: EventService) {
     this.goSrcs = [
       './assets/go-burger.png',
       './assets/go-chicken-leg.png',
@@ -48,7 +49,10 @@ export class HomeComponent implements OnInit {
       this.setRandomGoImage();
     }, 2000);
 
-    // this.setBreakfast();
+    this.eventService.teamSelected$.subscribe(selectedTeam => {
+      this.lunchLady.getTeamUsers(selectedTeam.id)
+        .subscribe(users => this.users = users);
+    });
   }
 
   ngOnInit() {
@@ -66,6 +70,7 @@ export class HomeComponent implements OnInit {
               });
           });
       });
+
   }
 
 
@@ -77,6 +82,8 @@ export class HomeComponent implements OnInit {
   getRestaurant(): any {
     let searchOptions = new RestaurantSearch();
     searchOptions.zip = this.zip;
+    searchOptions.userIds = !this.users ? [this.internalUser.id] : this.users.map(u => u.id);
+
     if (!this.sessionId) {
       this.sessionId = UUID.UUID();
     }

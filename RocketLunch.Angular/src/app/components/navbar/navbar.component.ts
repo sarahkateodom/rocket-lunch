@@ -1,28 +1,36 @@
+import { EventService } from './../../services/event.service';
 import { LunchLadyService } from './../../services/lunch-lady.service';
 import { AuthService, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/models/user';
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   public loading: boolean = true;
   public internalUser: User;
-
-  constructor(private service: LunchLadyService, private authService: AuthService) { }
+  
+  constructor(private service: LunchLadyService, private eventService: EventService, private authService: AuthService) { 
+  }
 
   ngOnInit() {
     this.service.getCurrentUser()
       .subscribe(i => {
         console.log('Current user', i)
         this.internalUser = i;
+        this.internalUser.teams.push({ id: 1, name: 'test team' } as Team);
         this.loading = false;
       }, err => {
         this.loading = false;
-      });
+      });  
+  }
+
+  selectTeam(team: Team) {
+    this.eventService.setSelectedTeam(team);
   }
 
   signIn(): void {
