@@ -40,6 +40,12 @@ namespace RocketLunch.data
                 .Property(r => r.Nopes)
                 .HasDefaultValue("[]");
 
+            modelBuilder.Entity<UserEntity>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd()
+                .UseNpgsqlIdentityByDefaultColumn();
+
+
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 // Replace table names

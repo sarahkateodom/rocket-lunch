@@ -9,8 +9,8 @@ using RocketLunch.data;
 namespace RocketLunch.data.Migrations
 {
     [DbContext(typeof(LunchContext))]
-    [Migration("20191217184740_AddZipToUsers")]
-    partial class AddZipToUsers
+    [Migration("20191217191934_AddZipToUser")]
+    partial class AddZipToUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,8 @@ namespace RocketLunch.data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Email")
                         .HasColumnName("email");
