@@ -18,6 +18,31 @@ namespace RocketLunch.data
             _lunchContext = lunchContext ?? throw new ArgumentNullException("lunchContext");
         }
 
+        public async Task AddUserToTeamAsync(int userId, int teamId)
+        {
+            if (await _lunchContext.UserTeams.AnyAsync(ut => ut.TeamId == teamId && ut.UserId == userId)) return;
+
+            await _lunchContext.UserTeams.AddAsync(new UserTeamEntity
+            {
+                TeamId = teamId,
+                UserId = userId,
+            }).ConfigureAwait(false);
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<int> CreateTeamAsync(string name, string zip)
+        {
+            int teamId = (await _lunchContext.Teams.AddAsync(new TeamEntity
+            {
+                Name = name,
+                Zip = zip,
+            }).ConfigureAwait(false)).Entity.Id;
+
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+
+            return teamId;
+        }
+
         public async Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
@@ -66,15 +91,23 @@ namespace RocketLunch.data
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            return await _lunchContext.Users.Select(u => new UserDto
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Nopes = (u.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(u.Nopes) : new List<string>(),
-                Email = u.Email,
-                PhotoUrl = u.PhotoUrl,
-            }).ToListAsync();
+            return await _lunchContext.Users.Select(u => MapToUserDto(u)).ToListAsync();
         }
+
+        public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)
+        {
+            return await _lunchContext.UserTeams.Where(ut => ut.TeamId == teamId)
+                .Select(ut => MapToUserDto(ut.User)).ToListAsync();
+        }
+
+        public async Task RemoveUserFromTeamAsync(int userId, int teamId)
+        {
+            var userTeam = await _lunchContext.UserTeams.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId).ConfigureAwait(false);
+            _lunchContext.UserTeams.Remove(userTeam);
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<bool> TeamNameExistsAsync(string teamName) => await _lunchContext.Teams.AnyAsync(t => t.Name == teamName);
 
         public async Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes, string zip)
         {
@@ -83,6 +116,18 @@ namespace RocketLunch.data
             currentUser.Nopes = JsonConvert.SerializeObject(nopes);
             currentUser.Zip = zip;
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private UserDto MapToUserDto(UserEntity user)
+        {
+            return new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Nopes = (user.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(user.Nopes) : new List<string>(),
+                Email = user.Email,
+                PhotoUrl = user.PhotoUrl,
+            };
         }
     }
 }

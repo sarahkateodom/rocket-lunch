@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,12 +12,19 @@ namespace RocketLunch.web.controllers
     [Authorize]
     public class TeamsController : Controller
     {
+        IManageTeams teamsService;
+
+        public TeamsController(IManageTeams teamsService)
+        {
+            this.teamsService = teamsService;
+        }
+
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, "Create new Team. This will add User to Team", typeof(TeamDto))]
         [Route("api/users/{userId}/teams")]
         public async Task<ObjectResult> CreateTeam(int userId, [FromBody] TeamDto teamDto)
         {
-            return new OkObjectResult(teamDto);
+            return new OkObjectResult(await this.teamsService.CreateTeamAsync(userId, teamDto));
         }
 
         [HttpPost]

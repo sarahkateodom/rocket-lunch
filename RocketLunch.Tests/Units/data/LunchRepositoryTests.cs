@@ -197,6 +197,184 @@ namespace RocketLunch.tests.units.data
             Assert.Null(result);
         }
 
+        [Fact]
+        public async void LunchRepository_CreateTeamAsync_CreatesATeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            const string Name = "bob's team";
+            const string Zip = "90210";
+
+            // act
+            int result = await target.CreateTeamAsync(Name, Zip);
+
+            // assert
+            var team = context.Teams.First();
+            Assert.Equal(Name, team.Name);
+            Assert.Equal(Zip, team.Zip);
+            Assert.Equal(team.Id, result);
+        }
+
+        [Fact]
+        public async void LunchRepository_TeamNameExistsAsync_ReturnsFalseWhenTeamDoesNotExist()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            const string Name = "bob's team";
+
+            // act
+            bool result = await target.TeamNameExistsAsync(Name);
+
+            // assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async void LunchRepository_TeamNameExistsAsync_ReturnsTrueWhenTeamDoesExist()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            const string Name = "bob's team";
+            context.Teams.Add(new TeamEntity
+            {
+                Name = Name
+            });
+            context.SaveChanges();
+
+            // act
+            bool result = await target.TeamNameExistsAsync(Name);
+
+            // assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async void LunchRepository_AddUserToTeamAsync_AddsUserToTeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            TeamEntity team = context.Teams.Add(new TeamEntity
+            {
+                Name = "bob's team"
+            }).Entity;
+            UserEntity user = context.Users.Add(new UserEntity
+            {
+                Name = "bob"
+            }).Entity;
+            context.SaveChanges();
+
+
+            // act
+            await target.AddUserToTeamAsync(user.Id, team.Id);
+
+            // assert
+            var userTeam = context.UserTeams.First();
+            Assert.Equal(team.Id, userTeam.TeamId);
+            Assert.Equal(user.Id, userTeam.UserId);
+        }
+
+        [Fact]
+        public async void LunchRepository_AddUserToTeamAsync_ReturnsWithoutErrorWhenComboAlreadyExists()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            TeamEntity team = context.Teams.Add(new TeamEntity
+            {
+                Name = "bob's team"
+            }).Entity;
+            UserEntity user = context.Users.Add(new UserEntity
+            {
+                Name = "bob"
+            }).Entity;
+            context.UserTeams.Add(new UserTeamEntity
+            {
+                UserId = user.Id,
+                TeamId = team.Id
+            });
+            context.SaveChanges();
+
+
+            // act
+            await target.AddUserToTeamAsync(user.Id, team.Id);
+
+            // assert
+            // no exception thrown
+        }
+
+        [Fact]
+        public async void LunchRepository_RemoveUserFromTeamAsync_RemovesUserFromTeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            TeamEntity team = context.Teams.Add(new TeamEntity
+            {
+                Name = "bob's team"
+            }).Entity;
+            UserEntity user = context.Users.Add(new UserEntity
+            {
+                Name = "bob"
+            }).Entity;
+            context.UserTeams.Add(new UserTeamEntity
+            {
+                UserId = user.Id,
+                TeamId = team.Id
+            });
+            context.SaveChanges();
+
+
+            // act
+            await target.RemoveUserFromTeamAsync(user.Id, team.Id);
+
+            // assert
+            Assert.Equal(0, context.UserTeams.Count());
+        }
+
+        [Fact]
+        public async void LunchRepository_GetUsersOfTeamAsync_RemovesUserFromTeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            TeamEntity team = context.Teams.Add(new TeamEntity
+            {
+                Name = "bob's team"
+            }).Entity;
+            UserEntity user = context.Users.Add(new UserEntity
+            {
+                Name = "bob"
+            }).Entity;
+            UserEntity user2 = context.Users.Add(new UserEntity
+            {
+                Name = "lilTimmy"
+            }).Entity;
+            context.UserTeams.Add(new UserTeamEntity
+            {
+                UserId = user.Id,
+                TeamId = team.Id
+            });
+            context.UserTeams.Add(new UserTeamEntity
+            {
+                UserId = user2.Id,
+                TeamId = team.Id
+            });
+            context.SaveChanges();
+
+
+            // act
+            List<UserDto> result = (await target.GetUsersOfTeamAsync(team.Id)).ToList();
+
+            // assert
+            Assert.Equal(2, result.Count());
+            Assert.Equal("bob", result[0].Name);
+            Assert.Equal("lilTimmy", result[1].Name);
+        }
+
 
         private LunchContext GetContext()
         {
