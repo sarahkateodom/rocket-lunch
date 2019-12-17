@@ -72,6 +72,52 @@ namespace RocketLunch.tests.units.data
         }
 
         [Fact]
+        public async void LunchRepository_GetUserByEmailAsync_GetsUser()
+        {
+            // arrangec
+            LunchContext context = GetContext();
+            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
+            var addedUser = context.Users.Add(new UserEntity
+            {
+                Id = 1,
+                GoogleId = "googleID",
+                Name = "test",
+                Email = "email@email.email",
+                Nopes = JsonConvert.SerializeObject(nopes),
+                PhotoUrl = "https://gph.is/NYMue5",
+                Zip = "39955",
+            }).Entity;
+
+            context.SaveChanges();
+
+            LunchRepository target = new LunchRepository(context);
+
+            // act
+            UserDto result = await target.GetUserByEmailAsync(addedUser.Email);
+
+            // assert
+            Assert.Equal(addedUser.Email, result.Email);
+            Assert.Equal(addedUser.Id, result.Id);
+            Assert.Equal(addedUser.Name, result.Name);
+            Assert.Equal(addedUser.Nopes, JsonConvert.SerializeObject(result.Nopes));
+        }
+
+        [Fact]
+        public async void LunchRepository_GetUserByEmailAsync_ReturnsNullWhenUserNotFound()
+        {
+            // arrangec
+            LunchContext context = GetContext();
+
+            LunchRepository target = new LunchRepository(context);
+
+            // act
+            UserDto result = await target.GetUserByEmailAsync("fsdfklasjf");
+
+            // assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async void LunchRepository_CreateUserAsync_AddsEntryToTable()
         {
             // arrange

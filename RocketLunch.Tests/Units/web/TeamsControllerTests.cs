@@ -15,25 +15,45 @@ namespace RocketLunch.tests.web
         {
             // arrange
             int userId = 2;
-            var teamDto = new TeamDto {
+            var teamDto = new TeamDto
+            {
                 Name = "bob's team",
                 Zip = "90210"
             };
-            
+
             Mock<IManageTeams> teamsService = new Mock<IManageTeams>();
             TeamDto returnedDto = new TeamDto { Name = teamDto.Name, Zip = teamDto.Zip, Id = 32, };
             teamsService.Setup(t => t.CreateTeamAsync(userId, teamDto)).ReturnsAsync(returnedDto);
-            
+
             var target = new TeamsController(teamsService.Object);
-        
+
             // act
             var result = await target.CreateTeam(userId, teamDto);
-        
+
             // assert
             Assert.Equal(returnedDto, result.Value);
             Assert.Equal(200, result.StatusCode);
         }
-        
-        
+
+        [Fact]
+        public async void TeamsController_AddUserToTeam_ReturnOkAndCallsTeamService()
+        {
+            // arrange
+            string email = "bob@bob.com";
+            int teamId = 32;
+
+            Mock<IManageTeams> teamsService = new Mock<IManageTeams>();
+
+            var target = new TeamsController(teamsService.Object);
+
+            // act
+            var result = await target.AddUserToTeam(email, teamId);
+
+            // assert
+            teamsService.Verify(x => x.AddUserToTeamAsync(teamId, email), Times.Once);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+
     }
 }

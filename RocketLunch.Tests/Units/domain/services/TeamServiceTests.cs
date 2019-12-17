@@ -99,5 +99,48 @@ namespace RocketLunch.tests.units.domain.services
             // assert
             await Assert.ThrowsAsync<BadRequestException>(async () => await target.CreateTeamAsync(1, dto));
         }
+
+        [Fact]
+        public async void TeamService_AddUserToTeamAsync_CallRepo()
+        {
+            // arrange
+            int teamId = 32;
+            string email = "dogs@cats.com";
+            int userId = 42;
+
+            var repo = new Mock<IRepository>();
+            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync(new UserDto
+            {
+                Id = userId
+            });
+
+            var target = new TeamService(repo.Object);
+
+            // act
+            await target.AddUserToTeamAsync(teamId, email);
+
+            // assert
+            repo.Verify(x => x.AddUserToTeamAsync(userId, teamId), Times.Once);
+        }
+
+        [Fact]
+        public async void TeamService_AddUserToTeamAsync_DoesNotCallRepoWhenUserDoesNotExist()
+        {
+            // arrange
+            int teamId = 32;
+            string email = "dogs@cats.com";
+            int userId = 42;
+
+            var repo = new Mock<IRepository>();
+            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync((UserDto)null);
+
+            var target = new TeamService(repo.Object);
+
+            // act
+            await target.AddUserToTeamAsync(teamId, email);
+
+            // assert
+            repo.Verify(x => x.AddUserToTeamAsync(userId, teamId), Times.Never);
+        }
     }
 }

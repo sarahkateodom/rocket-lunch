@@ -89,6 +89,11 @@ namespace RocketLunch.data
             };
         }
 
+        public async Task<UserDto> GetUserByEmailAsync(string email)
+        {
+            return MapToUserDto(await _lunchContext.Users.FirstOrDefaultAsync(x => x.Email == email).ConfigureAwait(false));
+        }
+
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
             return await _lunchContext.Users.Select(u => MapToUserDto(u)).ToListAsync();
@@ -120,6 +125,7 @@ namespace RocketLunch.data
 
         private UserDto MapToUserDto(UserEntity user)
         {
+            if (user == null) return null;
             return new UserDto
             {
                 Id = user.Id,

@@ -28,11 +28,12 @@ namespace RocketLunch.web.controllers
         }
 
         [HttpPost]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Add User to Team", typeof(TeamDto))]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Add User to Team")]
         [Route("api/users/{email}/teams/{teamId}")]
-        public async Task<ObjectResult> AddUserToTeam(string email, int teamId)
+        public async Task<OkResult> AddUserToTeam(string email, int teamId)
         {
-            return new OkObjectResult(new TeamDto());
+            await this.teamsService.AddUserToTeamAsync(teamId, email).ConfigureAwait(false);
+            return new OkResult();
         }
 
         [HttpDelete]
