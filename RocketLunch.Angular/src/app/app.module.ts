@@ -17,6 +17,7 @@ import { routing } from './app.routes';
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
 import { ProfileComponent } from './components/profile/profile.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
  
 let config = new AuthServiceConfig([
@@ -33,6 +34,7 @@ export function provideConfig() {
 @NgModule({
   declarations: [
     AppComponent,
+    WelcomeComponent,
     HomeComponent,
     NavbarComponent,
     FooterComponent,

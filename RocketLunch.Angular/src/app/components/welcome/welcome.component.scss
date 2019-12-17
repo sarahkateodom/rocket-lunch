@@ -1,0 +1,24 @@
+.welcome-page {
+    position: relative;
+    width: 100%;
+    img {
+        width: 100%;
+        height: auto;
+        overflow-y: hidden;
+    }
+
+    .search-btn {
+        position: absolute;
+        top: 60%;
+        left: 19%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        background-image: linear-gradient(to right, #85D1F1, #1E81CE);
+        color: white;
+        font-size: 20px;
+        padding: 12px 40px;
+        border: none;
+        cursor: pointer;
+        border-radius: 27px;
+    }
+}
