@@ -4,7 +4,7 @@ export class User {
 
   constructor() {
     this.id = undefined;
-    this.name = '';
+    this.name;
     this.nopes = [];
     this.teams = [];
   }

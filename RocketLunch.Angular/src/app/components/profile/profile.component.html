@@ -1,37 +1,57 @@
 <navbar></navbar>
-<div class="container">
-  <form class="form-inline mb-2">
-    <div class="form-group mr-2">
-      <label for="nopeSelect" class="control-label modal-input-label"><b>Nopes: </b></label>
-    </div>
-    <div class="form-group mr-2">
-      <select class="form-control" name="selectedRestaurant" [(ngModel)]="selectedRestaurantId">
-        <option *ngFor="let restaurant of getFilteredRestaurants()" [value]="restaurant.id">{{ restaurant.name }}
-        </option>
-      </select>
-    </div>
-    <button type="button" class="btn btn-info" (click)="nopeRestaurant()"><i class="fa fa-plus"></i></button>
-  </form>
-  <div *ngIf="user">
-    <b>Current Nopes: </b>
-    <div class="nopes" *ngFor="let nope of nopesToDisplay()">
-      <span *ngIf="getRestaurantNameFromId(nope)" class="badge badge-pill badge-secondary nope">
-        <span>{{ getRestaurantNameFromId(nope)}} </span>
-        <span class="nope-remove" (click)="removeNope(nope)">x</span>
-      </span>
+<div class="container" *ngIf="user">
+
+  <div class="card mt-5" style="width: 14rem;">
+    <img src="{{user.photoUrl}}" class="card-img-top">
+    <div class="card-body">
+      <p>Name: {{user.name}}</p>
+      <p>Zip: {{user.zip}}</p>
     </div>
   </div>
 
-  <hr>
-  <button *ngIf="user" type="button" class="btn btn-info" (click)="openCreateTeamModal()"><i
-      class="fa fa-user-plus"></i> Create Team</button>
+  <div class="card mt-5" style="width: 80%;">
+    <div class="card-header">
+      Manage Restaurant Preferences
+    </div>
+    <div class="card-body">
+      <div class="form-group mr-2">
+        <label for="nopeSelect" class="control-label modal-input-label"><b>Nopes: </b></label>
+      </div>
+      <div class="form-group mr-2">
+        <select class="form-control" name="selectedRestaurant" [(ngModel)]="selectedRestaurantId">
+          <option *ngFor="let restaurant of getFilteredRestaurants()" [value]="restaurant.id">{{ restaurant.name }}
+          </option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-info" (click)="nopeRestaurant()"><i class="fa fa-plus"></i></button>
+      <div *ngIf="user">
+        <b>Current Nopes: </b>
+        <div class="nopes" *ngFor="let nope of nopesToDisplay()">
+          <span *ngIf="getRestaurantNameFromId(nope)" class="badge badge-pill badge-secondary nope">
+            <span>{{ getRestaurantNameFromId(nope)}} </span>
+            <span class="nope-remove" (click)="removeNope(nope)">x</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <ul>
-    <li *ngFor="let team of user?.teams">{{team.name}}</li>
-  </ul>
+  <div class="card mt-5" style="width: 80%;">
+    <div class="card-header">
+      Manage Your Teams
+
+      <button *ngIf="user" type="button" class="btn btn-info" style="float:right;" (click)="openCreateTeamModal()"><i
+          class="fa fa-user-plus"></i> Create Team</button>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let team of user?.teams">{{team.name}}</li>
+      </ul>
+    </div>
+  </div>
+
 </div>
 
+
 <app-team-modal #teamModal [user]="user" [zip]="user?.zip"></app-team-modal>
-
-
 <app-footer></app-footer>
