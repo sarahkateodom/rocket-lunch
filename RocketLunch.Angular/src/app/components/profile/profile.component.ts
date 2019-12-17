@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit {
   subscription;
 
   constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute) {
-    this.getRestaurants();
+    
   }
 
   ngOnInit() {
@@ -27,14 +27,16 @@ export class ProfileComponent implements OnInit {
       this.lunchLady.getUser(userId)
         .subscribe(x => {
           this.user = x;
-          console.log(this.user)
+          console.log(this.user);
+          this.getRestaurants();
         });
     });
 
   }
 
   getRestaurants() {
-    this.lunchLady.getRestaurants("38655")
+    if (!this.user) return;
+    this.lunchLady.getRestaurants(this.user.zip)
       .subscribe(x => {
         this.restaurants = x;
       });
