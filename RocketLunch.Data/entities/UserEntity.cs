@@ -12,5 +12,6 @@ namespace RocketLunch.data.entities
         public string Email { get; set; }
         public string PhotoUrl { get; set; }
         public string Nopes { get; set; }
+        public string Zip { get; set; }
     }
 }

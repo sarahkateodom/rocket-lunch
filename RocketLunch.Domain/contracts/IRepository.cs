@@ -10,6 +10,6 @@ namespace RocketLunch.domain.contracts
         Task<IEnumerable<UserDto>> GetUsersAsync();
         Task<UserDto> GetUserAsync(string googleId);
         Task<UserDto> GetUserAsync(int id);
-        Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes);
+        Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes, string Zip);
     }
 }

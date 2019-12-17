@@ -165,13 +165,14 @@ namespace RocketLunch.tests.units.domain.services
             {
                 Name = "Anne Telohp",
                 Nopes = new List<string> { "Chicken Salad Chick" },
+                Zip = "90210"
             };
 
             // act
             var result = await target.UpdateUserAsync(userId, dto);
 
             // assert
-            mockRepo.Verify(r => r.UpdateUserAsync(userId, dto.Name, dto.Nopes), Times.Once);
+            mockRepo.Verify(r => r.UpdateUserAsync(userId, dto.Name, dto.Nopes, dto.Zip), Times.Once);
         }
 
         [Fact]
@@ -189,7 +190,7 @@ namespace RocketLunch.tests.units.domain.services
             };
 
             // act & assert
-            await Assert.ThrowsAsync<NotFoundException>(async() => await target.UpdateUserAsync(userId, dto));
+            await Assert.ThrowsAsync<NotFoundException>(async () => await target.UpdateUserAsync(userId, dto));
         }
 
         [Fact]

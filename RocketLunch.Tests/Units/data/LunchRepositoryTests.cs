@@ -153,12 +153,13 @@ namespace RocketLunch.tests.units.data
             List<string> nopes = new List<string> { "Chum Bucket", "Jimmy Pesto's Pizzaria" };
 
             // act
-            await target.UpdateUserAsync(user.Id, name, nopes);
+            await target.UpdateUserAsync(user.Id, name, nopes, "90210");
 
             // assert
             UserEntity updatedUser = await context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
             Assert.Equal(name, updatedUser.Name);
             Assert.Equal(JsonConvert.SerializeObject(nopes), updatedUser.Nopes);
+            Assert.Equal("90210", updatedUser.Zip);
         }
 
         [Fact]

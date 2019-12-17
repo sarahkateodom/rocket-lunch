@@ -35,7 +35,7 @@ namespace RocketLunch.domain.services
         {
             UserDto user = await _repository.GetUserAsync(userId).ConfigureAwait(false) ?? throw new NotFoundException("Specified user not found.");
 
-            await _repository.UpdateUserAsync(userId, dto.Name, dto.Nopes).ConfigureAwait(false);
+            await _repository.UpdateUserAsync(userId, dto.Name, dto.Nopes, dto.Zip).ConfigureAwait(false);
             return true;
         }
 

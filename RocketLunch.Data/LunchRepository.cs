@@ -76,11 +76,12 @@ namespace RocketLunch.data
             }).ToListAsync();
         }
 
-        public async Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes)
+        public async Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes, string zip)
         {
             UserEntity currentUser = await _lunchContext.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
             currentUser.Name = name;
             currentUser.Nopes = JsonConvert.SerializeObject(nopes);
+            currentUser.Zip = zip;
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
