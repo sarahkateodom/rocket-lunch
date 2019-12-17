@@ -8,6 +8,7 @@ import { UUID } from 'angular2-uuid';
 import { RestaurantSearch } from '../models/restaurant-search';
 import { SocialUser, SocialLoginModule } from 'angularx-social-login';
 import { User } from '../models/user';
+import { GeocodeResult } from '../models/geocode-result';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,11 @@ export class LunchLadyService {
   public logout(): Observable<any> {
     let url = `/api/logout`;
     return this.http.get(url).pipe(map(res => res));
+  }
+
+  public getGeocodeResult(lng: string,lat: string): Observable<GeocodeResult> {
+    let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng}%2C%20${lat}.json?access_token=pk.eyJ1Ijoib3hmb3JkbGFic2NsZ3giLCJhIjoiY2s0MXc5c2lpMDU3eTNvcDlleGYzZXVwNSJ9.1WoZ9Vkzpu8dzztCZYT53g`;
+    return this.http.get(url).pipe(map(res => <GeocodeResult>res));
   }
 
   public getRestaurant(guid: UUID, searchModel: RestaurantSearch): Observable<Restaurant> {

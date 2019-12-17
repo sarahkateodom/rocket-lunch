@@ -13,7 +13,9 @@ export class HttpService {
 	((err, errMsg) => {
 		if (err.status === 401)
 		{
-
+			return new Observable<Response>((subscriber: Subscriber<Response>) => {
+				subscriber.error(err);
+			});
 		}
 		else if (err.status === 403) {
 

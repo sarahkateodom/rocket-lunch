@@ -11,4 +11,5 @@ export class User {
     public email: string;
     public photoUrl: string;
     public nopes: string[] = [];
+    public zip: string;
 }
