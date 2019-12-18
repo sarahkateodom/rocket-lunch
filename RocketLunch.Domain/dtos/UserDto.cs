@@ -7,7 +7,6 @@ namespace RocketLunch.domain.dtos
         public UserDto()
         {
             Nopes = new List<string>();
-            // Teams = new List<TeamDto>();
         }
 
         public int Id { get; set; }
@@ -16,7 +15,6 @@ namespace RocketLunch.domain.dtos
         public string Email { get; set; }
         public List<string> Nopes { get; set; }
         public string Zip { get; set; }
-        // public IEnumerable<TeamDto> Teams { get; set; }
 
     }
 }

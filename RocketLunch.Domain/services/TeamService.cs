@@ -19,7 +19,7 @@ namespace RocketLunch.domain.services
         public async Task AddUserToTeamAsync(int teamId, string email)
         {
             var user = await this.repository.GetUserByEmailAsync(email).ConfigureAwait(false);
-            if(user == null) return;
+            if (user == null) return;
             await this.repository.AddUserToTeamAsync(user.Id, teamId).ConfigureAwait(false);
         }
 
@@ -28,7 +28,7 @@ namespace RocketLunch.domain.services
             if (dto == null) throw new ArgumentNullException();
             if (await this.repository.TeamNameExistsAsync(dto.Name).ConfigureAwait(false)) throw new BadRequestException("Team name exists");
 
-            var newTeam = new TeamDto 
+            var newTeam = new TeamDto
             {
                 Id = await this.repository.CreateTeamAsync(dto.Name, dto.Zip).ConfigureAwait(false),
                 Name = dto.Name,
@@ -38,9 +38,9 @@ namespace RocketLunch.domain.services
             return newTeam;
         }
 
-        public Task<IEnumerable<UserDto>> GetUsersOfTeam(int teamId)
+        public async Task<IEnumerable<UserDto>> GetUsersOfTeam(int teamId)
         {
-            throw new NotImplementedException();
+            return await this.repository.GetUsersOfTeamAsync(teamId).ConfigureAwait(false) ?? throw new NotFoundException("Team not found");
         }
     }
 }

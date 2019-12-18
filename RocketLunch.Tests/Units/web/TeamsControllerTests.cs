@@ -4,6 +4,7 @@ using Moq;
 using RocketLunch.domain.contracts;
 using RocketLunch.web.controllers;
 using RocketLunch.domain.dtos;
+using System.Collections.Generic;
 
 namespace RocketLunch.tests.web
 {
@@ -51,6 +52,33 @@ namespace RocketLunch.tests.web
 
             // assert
             teamsService.Verify(x => x.AddUserToTeamAsync(teamId, email), Times.Once);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public async void TeamsController_GetTeamUsers_ReturnUserFromTeamService()
+        {
+            // arrange
+            int teamId = 32;
+            var users = new List<UserDto> {
+                new UserDto {
+                    Name = "bob"
+                },
+                new UserDto {
+                    Name = "lilTimmy"
+                }
+            };
+
+            Mock<IManageTeams> teamsService = new Mock<IManageTeams>();
+            teamsService.Setup(x => x.GetUsersOfTeam(teamId)).ReturnsAsync(users);
+
+            var target = new TeamsController(teamsService.Object);
+
+            // act
+            var result = await target.GetTeamUsers(teamId);
+
+            // assert
+            Assert.Equal(users, result.Value);
             Assert.Equal(200, result.StatusCode);
         }
 

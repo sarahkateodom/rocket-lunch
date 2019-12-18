@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Moq;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
@@ -141,6 +142,49 @@ namespace RocketLunch.tests.units.domain.services
 
             // assert
             repo.Verify(x => x.AddUserToTeamAsync(userId, teamId), Times.Never);
+        }
+
+        [Fact]
+        public async void TeamService_GetUsersOfTeam_ReturnsUsersFromRepo()
+        {
+            // arrange
+            int teamId = 32;
+
+            var repo = new Mock<IRepository>();
+            List<UserDto> users = new List<UserDto> {
+                new UserDto {
+                    Name = "bob"
+                },
+                new UserDto {
+                    Name = "lilTimmy"
+                }
+            };
+            repo.Setup(r => r.GetUsersOfTeamAsync(teamId)).ReturnsAsync(users);
+
+            var target = new TeamService(repo.Object);
+
+            // act
+            var result = await target.GetUsersOfTeam(teamId);
+
+            // assert
+            Assert.Equal(users, result);
+        }
+
+        [Fact]
+        public async void TeamService_GetUsersOfTeam_ThrowsNotFoundWhenTeamIsNotThere()
+        {
+            // arrange
+            int teamId = 32;
+
+            var repo = new Mock<IRepository>();
+            repo.Setup(r => r.GetUsersOfTeamAsync(teamId)).ReturnsAsync((IEnumerable<UserDto>)null);
+
+            var target = new TeamService(repo.Object);
+
+            // act
+            // assert
+            Exception ex = await Assert.ThrowsAsync<NotFoundException>( async () => await target.GetUsersOfTeam(teamId));
+            Assert.Contains("Team not found", ex.Message);
         }
     }
 }

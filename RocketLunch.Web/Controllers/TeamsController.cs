@@ -49,7 +49,7 @@ namespace RocketLunch.web.controllers
         [Route("api/teams/{teamId}/users")]
         public async Task<ObjectResult> GetTeamUsers(int teamId)
         {
-            return new OkObjectResult(new List<UserDto>());
+            return new OkObjectResult(await this.teamsService.GetUsersOfTeam(teamId));
         }
     }
 }

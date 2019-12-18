@@ -515,7 +515,7 @@ namespace RocketLunch.tests.units.data
         }
 
         [Fact]
-        public async void LunchRepository_GetUsersOfTeamAsync_RemovesUserFromTeam()
+        public async void LunchRepository_GetUsersOfTeamAsync_ReturnsListOfUsersFromTeam()
         {
             // arrange
             LunchContext context = GetContext();
@@ -552,6 +552,20 @@ namespace RocketLunch.tests.units.data
             Assert.Equal(2, result.Count());
             Assert.Equal("bob", result[0].Name);
             Assert.Equal("lilTimmy", result[1].Name);
+        }
+
+        [Fact]
+        public async void LunchRepository_GetUsersOfTeamAsync_ReturnsNullWhenTeamNotFound()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+
+            // act
+            IEnumerable<UserDto> result = await target.GetUsersOfTeamAsync(1);
+
+            // assert
+            Assert.Null(result);
         }
 
         [Fact]
