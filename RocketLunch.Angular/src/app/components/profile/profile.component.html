@@ -1,15 +1,64 @@
 <navbar></navbar>
-<div class="container" *ngIf="user">
+<div class=" profile" *ngIf="user">
 
-  <div class="card mt-5" style="width: 14rem;">
-    <img src="{{user.photoUrl}}" class="card-img-top">
-    <div class="card-body">
-      <p>Name: {{user.name}}</p>
-      <p>Zip: {{user.zip}}</p>
+  <div class="container">
+    <div class="card mt-5">
+      <div class="card-header">
+        <div class="row">
+          <img src="{{user.photoUrl}}" class="card-img-top col profile-photo">
+          <div class="col">
+            <p>Name: {{user.name}}</p>
+            <p>Zip: {{user.zip}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card">
+          <div class="card-header">
+            Your Nopes
+            <button *ngIf="user" type="button" class="btn btn-info" style="float:right;" (click)="openNopesModal()"><i
+                class="fa fa-user-plus"></i> Add Nopes</button>
+          </div>
+          <div class="card-body">
+            <div class="form-row ml-1">
+              <div class="col" class="users">
+                <p>
+                  <span *ngFor="let nope of nopesToDisplay(); let i = index"
+                    class="badge badge-pill badge-secondary user mr-1">
+                    <span *ngIf="getRestaurantNameFromId(nope)">
+                      <span>{{getRestaurantNameFromId(nope)}} </span><span class="team-close"
+                        (click)="removeNope(nope)">x</span>
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-5">
+          <div class="card-header">
+            Your Teams
+            <button *ngIf="user" type="button" class="btn btn-info" style="float:right;"
+              (click)="openCreateTeamModal()"><i class="fa fa-user-plus"></i> Create Team</button>
+          </div>
+          <div class="card-body">
+            <div class="form-row ml-1">
+              <div class="col" class="users">
+                <p>
+                  <span *ngFor="let team of user.teams; let i = index" (click)="openEditTeamModal(team)"
+                    class="badge badge-pill badge-secondary user mr-1">
+                    <span>{{team.name}} </span><span class="team-close" (click)="leaveTeam(team, i, $event)">x</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="card mt-5" style="width: 80%;">
+    <!-- <div class="card mt-5" style="width: 80%;">
     <div class="card-header">
       Manage Restaurant Preferences
     </div>
@@ -48,10 +97,10 @@
         <li *ngFor="let team of user?.teams" (click)="openEditTeamModal(team)">{{team.name}}</li>
       </ul>
     </div>
+  </div> -->
+
   </div>
-
 </div>
-
 <app-team-modal #teamModal [user]="user" [team]="team"></app-team-modal>
 
 <app-footer></app-footer>

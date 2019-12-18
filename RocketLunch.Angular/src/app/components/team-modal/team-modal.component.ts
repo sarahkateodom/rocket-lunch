@@ -41,6 +41,10 @@ export class TeamModalComponent implements OnInit {
         this.modal.hide();
     }
 
+    filteredUsers() {
+        return this.users.filter(u => u.id != this.user.id);
+    }
+
     createTeam() {
         if (this.selectedTeam && this.selectedTeam.name && this.selectedTeam.zip) {
             this.lunchService.createTeam(this.user.id, this.selectedTeam).subscribe(team => {

@@ -85,6 +85,16 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  leaveTeam(team: Team, index: number, e: any) {
+    e.stopPropagation();
+    this.lunchLady.removeUserFromTeam(this.user.id, team.id)
+      .subscribe(res => this.user.teams.splice(index, 1));
+  }
+
+  openNopesModal() {
+
+  }
+
   openCreateTeamModal() {
     this.team = undefined; // new team
     setTimeout(() => this.teamModal.show(), 33);

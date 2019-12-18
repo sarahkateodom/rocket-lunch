@@ -34,7 +34,7 @@
             <div class="form-row ml-1">
                 <div class="col" class="users">
                     <p>
-                        <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1">
+                        <span *ngFor="let user of filteredUsers(); let i = index" class="badge badge-pill badge-secondary user mr-1">
                             <span>{{ user.name }} </span><span class="user-close" (click)="removeUserFromTeam(user.id, i)">x</span>
                         </span>
                     </p>
