@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit {
       .subscribe(i => {
         console.log('Current user', i)
         this.internalUser = i;
-        this.internalUser.teams.push({ id: 1, name: 'test team' } as Team);
         this.loading = false;
       }, err => {
         this.loading = false;
