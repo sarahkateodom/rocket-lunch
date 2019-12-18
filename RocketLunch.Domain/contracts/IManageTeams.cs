@@ -8,6 +8,7 @@ namespace RocketLunch.domain.contracts
     {
         Task<TeamDto> CreateTeamAsync(int userId, CreateTeamDto dto);
         Task AddUserToTeamAsync(int teamId, string email);
-        Task<IEnumerable<UserDto>> GetUsersOfTeam(int teamId);
+        Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId);
+        Task RemoveUserFromTeamAsync(int teamId, int userId);
     }
 }

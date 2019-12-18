@@ -70,7 +70,7 @@ namespace RocketLunch.tests.web
             };
 
             Mock<IManageTeams> teamsService = new Mock<IManageTeams>();
-            teamsService.Setup(x => x.GetUsersOfTeam(teamId)).ReturnsAsync(users);
+            teamsService.Setup(x => x.GetUsersOfTeamAsync(teamId)).ReturnsAsync(users);
 
             var target = new TeamsController(teamsService.Object);
 
@@ -82,6 +82,24 @@ namespace RocketLunch.tests.web
             Assert.Equal(200, result.StatusCode);
         }
 
+        [Trait("Category", "UnitTest")]
+        [Fact]
+        public async void TeamsController_RemoveUserFromTeam_CallsServiceAndReturnsOk()
+        {
+            // arrange
+            int teamId = 23;
+            int userId = 123;
+
+            Mock<IManageTeams> teamsService = new Mock<IManageTeams>();
+            var target = new TeamsController(teamsService.Object);
+
+            // act
+            var result = await target.RemoveUserFromTeam(userId, teamId);
+
+            // assert
+            teamsService.Verify(t => t.RemoveUserFromTeamAsync(teamId, userId), Times.Once);
+            Assert.Equal(200, result.StatusCode);
+        }
 
     }
 }

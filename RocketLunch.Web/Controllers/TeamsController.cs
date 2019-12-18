@@ -39,9 +39,10 @@ namespace RocketLunch.web.controllers
         [HttpDelete]
         [SwaggerResponse((int)HttpStatusCode.OK, "Remove User from Team", typeof(bool))]
         [Route("api/users/{userId}/teams/{teamId}")]
-        public async Task<ObjectResult> RemoveUserFromTeam(int userId, int teamId)
+        public async Task<OkResult> RemoveUserFromTeam(int userId, int teamId)
         {
-            return new OkObjectResult(true);
+            await this.teamsService.RemoveUserFromTeamAsync(teamId, userId);
+            return new OkResult();
         }
 
         [HttpGet]
@@ -49,7 +50,7 @@ namespace RocketLunch.web.controllers
         [Route("api/teams/{teamId}/users")]
         public async Task<ObjectResult> GetTeamUsers(int teamId)
         {
-            return new OkObjectResult(await this.teamsService.GetUsersOfTeam(teamId));
+            return new OkObjectResult(await this.teamsService.GetUsersOfTeamAsync(teamId));
         }
     }
 }

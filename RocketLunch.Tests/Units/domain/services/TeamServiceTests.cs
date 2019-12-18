@@ -164,7 +164,7 @@ namespace RocketLunch.tests.units.domain.services
             var target = new TeamService(repo.Object);
 
             // act
-            var result = await target.GetUsersOfTeam(teamId);
+            var result = await target.GetUsersOfTeamAsync(teamId);
 
             // assert
             Assert.Equal(users, result);
@@ -183,8 +183,26 @@ namespace RocketLunch.tests.units.domain.services
 
             // act
             // assert
-            Exception ex = await Assert.ThrowsAsync<NotFoundException>( async () => await target.GetUsersOfTeam(teamId));
+            Exception ex = await Assert.ThrowsAsync<NotFoundException>( async () => await target.GetUsersOfTeamAsync(teamId));
             Assert.Contains("Team not found", ex.Message);
+        }
+
+
+        [Fact]
+        public async void TeamService_RemoveUserFromTeamAsync_CallRepo()
+        {
+            // arrange
+            int teamId = 32;
+            int userId = 89;
+
+            var repo = new Mock<IRepository>();
+            var target = new TeamService(repo.Object);
+
+            // act
+            await target.RemoveUserFromTeamAsync(teamId, userId);
+
+            // assert
+            repo.Verify(x => x.RemoveUserFromTeamAsync(userId, teamId), Times.Once);
         }
     }
 }

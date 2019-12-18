@@ -38,9 +38,14 @@ namespace RocketLunch.domain.services
             return newTeam;
         }
 
-        public async Task<IEnumerable<UserDto>> GetUsersOfTeam(int teamId)
+        public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)
         {
             return await this.repository.GetUsersOfTeamAsync(teamId).ConfigureAwait(false) ?? throw new NotFoundException("Team not found");
+        }
+
+        public async Task RemoveUserFromTeamAsync(int teamId, int userId)
+        {
+            await this.repository.RemoveUserFromTeamAsync(userId, teamId).ConfigureAwait(false);
         }
     }
 }
