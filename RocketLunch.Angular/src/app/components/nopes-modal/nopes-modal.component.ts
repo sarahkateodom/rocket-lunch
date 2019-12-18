@@ -68,6 +68,7 @@ export class NopesModalComponent {
     if (!this.user.nopes) this.user.nopes = [];
     if (this.selectedRestaurantId) this.user.nopes.push(this.selectedRestaurantId);
     this.saveUser();
+    this.selectedRestaurantId = undefined;
   }
 
   removeNope(id: string) {

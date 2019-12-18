@@ -34,6 +34,7 @@ export class ProfileComponent implements OnInit {
       this.lunchLady.getUser(userId)
         .subscribe(x => {
           this.user = x;
+          if (!this.user.nopes) this.user.nopes = [];
           console.log('Profile user', this.user);
           this.getRestaurants();
         });
