@@ -14,12 +14,12 @@ namespace RocketLunch.web.controllers
             _sessionService = sessionService ?? throw new ArgumentNullException("sessionService");
         }
 
-        // [HttpPost]
-        // [Route("api/sessions")]
-        // public async Task<Guid> CreateSession([FromBody] List<int> userIds)
-        // {
-        //     return await _sessionService.CreateUserSession(userIds);
-        // }
+        [HttpPost]
+        [Route("api/sessions")]
+        public async Task<Guid> CreateSession([FromBody] List<int> userIds)
+        {
+            return await _sessionService.CreateUserSession(userIds);
+        }
 
         // [HttpPut]
         // [Route("api/sessions/{sessionId}")]

@@ -15,12 +15,12 @@ namespace RocketLunch.domain.services
             this.cache = cache;
         }
 
-        // public async Task<Guid> CreateUserSession(IEnumerable<int> userIds)
-        // {
-        //     Guid sessionGuid = Guid.NewGuid();
-        //     await cache.SetUserSessionAsync(sessionGuid, userIds.ToList());
-        //     return sessionGuid;
-        // }
+        public async Task<Guid> CreateUserSession(IEnumerable<int> userIds)
+        {
+            Guid sessionGuid = Guid.NewGuid();
+            await cache.SetUserSessionAsync(sessionGuid, userIds.ToList());
+            return sessionGuid;
+        }
 
         //  public async Task UpdateUserSession(Guid sessionId, IEnumerable<int> userIds)
         // {

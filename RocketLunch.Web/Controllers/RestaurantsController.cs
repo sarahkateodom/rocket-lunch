@@ -22,7 +22,7 @@ namespace RocketLunch.web.controllers
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, "Search restaurants by SearchOptions", typeof(RestaurantDto))]
         [Route("api/restaurants/{sessionId}")]
-        public async Task<ObjectResult> GetRestaurant(Guid sessionId, SearchOptions options)
+        public async Task<ObjectResult> GetRestaurant(Guid sessionId, [FromBody]SearchOptions options)
         {
             var result = await _serveLunch.GetRestaurantAsync(sessionId, options);
             return new OkObjectResult(result);
