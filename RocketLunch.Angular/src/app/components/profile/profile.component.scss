@@ -1,5 +1,9 @@
 .profile {
-    
+    .add-button {
+        background-color: #7a6ba4;
+        color: white;
+        border: 1px #7a6ba4 solid;
+    }
     
     .profile-photo {
         min-width: 100px;
@@ -8,20 +12,13 @@
         box-sizing: unset;
     }
 
-    .nopes {
-        //text-align: center;
-        .nope {
-            // font-size: 14px;
-            // padding: 10px;
-            margin-right: 4px;
-            
-            .nope-remove {
-                margin-left: 5px;
-                cursor: pointer;
-            }
-        }
-        .nope:hover {
-            background-color: #343a40;
-        }
+    .badge {
+        background-color: #7a6ba4;
+        color: white;
+        border: 1px #7a6ba4 solid;
+    }
+
+    .badge:hover {
+        background-color: #343a40;
     } 
 }

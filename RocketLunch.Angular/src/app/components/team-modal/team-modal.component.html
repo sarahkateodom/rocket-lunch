@@ -1,6 +1,6 @@
 <app-modal #modal class="">
     <div class="modal-header">
-        <h5 class="modal-title">Create a team. Eat with friends!</h5>
+        <h5 class="modal-title">Eat with friends!</h5>
     </div>
 
     <div class="modal-body" *ngIf="selectedTeam">
@@ -27,7 +27,7 @@
                     <input type="text" name="user-to-add-email" class="form-control" placeholder="user's email address"
                         [(ngModel)]="userToAddEmail">
                 </div>
-                <button type="button" class="form-group btn btn-info" (click)="addUser()"><i
+                <button type="button" class="form-group btn btn-info add-button" (click)="addUser()"><i
                         class="fa fa-plus"></i></button>
 
             </div>
