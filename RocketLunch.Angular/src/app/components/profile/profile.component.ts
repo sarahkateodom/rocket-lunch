@@ -4,7 +4,7 @@ import { Restaurant } from './../../models/restaurant';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TeamModalComponent } from '../team-modal/team-modal.component';
 import { Team } from 'src/app/models/team';
 
@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
   team: Team;
   editingZip: boolean = false;
 
-  constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute) {
+  constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute, private router: Router) {
     this.team = undefined;
   }
 
@@ -37,6 +37,8 @@ export class ProfileComponent implements OnInit {
           if (!this.user.nopes) this.user.nopes = [];
           console.log('Profile user', this.user);
           this.getRestaurants();
+        }, err => {
+          this.router.navigate(['/'])
         });
     });
 
