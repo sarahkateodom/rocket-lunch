@@ -3,17 +3,15 @@
   font-size: 30px;
   padding: 20px;
 
-  .result {
-    font-size: 80px;
-    color: #7a6ba4;
-    height: 128px;
+  h3 {
+    font-weight: lighter;
   }
 }
 
 .go-button {
   margin-left: 40%;
   text-align: center;
-  background-image: linear-gradient(to right, #a1e3f6, #1E81CE);
+  background-image: linear-gradient(to right, #a1e3f6, #1e81ce);
   color: white;
   font-size: 20px;
   padding: 12px 40px;
@@ -30,11 +28,15 @@
 
 .users {
   text-align: center;
-  height: 200px;
+  // height: 200px;
   .user {
     font-size: 14px;
     padding: 10px;
     margin-right: 8px;
+
+    background-color: white;
+    color: #834c98;
+    font-weight: lighter;
 
     .user-close {
       margin-left: 5px;
@@ -42,7 +44,8 @@
     }
   }
   .user:hover {
-    background-color: #343a40;
+    // background-color: #343a40;
+    background-color: #e6c0e8;
   }
 }
 
@@ -135,4 +138,19 @@
 
 .search-box {
   background-color: white;
+}
+
+#resultBox {
+  background-color: #7e5fa2;
+  color: white;
+}
+
+#memberBox {
+  background-color: #a98ec9;
+  color: white;
+
+  h4 {
+    text-align: left;
+    font-weight: lighter;
+  }
 }
