@@ -49,15 +49,8 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  getFilteredRestaurants() {
-    if (!this.user || !this.user.nopes || !this.restaurants) return this.restaurants;
-    return this.restaurants.filter(r => {
-      return this.nopesToDisplay().indexOf(r.id) == -1;
-    });
-  }
-
   nopesToDisplay(): string[] {
-    return this.user.nopes
+    return this.user.nopes.filter(x => this.getRestaurantNameFromId(x));
   }
 
   getRestaurantNameFromId(id: string): string {
@@ -69,15 +62,6 @@ export class ProfileComponent implements OnInit {
   removeNope(id: string) {
     if (!this.user) return;
     this.user.nopes = this.user.nopes.filter(x => x != id);
-    this.updateUser();
-  }
-
-  nopeRestaurant() {
-    if (!this.selectedRestaurantId) return;
-    if (!this.user.nopes) this.user.nopes = [];
-
-    this.user.nopes.push(this.selectedRestaurantId);
-    this.selectedRestaurantId = undefined;
     this.updateUser();
   }
 

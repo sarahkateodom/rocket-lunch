@@ -21,7 +21,7 @@
       <div class="card-body">
         <div class="card">
           <div class="card-header">
-            Your Nopes
+            Your Nopes ({{nopesToDisplay().length}})
             <button *ngIf="user" type="button" class="btn btn-info add-button" style="float:right;"
               (click)="openNopesModal()"><i class="fa fa-thumbs-o-down"></i> Edit Nopes</button>
           </div>
@@ -31,10 +31,8 @@
                 <p>
                   <span *ngFor="let nope of nopesToDisplay(); let i = index"
                     class="badge badge-pill badge-secondary user mr-1">
-                    <span *ngIf="getRestaurantNameFromId(nope)">
-                      <span>{{getRestaurantNameFromId(nope)}} </span><span class="team-close"
-                        (click)="removeNope(nope)">x</span>
-                    </span>
+                    <span>{{getRestaurantNameFromId(nope)}} </span><span class="team-close"
+                      (click)="removeNope(nope)">x</span>
                   </span>
                 </p>
               </div>
@@ -44,7 +42,7 @@
 
         <div class="card mt-5">
           <div class="card-header">
-            Your Teams
+            Your Teams ({{user.teams.length}})
             <button *ngIf="user" type="button" class="btn btn-info add-button" style="float:right;"
               (click)="openCreateTeamModal()"><i class="fa fa-user-plus"></i> Create Team</button>
           </div>
