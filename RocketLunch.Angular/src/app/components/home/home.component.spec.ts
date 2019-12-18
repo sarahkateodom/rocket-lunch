@@ -93,5 +93,7 @@ describe('HomeComponent', () => {
       // assert
       expect(component.sessionId).not.toBe(undefined);
     });
+
+    
   });
 });

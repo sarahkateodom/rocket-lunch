@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
   isLunch: boolean = false;
   isDinner: boolean = false;
   zip: string;
+  loading: boolean = false;
 
   constructor(private lunchLady: LunchLadyService, private eventService: EventService) {
     this.goSrcs = [
@@ -85,6 +86,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRestaurant(): any {
+    this.loading = true;
     let searchOptions = new RestaurantSearch();
     searchOptions.zip = this.zip;
     searchOptions.userIds = !this.users ? [this.internalUser.id] : this.users.map(u => u.id);
@@ -96,6 +98,7 @@ export class HomeComponent implements OnInit {
     this.lunchLady.getRestaurant(this.sessionId, searchOptions)
       .subscribe(x => {
         this.restaurant = x;
+        this.loading = false;
       });
   }
 
