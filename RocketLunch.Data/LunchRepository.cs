@@ -120,6 +120,7 @@ namespace RocketLunch.data
                 Nopes = (user.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(user.Nopes) : new List<string>(),
                 Email = user.Email,
                 PhotoUrl = user.PhotoUrl,
+                Zip = user.Zip,
                 Teams = user.UserTeams.Select(x => MaptoTeamDto(x.Team))
             };
         }
