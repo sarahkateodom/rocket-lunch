@@ -18,6 +18,7 @@ import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
 import { ProfileComponent } from './components/profile/profile.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { NopesModalComponent } from './components/nopes-modal/nopes-modal.component';
 
  
 let config = new AuthServiceConfig([
@@ -42,6 +43,7 @@ export function provideConfig() {
     TooManyRequestsComponent,
     ProfileComponent,
     TeamModalComponent,
+    NopesModalComponent,
   ],
   imports: [
     BrowserModule,

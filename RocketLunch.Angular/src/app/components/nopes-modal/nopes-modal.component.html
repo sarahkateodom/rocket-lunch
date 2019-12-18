@@ -1,0 +1,32 @@
+<app-modal #modal class="">
+  <div class="modal-header">
+    <h5 class="modal-title">Hello there! Hungry?</h5>
+  </div>
+
+  <div class="modal-body" *ngIf="user">
+    <form class="form-inline mb-2">
+      <div class="form-group mr-2">
+        <label for="nopeSelect" class="control-label modal-input-label"><b>Nopes: </b></label>
+      </div>
+      <div class="form-group mr-2">
+        <select class="form-control" name="selectedRestaurant" [(ngModel)]="selectedRestaurantId">
+          <option *ngFor="let restaurant of getFilteredRestaurants()" [value]="restaurant.id">{{ restaurant.name }}</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-info" (click)="nopeRestaurant()"><i class="fa fa-plus"></i></button>
+    </form>
+    <div>
+      <b>Current Nopes: </b>
+      <span *ngFor="let nope of nopesToDisplay()" class="nopes">
+        <span *ngIf="getRestaurantNameFromId(nope)" class="badge badge-pill badge-secondary nope">
+          <span>{{ getRestaurantNameFromId(nope)}} </span>
+          <span class="nope-remove" (click)="removeNope(nope)">x</span>
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="hide()">Close</button>
+  </div>
+</app-modal>

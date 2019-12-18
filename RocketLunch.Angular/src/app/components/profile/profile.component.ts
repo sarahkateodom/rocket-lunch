@@ -1,3 +1,4 @@
+import { NopesModalComponent } from './../nopes-modal/nopes-modal.component';
 import { AuthService, SocialUser } from 'angularx-social-login';
 import { Restaurant } from './../../models/restaurant';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -14,6 +15,7 @@ import { Team } from 'src/app/models/team';
 })
 export class ProfileComponent implements OnInit {
   @ViewChild(TeamModalComponent, { static: true }) teamModal: TeamModalComponent;
+  @ViewChild(NopesModalComponent, { static: true }) nopesModal: NopesModalComponent;
   restaurants: Restaurant[];
   selectedRestaurantId: string;
   user: User;
@@ -92,7 +94,7 @@ export class ProfileComponent implements OnInit {
   }
 
   openNopesModal() {
-
+    setTimeout(() => this.nopesModal.show(), 33);
   }
 
   openCreateTeamModal() {

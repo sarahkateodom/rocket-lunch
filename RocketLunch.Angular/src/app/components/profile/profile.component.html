@@ -17,7 +17,7 @@
           <div class="card-header">
             Your Nopes
             <button *ngIf="user" type="button" class="btn btn-info" style="float:right;" (click)="openNopesModal()"><i
-                class="fa fa-user-plus"></i> Add Nopes</button>
+                class="fa fa-user-plus"></i> Edit Nopes</button>
           </div>
           <div class="card-body">
             <div class="form-row ml-1">
@@ -102,5 +102,6 @@
   </div>
 </div>
 <app-team-modal #teamModal [user]="user" [team]="team"></app-team-modal>
+<app-nopes-modal #nopesModal [user]="user"></app-nopes-modal>
 
 <app-footer></app-footer>
