@@ -1,39 +1,75 @@
 <navbar></navbar>
-<div class="container">
-  <div class="row justify-content-md-center">
+<div class="search-banner">Exploring <strong>Lunch Places</strong> <span *ngIf="selectedTeam"> With
+    <strong>{{selectedTeam.name}}</strong></span> Near <strong>{{zip}}</strong></div>
+<div class="container search-box mt-5">
+  <div class="row justify-content-md-center pb-5">
     <div class="col" class="go-for-lunch">
       <img *ngIf="loading" class="loading-image" src="./assets/loading.gif" alt="loading">
       <div *ngIf="!loading">
         <p class="result"><span *ngIf="restaurant">{{restaurant.name}}</span></p>
-        <button type="button" class="btn btn-info go-button" (click)="getRestaurant()">
-          GO for
-          <img class="go-image" [src]="goSrc" alt="go">
-        </button>
       </div>
     </div>
   </div>
-  <!-- <div class="row justify-content-md-center" style="padding-bottom: 10px;">
-    <div class="switch">
-      <input id="lunch" type="checkbox" [(ngModel)]="isLunch" />
-      <input id="dinner" type="checkbox" [(ngModel)]="isDinner" />
-      <input type="checkbox" name="toggle" (click)='toggleMeal()'>
-      <label for="toggle"><i>
-          <div class="slide"><img class="slide-img" [src]="sliderSrc" /></div>
-        </i></label>
+  <div class="row ml-1">
+    <div class="col" class="users">
+      <p>
+        <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1">
+          <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
+        </span>
+      </p>
     </div>
-  </div> -->
+  </div>
+  <button type="button" class="btn btn-info go-button mb-5" (click)="getRestaurant()">
+    ReLaunch
+    <!-- <img class="go-image" [src]="goSrc" alt="go"> -->
+  </button>
   <!-- <div class="row justify-content-md-center">
     <div class="col" class="users">
       <p>
         <span *ngFor="let user of users" class="badge badge-pill badge-secondary user" (click)="selectUser(user)">
           <span>{{ user.name }} </span><span class="user-close" (click)="dismissUser(user.id)">x</span></span>
-        <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
-          <i class="fa fa-user-plus"></i> Add Eater
-        </span>
-      </p>
-    </div>
-  </div> -->
+          <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
+            <i class="fa fa-user-plus"></i> Add Eater
+          </span>
+        </p>
+      </div>
+    </div> -->
 </div>
 
 
 <app-footer></app-footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="row justify-content-md-center" style="padding-bottom: 10px;">
+      <div class="switch">
+        <input id="lunch" type="checkbox" [(ngModel)]="isLunch" />
+        <input id="dinner" type="checkbox" [(ngModel)]="isDinner" />
+        <input type="checkbox" name="toggle" (click)='toggleMeal()'>
+        <label for="toggle"><i>
+            <div class="slide"><img class="slide-img" [src]="sliderSrc" /></div>
+          </i></label>
+      </div>
+    </div> -->

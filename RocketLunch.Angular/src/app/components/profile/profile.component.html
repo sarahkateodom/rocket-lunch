@@ -9,11 +9,16 @@
           <div class="col">
             <p>Name: {{user.name}}</p>
             <p *ngIf="!editingZip">Zip: {{user.zip}} <span (click)="toggleEditZip()"
-                class="fa fa-pencil clickable"></span>
+                class="fa fa-pencil clickable ml-1"></span>
             </p>
-            <div *ngIf="editingZip">
-              <input  type="text" [(ngModel)]="user.zip">
-              <span class="fa fa-check clickable" (click)="updateUser();toggleEditZip()"></span>
+            <div *ngIf="editingZip" class="form-row">
+              <div class="col col-2 input-group">
+                <input type="text" class="form-control" placeholder="Zip" [(ngModel)]="user.zip">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="updateUser();toggleEditZip()">
+                    <span class="fa fa-check"></span></button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -23,7 +28,7 @@
           <div class="card-header">
             Your Nopes ({{nopesToDisplay().length}})
             <button *ngIf="user" type="button" class="btn btn-info add-button" style="float:right;"
-              (click)="openNopesModal()"><i class="fa fa-thumbs-o-down"></i> Edit Nopes</button>
+              (click)="openNopesModal()"><i class="fa fa-pencil"></i> Edit Nopes</button>
           </div>
           <div class="card-body">
             <div class="form-row ml-1">

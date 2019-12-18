@@ -5,29 +5,32 @@
 
   .result {
     font-size: 80px;
-    color: rgb(23, 162, 184);
+    color: #7a6ba4;
     height: 128px;
-  }
-
-  .go-button {
-    font-size: 70px;
-    padding: 20px;
-    -webkit-box-shadow: 0 8px 6px -6px black;
-    -moz-box-shadow: 0 8px 6px -6px black;
-    box-shadow: 0 8px 6px -6px black;
-  }
-
-  .go-image {
-    width: 128px;
-  }
-
-  .loading-image {
-    // width: 256px;
   }
 }
 
+.go-button {
+  margin-left: 40%;
+  text-align: center;
+  background-image: linear-gradient(to right, #a1e3f6, #1E81CE);
+  color: white;
+  font-size: 20px;
+  padding: 12px 40px;
+  -webkit-box-shadow: 0 8px 6px -6px black;
+  -moz-box-shadow: 0 8px 6px -6px black;
+  box-shadow: 0 8px 6px -6px black;
+  border: none;
+  border-radius: 27px;
+}
+
+// .go-image {
+//   width: 128px;
+// }
+
 .users {
   text-align: center;
+  height: 200px;
   .user {
     font-size: 14px;
     padding: 10px;
@@ -42,6 +45,7 @@
     background-color: #343a40;
   }
 }
+
 // breakfast lunch dinner toggle
 .switch input {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -121,4 +125,14 @@
 
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
+}
+
+.search-banner {
+  background-color: #4087d3;
+  color: white;
+  text-align: center;
+}
+
+.search-box {
+  background-color: white;
 }

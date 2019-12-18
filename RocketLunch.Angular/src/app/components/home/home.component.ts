@@ -6,6 +6,7 @@ import { Restaurant } from '../../models/restaurant';
 import { MealTime } from '../../models/enums/MealTime';
 import { RestaurantSearch } from 'src/app/models/restaurant-search';
 import { EventService } from 'src/app/services/event.service';
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'home',
@@ -19,6 +20,7 @@ export class HomeComponent implements OnInit {
   internalUser: User;
   users: User[] = [];
   selectedUser: User;
+  selectedTeam: Team;
   restaurants: Restaurant[] = [];
   sessionId: UUID;
   sliderSrc: string = './assets/sun.png';
@@ -51,6 +53,12 @@ export class HomeComponent implements OnInit {
     }, 2000);
 
     this.eventService.teamSelected$.subscribe(selectedTeam => {
+      this.selectedTeam = selectedTeam;
+      if (!selectedTeam) {
+        this.users = [];
+        return;
+      }
+
       this.lunchLady.getTeamUsers(selectedTeam.id)
         .subscribe(users => this.users = users);
     });
@@ -100,6 +108,10 @@ export class HomeComponent implements OnInit {
         this.restaurant = x;
         this.loading = false;
       });
+  }
+
+  public excludeUser(user: User, index: number){
+
   }
 
   // toggleMeal() {
