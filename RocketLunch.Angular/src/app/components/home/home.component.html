@@ -4,10 +4,11 @@
 <div class="container search-box mt-5">
   <div class="row justify-content-md-center pb-5">
     <div class="col" class="go-for-lunch">
-      <img *ngIf="loading" class="loading-image" src="./assets/loading.gif" alt="loading">
-      <div *ngIf="!loading">
+      <!-- <img *ngIf="loading" class="loading-image" src="./assets/loading.gif" alt="loading"> -->
+      <!-- <div *ngIf="!loading">
         <p class="result"><span *ngIf="restaurant">{{restaurant.name}}</span></p>
-      </div>
+      </div> -->
+      <p class="result"><span *ngIf="restaurant">{{restaurant.name}}</span></p>
     </div>
   </div>
   <div class="row ml-1">
