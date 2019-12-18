@@ -9,7 +9,10 @@ describe('ModalComponent', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			declarations: [ModalComponent]
-		}).compileComponents();
+		})
+		.overrideTemplate(
+			ModalComponent,
+			"<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>").compileComponents();
 
 		fixture = TestBed.createComponent(ModalComponent);
 		component = fixture.componentInstance;

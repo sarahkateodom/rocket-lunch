@@ -1,3 +1,5 @@
+import { FooterComponent } from './../footer/footer.component';
+import { NavbarComponent } from './../navbar/navbar.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
@@ -18,15 +20,18 @@ describe('HomeComponent', () => {
     { id: 2, name: "Pam Dabare", nopes: ['fsad', ';lkj'] } as User,
   ] as User[];
 
+ 
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser'])
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser', 'getCurrentUser'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
     mockLunchService.getRestaurants.and.returnValue(of([new Restaurant()]));
+    mockLunchService.getCurrentUser.and.returnValue(of(users[0]));
     mockLunchService.getUsers.and.returnValue(of(users));
     mockLunchService.createUserSession.and.returnValue(of("12324124-123123-123123"));
     mockLunchService.updateUserSession.and.returnValue(of(true));
     mockLunchService.updateuser.and.returnValue(of(true));
+      
     TestBed.configureTestingModule({
       declarations: [HomeComponent, ModalComponent],
       providers: [
@@ -35,6 +40,9 @@ describe('HomeComponent', () => {
       ],
       imports: [FormsModule]
     })
+    .overrideTemplate(
+      HomeComponent,
+      "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
       .compileComponents();
   }));
 
@@ -48,21 +56,17 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ctor', () => {
-    it('gets users', () => {
-      component = fixture.componentInstance;
-      expect(mockLunchService.getUsers).toHaveBeenCalled();
-    })
-
-    it('gets restaurants', () => {
-      component = fixture.componentInstance;
-      expect(mockLunchService.getRestaurants).toHaveBeenCalled();
-    })
-
+  describe('ngOnInit', () => {
     it('creates user session', () => {
       component = fixture.componentInstance;
+      component.ngOnInit();
+      expect(mockLunchService.createUserSession).toHaveBeenCalledWith([]);
+    })
 
-      expect(mockLunchService.createUserSession).toHaveBeenCalledWith(users.map(u => u.id));
+    it('calls getRestaurant', () => {
+      component = fixture.componentInstance;
+      component.ngOnInit();
+      expect(mockLunchService.getRestaurant).toHaveBeenCalled();
     })
   });
 

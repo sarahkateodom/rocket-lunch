@@ -11,8 +11,10 @@ describe('NavbarComponent', () => {
   let fixture: ComponentFixture<NavbarComponent>;
   let mockLunchService: any;
   let mockAuthService: any;
+
   beforeEach(async(() => {
-    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['login', 'logout']);
+    mockLunchService = jasmine.createSpyObj('LunchLadyService', ['login', 'logout', 'getCurrentUser']);
+    mockLunchService.getCurrentUser.and.returnValue(of(new User()));
     mockAuthService = jasmine.createSpyObj('AuthService', ['authState']);
     mockAuthService.authState = (of({ id: 1, name: 'test' } as User));
     TestBed.configureTestingModule({
@@ -22,6 +24,9 @@ describe('NavbarComponent', () => {
         { provide: AuthService, useValue: mockAuthService },
       ],
     })
+    .overrideTemplate(
+      NavbarComponent,
+      "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
       .compileComponents();
   }));
 

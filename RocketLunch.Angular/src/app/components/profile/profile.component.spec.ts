@@ -1,3 +1,5 @@
+import { FooterComponent } from './../footer/footer.component';
+import { NavbarComponent } from './../navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -6,15 +8,12 @@ import { of } from 'rxjs';
 import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
 import { Restaurant } from 'src/app/models/restaurant';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
   let mockLunchService: any;
-
-  TestBed.overrideTemplate(
-    ProfileComponent,
-    "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>");
 
   beforeEach(async(() => {
     mockLunchService = jasmine.createSpyObj('LunchLadyService', ['updateuser', 'getRestaurants', 'getUser'])
@@ -25,10 +24,14 @@ describe('ProfileComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
       providers: [
+        { provide: ActivatedRoute, useValue: { params: of({ id: 123 }) } },
         { provide: LunchLadyService, useValue: mockLunchService },
       ],
       imports: [FormsModule]
     })
+    .overrideTemplate(
+      ProfileComponent,
+      "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
       .compileComponents();
   }));
 

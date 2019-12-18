@@ -56,25 +56,28 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.lunchLady.getCurrentUser()
-      .subscribe(i => {
-        this.internalUser = i;
-        this.zip = this.internalUser.zip;
-        this.getRestaurant();
-      }, err => {
-        this.lunchLady.getPosition()
-          .then((x) => {
-            // get geocode location
-            this.lunchLady.getGeocodeResult(x.lng, x.lat)
-              .subscribe(geocode => {
-                this.zip = geocode.features.filter(feature => feature.place_type.find(place => place == "postcode"))[0].text;
-                this.getRestaurant();
+    this.lunchLady.createUserSession([])
+      .subscribe(sessionId => {
+        this.sessionId = sessionId;
+
+        this.lunchLady.getCurrentUser()
+          .subscribe(i => {
+            this.internalUser = i;
+            this.zip = this.internalUser.zip;
+            this.getRestaurant();
+          }, err => {
+            this.lunchLady.getPosition()
+              .then((x) => {
+                // get geocode location
+                this.lunchLady.getGeocodeResult(x.lng, x.lat)
+                  .subscribe(geocode => {
+                    this.zip = geocode.features.filter(feature => feature.place_type.find(place => place == "postcode"))[0].text;
+                    this.getRestaurant();
+                  });
               });
           });
       });
-
   }
-
 
   setRandomGoImage() {
     let randomIndex = Math.floor(Math.random() * this.goSrcs.length);

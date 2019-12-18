@@ -81,10 +81,10 @@ export class LunchLadyService {
     return this.http.get(url).pipe(map(res => <User[]>res));
   }
 
-  // public createUserSession(users: number[]): Observable<UUID> {
-  //   let url = `/api/sessions/`;
-  //   return this.http.post(url, users).pipe(map(res => <UUID>res));
-  // }
+  public createUserSession(users: number[]): Observable<UUID> {
+    let url = `/api/sessions/`;
+    return this.http.post(url, users).pipe(map(res => <UUID>res));
+  }
 
   // public updateUserSession(id: UUID, users: number[]): Observable<boolean> {
   //   let url = `/api/sessions/${id}`;
