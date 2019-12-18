@@ -75,6 +75,16 @@ export class LunchLadyService {
     let url = `/api/users/${userId}/teams`;
     return this.http.post(url, team).pipe(map(res => <Team>res));
   }
+  
+  public addUserToTeam(email: string, teamId: number): Observable<User> {
+      let url = `/api/users/${email}/teams/${teamId}`;
+      return this.http.post(url, null).pipe(map(res => Object.assign(new User(), <User>res)));
+  }
+
+  public removeUserFromTeam(userId: number, teamId: number):Observable<boolean> {
+    let url = `/api/users/${userId}/teams/${teamId}`;
+    return this.http.delete(url).pipe(map(res => <boolean>res));
+  }
 
   public getTeamUsers(teamId: number): Observable<User[]>{
     let url = `/api/teams/${teamId}/users`;
@@ -85,6 +95,7 @@ export class LunchLadyService {
     let url = `/api/sessions/`;
     return this.http.post(url, users).pipe(map(res => <UUID>res));
   }
+
 
   // public updateUserSession(id: UUID, users: number[]): Observable<boolean> {
   //   let url = `/api/sessions/${id}`;

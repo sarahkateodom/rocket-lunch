@@ -13,16 +13,27 @@ import { Team } from 'src/app/models/team';
 export class TeamModalComponent implements OnInit {
     @ViewChild(ModalComponent, { static: true }) modal: ModalComponent;
     @Input() user: User;
-    @Input() zip: string;
-    public teamToAdd: Team;
+    @Input() team: Team;
+    public selectedTeam: Team;
+    public users: User[] = [];
+    public userToAddEmail: string = '';
     constructor(private lunchService: LunchLadyService) { }
 
     ngOnInit(): void {
-        this.teamToAdd = new Team();
-        this.teamToAdd.zip = this.zip;
+        // if team is set to existing team, edit this.team
+        // otherwise, a new team will be made
     }
 
     show() {
+        if (!this.team) {
+            this.selectedTeam = new Team();
+            this.selectedTeam.zip = this.user ? this.user.zip : '';
+        } else {
+            this.selectedTeam = Object.assign(new Team(), this.team);
+            this.lunchService.getTeamUsers(this.selectedTeam.id)
+                .subscribe(users => this.users = users);
+        }
+
         this.modal.show();
     }
 
@@ -31,12 +42,26 @@ export class TeamModalComponent implements OnInit {
     }
 
     createTeam() {
-        if (this.teamToAdd && this.teamToAdd.name && this.teamToAdd.zip) {
-            this.lunchService.createTeam(this.user.id, this.teamToAdd).subscribe(team => { 
+        if (this.selectedTeam && this.selectedTeam.name && this.selectedTeam.zip) {
+            this.lunchService.createTeam(this.user.id, this.selectedTeam).subscribe(team => {
                 this.user.teams.push(team);
                 this.hide();
             });
         }
+    }
+
+    addUser() {
+        if (this.selectedTeam && this.userToAddEmail) {
+            this.lunchService.addUserToTeam(this.userToAddEmail, this.selectedTeam.id)
+                .subscribe(user => this.users.push(user));
+        }
+    }
+
+    removeUserFromTeam(userId: number, index: number) {
+        this.lunchService.removeUserFromTeam(userId, this.selectedTeam.id)
+            .subscribe(res => {
+                this.users.splice(index, 1);
+            });
     }
 
 }

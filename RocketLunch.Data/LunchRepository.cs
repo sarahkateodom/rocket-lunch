@@ -87,9 +87,9 @@ namespace RocketLunch.data
             return MapToUserWithTeamsDto(result);
         }
 
-        public async Task<UserWithTeamsDto> GetUserByEmailAsync(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            return MapToUserWithTeamsDto(await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).FirstOrDefaultAsync(x => x.Email == email).ConfigureAwait(false));
+            return MapToUserDto(await _lunchContext.Users.FirstOrDefaultAsync(x => x.Email == email).ConfigureAwait(false));
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)

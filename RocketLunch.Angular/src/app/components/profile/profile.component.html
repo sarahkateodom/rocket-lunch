@@ -45,13 +45,13 @@
     </div>
     <div class="card-body">
       <ul>
-        <li *ngFor="let team of user?.teams">{{team.name}}</li>
+        <li *ngFor="let team of user?.teams" (click)="openEditTeamModal(team)">{{team.name}}</li>
       </ul>
     </div>
   </div>
 
 </div>
 
+<app-team-modal #teamModal [user]="user" [team]="team"></app-team-modal>
 
-<app-team-modal #teamModal [user]="user" [zip]="user?.zip"></app-team-modal>
 <app-footer></app-footer>

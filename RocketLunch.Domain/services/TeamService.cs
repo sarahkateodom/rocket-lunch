@@ -16,11 +16,12 @@ namespace RocketLunch.domain.services
             this.repository = repository;
         }
 
-        public async Task AddUserToTeamAsync(int teamId, string email)
+        public async Task<UserDto> AddUserToTeamAsync(int teamId, string email)
         {
             var user = await this.repository.GetUserByEmailAsync(email).ConfigureAwait(false);
-            if (user == null) return;
+            if(user == null) return null;
             await this.repository.AddUserToTeamAsync(user.Id, teamId).ConfigureAwait(false);
+            return user;
         }
 
         public async Task<TeamDto> CreateTeamAsync(int userId, CreateTeamDto dto)

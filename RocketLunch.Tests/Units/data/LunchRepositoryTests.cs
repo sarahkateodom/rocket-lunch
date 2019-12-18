@@ -154,57 +154,6 @@ namespace RocketLunch.tests.units.data
             Assert.Equal(addedUser.Nopes, JsonConvert.SerializeObject(result.Nopes));
         }
 
-        [Fact]
-        public async void LunchRepository_GetUserByEmailAsync_GetsUserWithTeams()
-        {
-            // arrangec
-            LunchContext context = GetContext();
-            LunchRepository target = new LunchRepository(context);
-            List<string> nopes = new List<string> { "https://goo.gl/pUu7he" };
-            var addedUser = context.Users.Add(new UserEntity
-            {
-                Id = 1,
-                GoogleId = "googleID",
-                Name = "test",
-                Nopes = JsonConvert.SerializeObject(nopes),
-                Zip = "90210",
-                Email = "email@email.email",
-            }).Entity;
-
-            TeamEntity team1 = context.Teams.Add(new TeamEntity
-            {
-                Id = 1,
-                Name = "bob's Team",
-                Zip = "38655"
-            }).Entity;
-            TeamEntity team2 = context.Teams.Add(new TeamEntity
-            {
-                Id = 2,
-                Name = "lilTimmy's Team",
-                Zip = "38655"
-            }).Entity;
-            context.UserTeams.Add(new UserTeamEntity
-            {
-                UserId = 1,
-                TeamId = team1.Id
-            });
-            context.UserTeams.Add(new UserTeamEntity
-            {
-                UserId = 1,
-                TeamId = team2.Id
-            });
-
-            context.SaveChanges();
-
-            // act
-            UserWithTeamsDto result = await target.GetUserByEmailAsync(addedUser.Email);
-
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Teams.Count());
-            Assert.Equal(team1.Name, result.Teams.ElementAt(0).Name);
-            Assert.Equal(team2.Name, result.Teams.ElementAt(1).Name);
-        }
 
         [Fact]
         public async void LunchRepository_GetUserByEmailAsync_ReturnsNullWhenUserNotFound()

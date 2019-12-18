@@ -28,21 +28,21 @@ namespace RocketLunch.web.controllers
         }
 
         [HttpPost]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Add User to Team")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Add User to Team", typeof(UserDto))]
         [Route("api/users/{email}/teams/{teamId}")]
-        public async Task<OkResult> AddUserToTeam(string email, int teamId)
+        public async Task<ObjectResult> AddUserToTeam(string email, int teamId)
         {
-            await this.teamsService.AddUserToTeamAsync(teamId, email).ConfigureAwait(false);
-            return new OkResult();
+            UserDto result = await this.teamsService.AddUserToTeamAsync(teamId, email).ConfigureAwait(false);
+            return new OkObjectResult(result);
         }
 
         [HttpDelete]
         [SwaggerResponse((int)HttpStatusCode.OK, "Remove User from Team", typeof(bool))]
         [Route("api/users/{userId}/teams/{teamId}")]
-        public async Task<OkResult> RemoveUserFromTeam(int userId, int teamId)
+        public async Task<ObjectResult> RemoveUserFromTeam(int userId, int teamId)
         {
             await this.teamsService.RemoveUserFromTeamAsync(teamId, userId);
-            return new OkResult();
+            return new OkObjectResult(true);
         }
 
         [HttpGet]

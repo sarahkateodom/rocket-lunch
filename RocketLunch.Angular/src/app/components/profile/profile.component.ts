@@ -5,6 +5,7 @@ import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
 import { ActivatedRoute } from '@angular/router';
 import { TeamModalComponent } from '../team-modal/team-modal.component';
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'app-profile',
@@ -18,9 +19,10 @@ export class ProfileComponent implements OnInit {
   user: User;
   loading = true;
   subscription;
+  team: Team;
 
   constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute) {
-    
+    this.team = undefined;
   }
 
   ngOnInit() {
@@ -84,6 +86,12 @@ export class ProfileComponent implements OnInit {
   }
 
   openCreateTeamModal() {
-    this.teamModal.show();
+    this.team = undefined; // new team
+    setTimeout(() => this.teamModal.show(), 33);
+  }
+
+  openEditTeamModal(team: Team) {
+    this.team = team; // team to edit
+    setTimeout(() => this.teamModal.show(), 33);
   }
 }

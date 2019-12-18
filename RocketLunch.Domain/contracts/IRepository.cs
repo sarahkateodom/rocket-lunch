@@ -9,7 +9,7 @@ namespace RocketLunch.domain.contracts
         Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl);
         Task<UserWithTeamsDto> GetUserAsync(string googleId);
         Task<UserWithTeamsDto> GetUserAsync(int id);
-        Task<UserWithTeamsDto> GetUserByEmailAsync(string email);
+        Task<UserDto> GetUserByEmailAsync(string email);
         Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes, string Zip);
         Task<int> CreateTeamAsync(string name, string zip);
         Task AddUserToTeamAsync(int userId, int teamId);
