@@ -13,5 +13,7 @@ namespace RocketLunch.data.entities
         public string PhotoUrl { get; set; }
         public string Nopes { get; set; }
         public string Zip { get; set; }
+
+        public ICollection<UserTeamEntity> UserTeams { get; set; }
     }
 }

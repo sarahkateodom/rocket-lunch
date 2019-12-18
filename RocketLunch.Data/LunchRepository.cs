@@ -65,38 +65,25 @@ namespace RocketLunch.data
 
         public async Task<UserDto> GetUserAsync(int id)
         {
-            UserEntity userEntity = await _lunchContext.Users.FindAsync(id).ConfigureAwait(false);
-            return userEntity != null ? new UserDto
-            {
-                Id = userEntity.Id,
-                Name = userEntity.Name,
-                Nopes = JsonConvert.DeserializeObject<List<string>>(userEntity.Nopes),
-                Email = userEntity.Email,
-                PhotoUrl = userEntity.PhotoUrl,
-            } : null;
+            UserEntity userEntity = await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).SingleOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            return MapToUserDto(userEntity);
         }
 
         public async Task<UserDto> GetUserAsync(string googleId)
         {
-            var result = await _lunchContext.Users.SingleOrDefaultAsync(u => u.GoogleId == googleId).ConfigureAwait(false);
-            return result == null ? null : new UserDto
-            {
-                Id = result.Id,
-                Name = result.Name,
-                Nopes = (result.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(result.Nopes) : new List<string>(),
-                Email = result.Email,
-                PhotoUrl = result.PhotoUrl,
-            };
+            _lunchContext.UserTeams.Include(x => x.Team);
+            var result = await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).SingleOrDefaultAsync(u => u.GoogleId == googleId).ConfigureAwait(false);
+            return MapToUserDto(result);
         }
 
         public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            return MapToUserDto(await _lunchContext.Users.FirstOrDefaultAsync(x => x.Email == email).ConfigureAwait(false));
+            return MapToUserDto(await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).FirstOrDefaultAsync(x => x.Email == email).ConfigureAwait(false));
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            return await _lunchContext.Users.Select(u => MapToUserDto(u)).ToListAsync();
+            return await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).Select(u => MapToUserDto(u)).ToListAsync();
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)
@@ -116,7 +103,7 @@ namespace RocketLunch.data
 
         public async Task UpdateUserAsync(int id, string name, IEnumerable<string> nopes, string zip)
         {
-            UserEntity currentUser = await _lunchContext.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+            UserEntity currentUser = await _lunchContext.Users.Include(x => x.UserTeams).ThenInclude(ut => ut.Team).FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
             currentUser.Name = name;
             currentUser.Nopes = JsonConvert.SerializeObject(nopes);
             currentUser.Zip = zip;
@@ -133,6 +120,17 @@ namespace RocketLunch.data
                 Nopes = (user.Nopes != null) ? JsonConvert.DeserializeObject<List<string>>(user.Nopes) : new List<string>(),
                 Email = user.Email,
                 PhotoUrl = user.PhotoUrl,
+                Teams = user.UserTeams.Select(x => MaptoTeamDto(x.Team))
+            };
+        }
+
+        private TeamDto MaptoTeamDto(TeamEntity team)
+        {
+            return new TeamDto
+            {
+                Id = team.Id,
+                Name = team.Name,
+                Zip = team.Zip
             };
         }
     }

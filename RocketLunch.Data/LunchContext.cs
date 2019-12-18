@@ -54,6 +54,14 @@ namespace RocketLunch.data
 
             modelBuilder.Entity<UserTeamEntity>()
                 .HasKey(p => new { p.TeamId, p.UserId });
+            modelBuilder.Entity<UserTeamEntity>()
+                .HasOne(bc => bc.Team)
+                .WithMany(b => b.TeamUsers)
+                .HasForeignKey(bc => bc.TeamId);
+            modelBuilder.Entity<UserTeamEntity>()
+                .HasOne(bc => bc.User)
+                .WithMany(c => c.UserTeams)
+                .HasForeignKey(bc => bc.UserId);
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
