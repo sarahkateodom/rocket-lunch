@@ -92,7 +92,7 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
-        public async void LunchService_GetRestaurantAsync_ReturnsRestaurantDtosWithoutNopes()
+        public async void LunchService_GetRestaurantAsync_FiltersOutNopes()
         {
             // arrange
             Mock<IGetLunchOptions> mockOptions = new Mock<IGetLunchOptions>();
@@ -115,16 +115,9 @@ namespace RocketLunch.tests.units.domain.services
                     Id = "rest1"
                 },
             });
-            mockRepo.Setup(x => x.GetUsersAsync()).ReturnsAsync(new List<UserDto>
-            {
-                new UserDto {
-                    Id = 1,
-                    Nopes = new List<string>{"rest2"}
-                },
-                new UserDto {
-                    Id = 2,
-                    Nopes = new List<string>{"rest3"}
-                }
+            mockRepo.Setup(x => x.GetNopesAsync(It.IsAny<IEnumerable<int>>())).ReturnsAsync(new List<string> {
+                "rest2",
+                "rest3"
             });
             List<int> users = new List<int> { 1, 2 };
             LunchService target = new LunchService(mockOptions.Object, mockRepo.Object, mockRandom.Object, cache);

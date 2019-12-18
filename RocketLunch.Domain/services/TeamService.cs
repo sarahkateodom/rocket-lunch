@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
@@ -22,13 +23,24 @@ namespace RocketLunch.domain.services
             await this.repository.AddUserToTeamAsync(user.Id, teamId).ConfigureAwait(false);
         }
 
-        public async Task<TeamDto> CreateTeamAsync(int userId, TeamDto dto)
+        public async Task<TeamDto> CreateTeamAsync(int userId, CreateTeamDto dto)
         {
             if (dto == null) throw new ArgumentNullException();
             if (await this.repository.TeamNameExistsAsync(dto.Name).ConfigureAwait(false)) throw new BadRequestException("Team name exists");
-            dto.Id = await this.repository.CreateTeamAsync(dto.Name, dto.Zip).ConfigureAwait(false);
-            await this.repository.AddUserToTeamAsync(userId, dto.Id).ConfigureAwait(false);
-            return dto;
+
+            var newTeam = new TeamDto 
+            {
+                Id = await this.repository.CreateTeamAsync(dto.Name, dto.Zip).ConfigureAwait(false),
+                Name = dto.Name,
+                Zip = dto.Zip,
+            };
+            await this.repository.AddUserToTeamAsync(userId, newTeam.Id).ConfigureAwait(false);
+            return newTeam;
+        }
+
+        public Task<IEnumerable<UserDto>> GetUsersOfTeam(int teamId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

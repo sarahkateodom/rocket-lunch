@@ -109,7 +109,7 @@ namespace RocketLunch.tests.units.domain.services
             int userId = 42;
 
             var repo = new Mock<IRepository>();
-            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync(new UserDto
+            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync(new UserWithTeamsDto
             {
                 Id = userId
             });
@@ -132,7 +132,7 @@ namespace RocketLunch.tests.units.domain.services
             int userId = 42;
 
             var repo = new Mock<IRepository>();
-            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync((UserDto)null);
+            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync((UserWithTeamsDto)null);
 
             var target = new TeamService(repo.Object);
 

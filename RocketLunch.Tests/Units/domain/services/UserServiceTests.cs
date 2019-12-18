@@ -28,7 +28,7 @@ namespace RocketLunch.tests.units.domain.services
         {
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserWithTeamsDto)null);
             mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
             {
                 Id = 1,
@@ -58,7 +58,7 @@ namespace RocketLunch.tests.units.domain.services
                 Name = "name",
             };
 
-            var existingUser = new UserDto
+            var existingUser = new UserWithTeamsDto
             {
                 Id = 1,
                 Name = "Bill",
@@ -88,7 +88,7 @@ namespace RocketLunch.tests.units.domain.services
                 Name = "name",
             };
 
-            var existingUser = new UserDto
+            var existingUser = new UserWithTeamsDto
             {
                 Id = 1,
                 Name = "Bill",
@@ -112,7 +112,7 @@ namespace RocketLunch.tests.units.domain.services
         {
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<string>())).ReturnsAsync((UserWithTeamsDto)null);
             mockRepo.Setup(x => x.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new UserDto
             {
                 Id = 1,
@@ -136,29 +136,13 @@ namespace RocketLunch.tests.units.domain.services
             mockRepo.Verify(r => r.CreateUserAsync(dto.GoogleId, dto.Email, dto.Name, dto.PhotoUrl), Times.Once);
         }
 
-        [Fact]
-        public async void UserService_GetUsersAsync_ReturnsListOfUsers()
-        {
-            // arrange
-            Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(r => r.GetUsersAsync()).ReturnsAsync(new List<UserDto> {
-                new UserDto(), new UserDto()
-            });
-            UserService target = new UserService(mockRepo.Object);
-
-            // act
-            var result = await target.GetUsersAsync();
-
-            // assert
-            Assert.Equal(2, result.Count());
-        }
 
         [Fact]
         public async void UserService_UpdateUserAsync_CallsRepositoryUpdateUser()
         {
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
+            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserWithTeamsDto());
             UserService target = new UserService(mockRepo.Object);
             int userId = 1;
             UserUpdateDto dto = new UserUpdateDto
@@ -180,7 +164,7 @@ namespace RocketLunch.tests.units.domain.services
         {
             // arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(r => r.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserWithTeamsDto)null);
             UserService target = new UserService(mockRepo.Object);
             int userId = 1;
             UserUpdateDto dto = new UserUpdateDto
@@ -198,7 +182,7 @@ namespace RocketLunch.tests.units.domain.services
         {
             //Arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserDto());
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync(new UserWithTeamsDto());
             UserService target = new UserService(mockRepo.Object);
             int param = 1;
 
@@ -214,7 +198,7 @@ namespace RocketLunch.tests.units.domain.services
         {
             //Arrange
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserDto)null);
+            mockRepo.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync((UserWithTeamsDto)null);
             UserService target = new UserService(mockRepo.Object);
             int param = 1;
 
@@ -226,7 +210,7 @@ namespace RocketLunch.tests.units.domain.services
         public async void UserSerivce_GetUserAsync_ReturnsUserDto()
         {
             //Arrange
-            var dto = new UserDto()
+            var dto = new UserWithTeamsDto()
             {
                 Id = 1,
                 Name = "name"

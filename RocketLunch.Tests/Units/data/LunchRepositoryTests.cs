@@ -100,7 +100,7 @@ namespace RocketLunch.tests.units.data
             context.SaveChanges();
 
             // act
-            UserDto result = await target.GetUserAsync(addedUserSettings.GoogleId);
+            UserWithTeamsDto result = await target.GetUserAsync(addedUserSettings.GoogleId);
 
             // assert
             Assert.NotNull(result);
@@ -197,7 +197,7 @@ namespace RocketLunch.tests.units.data
             context.SaveChanges();
 
             // act
-            UserDto result = await target.GetUserByEmailAsync(addedUser.Email);
+            UserWithTeamsDto result = await target.GetUserByEmailAsync(addedUser.Email);
 
             // assert
             Assert.NotNull(result);
@@ -263,28 +263,6 @@ namespace RocketLunch.tests.units.data
             Assert.Equal(newUser.Id, result.Id);
         }
 
-        [Fact]
-        public async void LunchRepository_GetUsersAsync_ReturnsUsers()
-        {
-            // arrange
-            LunchContext context = GetContext();
-            LunchRepository target = new LunchRepository(context);
-            context.Users.Add(new UserEntity()
-            {
-                Id = 1,
-                Name = "Tahra Dactyl",
-                Nopes = "[]",
-            });
-
-            context.SaveChanges();
-
-            // act
-            List<UserDto> result = (await target.GetUsersAsync()).ToList();
-
-
-            // assert
-            Assert.Equal(context.Users.Count(), result.Count);
-        }
 
         [Fact]
         public async void LunchRepository_UpdateUserAsync_UpdatesUser()
@@ -375,7 +353,7 @@ namespace RocketLunch.tests.units.data
             context.SaveChanges();
 
             // act
-            UserDto result = await target.GetUserAsync(addedUser.Id);
+            UserWithTeamsDto result = await target.GetUserAsync(addedUser.Id);
 
             // assert
             Assert.NotNull(result);
@@ -574,6 +552,53 @@ namespace RocketLunch.tests.units.data
             Assert.Equal(2, result.Count());
             Assert.Equal("bob", result[0].Name);
             Assert.Equal("lilTimmy", result[1].Name);
+        }
+
+        [Fact]
+        public async void LunchRepository_GetNopesAsync_ReturnsUsersNopes()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            UserEntity user = context.Users.Add(new UserEntity
+            {
+                Name = "bob",
+                Nopes = "['thing1','thing2']",
+            }).Entity;
+            UserEntity user2 = context.Users.Add(new UserEntity
+            {
+                Name = "lilTimmy",
+                Nopes = "['thing3','thing1']",
+            }).Entity;
+            context.SaveChanges();
+
+            IEnumerable<int> ids = context.Users.Select(u => u.Id);
+
+            // act
+            IEnumerable<string> result = await target.GetNopesAsync(ids);
+
+            // assert
+            Assert.Contains("thing1", result);
+            Assert.Contains("thing2", result);
+            Assert.Contains("thing3", result);
+            Assert.Equal(3, result.Count());
+        }
+
+        [Fact]
+        public async void LunchRepository_GetNopesAsync_ReturnsEmptyListWithNoUsers()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            context.SaveChanges();
+
+            var ids = new List<int>();
+
+            // act
+            IEnumerable<string> result = await target.GetNopesAsync(ids);
+
+            // assert
+            Assert.Equal(0, result.Count());
         }
 
 

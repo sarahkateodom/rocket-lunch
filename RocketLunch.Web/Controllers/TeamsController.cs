@@ -22,7 +22,7 @@ namespace RocketLunch.web.controllers
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, "Create new Team. This will add User to Team", typeof(TeamDto))]
         [Route("api/users/{userId}/teams")]
-        public async Task<ObjectResult> CreateTeam(int userId, [FromBody] TeamDto teamDto)
+        public async Task<ObjectResult> CreateTeam(int userId, [FromBody] CreateTeamDto teamDto)
         {
             return new OkObjectResult(await this.teamsService.CreateTeamAsync(userId, teamDto));
         }

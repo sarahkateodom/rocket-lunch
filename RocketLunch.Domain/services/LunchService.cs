@@ -26,13 +26,10 @@ namespace RocketLunch.domain.services
 
         public async Task<RestaurantDto> GetRestaurantAsync(Guid sessionId, SearchOptions options)
         {
-            List<int> userIds = options.UserIds.ToList();
-            var sessions = await repo.GetUsersAsync();
-            List<UserDto> users = sessions.Where(u => userIds.Contains(u.Id)).ToList();
             List<RestaurantDto> restaurants = (await lunchOptions.GetAvailableRestaurantOptionsAsync(sessionId, options).ConfigureAwait(false)).ToList();
 
             // Filter by user nopes
-            List<string> nopes = users.SelectMany(u => u.Nopes).ToList();
+            IEnumerable<string> nopes = await this.repo.GetNopesAsync(options.UserIds).ConfigureAwait(false);
             restaurants = restaurants.Where(r => !nopes.Contains(r.Id)).ToList();
 
             RestaurantDto result;

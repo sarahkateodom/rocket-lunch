@@ -26,11 +26,6 @@ namespace RocketLunch.domain.services
                 ?? await _repository.CreateUserAsync(userDto.GoogleId, userDto.Email, userDto.Name, userDto.PhotoUrl);
         }
 
-        public async Task<IEnumerable<UserDto>> GetUsersAsync()
-        {
-            return await _repository.GetUsersAsync().ConfigureAwait(false);
-        }
-
         public async Task<bool> UpdateUserAsync(int userId, UserUpdateDto dto)
         {
             UserDto user = await _repository.GetUserAsync(userId).ConfigureAwait(false) ?? throw new NotFoundException("Specified user not found.");

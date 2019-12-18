@@ -9,7 +9,6 @@ namespace RocketLunch.domain.contracts
     public interface IManageUsers
     {
         Task<UserDto> LoginAsync(LoginDto userDto);
-        Task<IEnumerable<UserDto>> GetUsersAsync();
         Task<bool> UpdateUserAsync(int userId, UserUpdateDto dto);
         Task<UserDto> GetUserAsync(int id);
     }

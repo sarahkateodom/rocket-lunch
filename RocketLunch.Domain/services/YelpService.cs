@@ -25,7 +25,7 @@ namespace RocketLunch.domain.services
         public async Task<IEnumerable<RestaurantDto>> GetAvailableRestaurantOptionsAsync(Guid sessionId, SearchOptions options)
         {
             SearchOptions cachedOptions = await cache.GetSessionSearchOptionsAsync(sessionId);
-            if( cachedOptions != null && JsonConvert.SerializeObject(cachedOptions) != JsonConvert.SerializeObject(options) ) await cache.ClearSessionSearchAsync(sessionId);
+            if (cachedOptions != null && JsonConvert.SerializeObject(cachedOptions) != JsonConvert.SerializeObject(options)) await cache.ClearSessionSearchAsync(sessionId);
             List<RestaurantDto> restaurantList = await cache.GetRestaurantListAsync(sessionId);
             if (restaurantList != null) return restaurantList;
             List<RestaurantDto> businesses = new List<RestaurantDto>();
