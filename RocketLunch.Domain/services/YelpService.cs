@@ -26,10 +26,14 @@ namespace RocketLunch.domain.services
 
         public async Task<IEnumerable<RestaurantDto>> GetAvailableRestaurantOptionsAsync(Guid sessionId, SearchOptions options)
         {
-            SearchOptions cachedOptions = await cache.GetSessionSearchOptionsAsync(sessionId);
-            if (cachedOptions != null && JsonConvert.SerializeObject(cachedOptions) != JsonConvert.SerializeObject(options)) await cache.ClearSessionSearchAsync(sessionId);
-            List<RestaurantDto> restaurantList = await cache.GetRestaurantListAsync(sessionId);
+            // cache is based on zip  deprecated
+            // SearchOptions cachedOptions = await cache.GetSessionSearchOptionsAsync(sessionId);
+            // if (cachedOptions != null && JsonConvert.SerializeObject(cachedOptions) != JsonConvert.SerializeObject(options)) await cache.ClearSessionSearchAsync(sessionId);
+
+            List<RestaurantDto> restaurantList = await cache.GetRestaurantListAsync(options.Zip);
             if (restaurantList != null) return restaurantList;
+
+
             List<RestaurantDto> businesses = new List<RestaurantDto>();
             int offset = 0;
             YelpResultDto dto;
@@ -39,10 +43,10 @@ namespace RocketLunch.domain.services
                 businesses.AddRange(dto.Businesses);
                 offset = businesses.Count;
             }
-            while (businesses.Count < dto.Total);
+            while (businesses.Count < dto.Total && businesses.Count < 1000);
 
             List<RestaurantDto> restaurants = businesses.OrderBy(x => x.Name).ToList();
-            await cache.SetRestaurantListAsync(sessionId, restaurants);
+            await cache.SetRestaurantListAsync(options.Zip, restaurants);
             //cache search options
             await cache.SetSessionSearchOptionsAsync(sessionId, options);
             return restaurants;
@@ -75,13 +79,16 @@ namespace RocketLunch.domain.services
             }
 
             HttpResponseMessage message = null;
+            int attempts = 0;
             do
             {
+                attempts++;
+                if (attempts == 4) throw new Exception("yelp is a jerk: " + await message.Content.ReadAsStringAsync().ConfigureAwait(false));
                 Thread.Sleep(201);
                 if (!YelpService.client.DefaultRequestHeaders.Any(x => x.Key == "Authorization"))
                     YelpService.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
                 message = YelpService.client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&limit=50&sort_by=best_match&offset={offset}{openAt}").Result; //categories search is OR 
-            } while (message.StatusCode == System.Net.HttpStatusCode.TooManyRequests || (int)message.StatusCode >= 500 );
+            } while (message.StatusCode == System.Net.HttpStatusCode.TooManyRequests || (int)message.StatusCode >= 500);
             var content = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<YelpResultDto>(content);
 

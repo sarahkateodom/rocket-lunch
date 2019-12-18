@@ -20,12 +20,12 @@ namespace RocketLunch.domain.services.mocks
         }
 
         private List<RestaurantDto> restaurants = null;
-        public async Task<List<RestaurantDto>> GetRestaurantListAsync(Guid sessionId)
+        public async Task<List<RestaurantDto>> GetRestaurantListAsync(string zip)
         {
             return await Task.FromResult(restaurants);
         }
 
-        public async Task SetRestaurantListAsync(Guid sessionId, List<RestaurantDto> restaurants)
+        public async Task SetRestaurantListAsync(string zip, List<RestaurantDto> restaurants)
         {
             await Task.Delay(0);
             this.restaurants = restaurants;

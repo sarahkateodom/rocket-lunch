@@ -141,7 +141,7 @@ namespace RocketLunch.tests.units.domain.services
         //     // assert
         //     Assert.Null(result);
         // }
-        
+
         // [Fact]
         // public async void RestaurantCache_GetUserSessionAsync_ReturnListWhenCached()
         // {
@@ -167,14 +167,14 @@ namespace RocketLunch.tests.units.domain.services
         public async void RestaurantCache_GetRestaurantListAsync_ReturnsNullIfNotPresent()
         {
             // arrange
-            Guid sessionId = Guid.NewGuid();
+            string zip = "90210";
 
             var target = new RestaurantCacheBuilder()
                 .Build();
-            
+
             // act
-            var result = await target.GetRestaurantListAsync(sessionId);
-            
+            var result = await target.GetRestaurantListAsync(zip);
+
             // assert
             Assert.Null(result);
         }
@@ -183,7 +183,7 @@ namespace RocketLunch.tests.units.domain.services
         public async void RestaurantCache_GetRestaurantListAsync_ReturnsListIfPresent()
         {
             // arrange
-            Guid sessionId = Guid.NewGuid();
+            string zip = "38655";
             Mock<ICache> cache = new Mock<ICache>();
             List<RestaurantDto> restaurants = new List<RestaurantDto> {
                 new RestaurantDto {
@@ -195,15 +195,15 @@ namespace RocketLunch.tests.units.domain.services
                     Id = "tim"
                 }
             };
-            cache.Setup(x => x.GetAsync<List<RestaurantDto>>($"{sessionId.ToString()}_sessionsearch")).ReturnsAsync(restaurants);
+            cache.Setup(x => x.GetAsync<List<RestaurantDto>>(zip)).ReturnsAsync(restaurants);
 
             var target = new RestaurantCacheBuilder()
                 .SetCache(cache.Object)
                 .Build();
-            
+
             // act
-            var result = await target.GetRestaurantListAsync(sessionId);
-            
+            var result = await target.GetRestaurantListAsync(zip);
+
             // assert
             Assert.Equal(restaurants, result);
         }
@@ -212,7 +212,7 @@ namespace RocketLunch.tests.units.domain.services
         public async void RestaurantCache_SetRestaurantListAsync_CallsSetCache()
         {
             // arrange
-            Guid sessionId = Guid.NewGuid();
+            string zip = "90201";
             Mock<ICache> cache = new Mock<ICache>();
             List<RestaurantDto> restaurants = new List<RestaurantDto> {
                 new RestaurantDto {
@@ -230,10 +230,10 @@ namespace RocketLunch.tests.units.domain.services
                 .Build();
 
             // act
-            await target.SetRestaurantListAsync(sessionId, restaurants);
+            await target.SetRestaurantListAsync(zip, restaurants);
 
             // assert
-            cache.Verify(c => c.SetAsync<List<RestaurantDto>>($"{sessionId.ToString()}_sessionsearch", restaurants, null), Times.Once);
+            cache.Verify(c => c.SetAsync<List<RestaurantDto>>(zip, restaurants, It.Is<TimeSpan>(x => x.Days == 1)), Times.Once);
         }
 
         [Fact]
@@ -242,7 +242,8 @@ namespace RocketLunch.tests.units.domain.services
             // arrange
             Guid sessionId = Guid.NewGuid();
             Mock<ICache> cache = new Mock<ICache>();
-            var options = new SearchOptions {
+            var options = new SearchOptions
+            {
                 Meal = MealTime.breakfast
             };
 
@@ -264,13 +265,14 @@ namespace RocketLunch.tests.units.domain.services
             Guid sessionId = Guid.NewGuid();
             Mock<ICache> cache = new Mock<ICache>();
 
-            var options = new SearchOptions {
+            var options = new SearchOptions
+            {
                 Meal = MealTime.breakfast
             };
 
             cache.Setup(x => x.GetAsync<SearchOptions>($"{sessionId.ToString()}_sessionsearchoptions")).ReturnsAsync(options);
 
-           
+
 
             var target = new RestaurantCacheBuilder()
                 .SetCache(cache.Object)

@@ -45,14 +45,14 @@ namespace RocketLunch.domain.services
             await cache.SetAsync($"{sessionId.ToString()}{sessionSuffix}", userIds);
         }
 
-        public async Task<List<RestaurantDto>> GetRestaurantListAsync(Guid sessionId)
+        public async Task<List<RestaurantDto>> GetRestaurantListAsync(string zip)
         {
-            return await cache.GetAsync<List<RestaurantDto>>($"{sessionId.ToString()}{this.sessionSearchSuffix}");
+            return await cache.GetAsync<List<RestaurantDto>>(zip);
         }
 
-        public async Task SetRestaurantListAsync(Guid sessionId, List<RestaurantDto> restaurants)
+        public async Task SetRestaurantListAsync(string zip, List<RestaurantDto> restaurants)
         {
-            await this.cache.SetAsync($"{sessionId.ToString()}{sessionSearchSuffix}", restaurants);
+            await this.cache.SetAsync(zip, restaurants, new TimeSpan(24, 0, 0));
         }
 
         public async Task SetSessionSearchOptionsAsync(Guid sessionId, SearchOptions options)
