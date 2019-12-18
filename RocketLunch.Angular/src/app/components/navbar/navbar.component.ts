@@ -41,6 +41,7 @@ export class NavbarComponent implements OnInit {
       self.service.login(socialUser)
         .subscribe(u => {
           self.internalUser = u;
+          this.eventService.userLoggedIn(u);
           console.log('SignIn User', u);
           if (!self.internalUser.zip) {
             // get lng/lat from browser

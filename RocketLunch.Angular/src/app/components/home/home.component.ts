@@ -64,6 +64,11 @@ export class HomeComponent implements OnInit {
       this.lunchLady.getTeamUsers(selectedTeam.id)
         .subscribe(users => this.users = users);
     });
+
+    this.eventService.userLoggedIn$.subscribe(user => {
+      console.log('Login Event Subscription:', user)
+      this.users = [user];
+    });
   }
 
   ngOnInit() {
