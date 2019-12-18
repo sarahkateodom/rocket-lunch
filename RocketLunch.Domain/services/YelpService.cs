@@ -8,6 +8,7 @@ using RocketLunch.domain.utilities;
 using Newtonsoft.Json;
 using System;
 using RocketLunch.domain.enumerations;
+using System.Threading;
 
 namespace RocketLunch.domain.services
 {
@@ -15,6 +16,7 @@ namespace RocketLunch.domain.services
     {
         private string apiKey;
         private IRestaurantCache cache;
+        private static HttpClient client = new HttpClient();
 
         public YelpService(string apiKey, IRestaurantCache cache)
         {
@@ -71,12 +73,18 @@ namespace RocketLunch.domain.services
             {
                 location = $"&location={options.Zip}";
             }
-            using (HttpClient client = new HttpClient())
+
+            HttpResponseMessage message = null;
+            do
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
-                HttpResponseMessage message = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&radius=20000&limit=50&sort_by=best_match&offset={offset}{openAt}"); //categories search is OR 
-                return JsonConvert.DeserializeObject<YelpResultDto>(await message.Content.ReadAsStringAsync().ConfigureAwait(false));
-            }
+                Thread.Sleep(201);
+                if (!YelpService.client.DefaultRequestHeaders.Any(x => x.Key == "Authorization"))
+                    YelpService.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
+                message = YelpService.client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&limit=50&sort_by=best_match&offset={offset}{openAt}").Result; //categories search is OR 
+            } while (message.StatusCode == System.Net.HttpStatusCode.TooManyRequests || (int)message.StatusCode >= 500 );
+            var content = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<YelpResultDto>(content);
+
         }
     }
 }
