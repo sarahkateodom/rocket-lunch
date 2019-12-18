@@ -8,7 +8,13 @@
           <img src="{{user.photoUrl}}" class="card-img-top col profile-photo">
           <div class="col">
             <p>Name: {{user.name}}</p>
-            <p>Zip: {{user.zip}}</p>
+            <p *ngIf="!editingZip">Zip: {{user.zip}} <span (click)="toggleEditZip()"
+                class="fa fa-pencil clickable"></span>
+            </p>
+            <div *ngIf="editingZip">
+              <input  type="text" [(ngModel)]="user.zip">
+              <span class="fa fa-check clickable" (click)="updateUser();toggleEditZip()"></span>
+            </div>
           </div>
         </div>
       </div>

@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   loading = true;
   subscription;
   team: Team;
+  editingZip: boolean = false;
 
   constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute) {
     this.team = undefined;
@@ -105,5 +106,9 @@ export class ProfileComponent implements OnInit {
   openEditTeamModal(team: Team) {
     this.team = team; // team to edit
     setTimeout(() => this.teamModal.show(), 33);
+  }
+
+  toggleEditZip() {
+    this.editingZip = !this.editingZip;
   }
 }

@@ -29,9 +29,9 @@ describe('ProfileComponent', () => {
       ],
       imports: [FormsModule]
     })
-    .overrideTemplate(
-      ProfileComponent,
-      "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
+      .overrideTemplate(
+        ProfileComponent,
+        "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
       .compileComponents();
   }));
 
@@ -132,7 +132,7 @@ describe('ProfileComponent', () => {
       // arrange
       let user = new User();
       user.nopes = ['blah1', 'blah2'];
-      component.restaurants =[
+      component.restaurants = [
         {
           id: 'blah1',
         } as Restaurant,
@@ -143,7 +143,7 @@ describe('ProfileComponent', () => {
           id: 'blah3',
         } as Restaurant
       ];
-   
+
       component.user = user;
 
       // act
@@ -158,7 +158,7 @@ describe('ProfileComponent', () => {
   describe('getRestaurantNameFromId', () => {
     it('returns name given id', () => {
       // arrange
-      component.restaurants =[
+      component.restaurants = [
         {
           id: 'blah1',
           name: 'name1',
@@ -206,5 +206,29 @@ describe('ProfileComponent', () => {
       // assert
       expect(mockLunchService.updateuser).toHaveBeenCalledTimes(1);
     });
-  })
+  });
+
+  describe('toggleEditZip', () => {
+    it('toggles from false to true', () => {
+      // arrange
+      component.editingZip = false;
+
+      // act
+      component.toggleEditZip();
+
+      // asert
+      expect(component.editingZip).toBeTruthy();
+    });
+
+    it('toggles from true to false', () => {
+      // arrange
+      component.editingZip = true;
+
+      // act
+      component.toggleEditZip();
+
+      // asert
+      expect(component.editingZip).toBeFalsy();
+    });
+  });
 });
