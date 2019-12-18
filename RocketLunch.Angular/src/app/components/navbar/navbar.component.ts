@@ -4,6 +4,7 @@ import { AuthService, GoogleLoginProvider, SocialUser } from 'angularx-social-lo
 import { Component, OnInit, Output, EventEmitter, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { Team } from 'src/app/models/team';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'navbar',
@@ -14,7 +15,7 @@ export class NavbarComponent implements OnInit {
   public loading: boolean = true;
   public internalUser: User;
   
-  constructor(private service: LunchLadyService, private eventService: EventService, private authService: AuthService) { 
+  constructor(private service: LunchLadyService, private eventService: EventService, private authService: AuthService, private router: Router) { 
   }
 
   ngOnInit() {
@@ -68,6 +69,7 @@ export class NavbarComponent implements OnInit {
       this.service.logout()
         .subscribe(success => {
           if (success) this.internalUser = undefined;
+          this.router.navigate(['/']);
         });
     });
   }
