@@ -22,9 +22,9 @@
       <div routerLink="/profile/{{internalUser.id}}" class="dropdown-item">Profile</div>
       <div class="dropdown-item" (click)="signOut()">Sign Out</div>
 
-      <div class="dropdown-divider"></div>
+      <!-- <div class="dropdown-divider"></div>
       <div class="dropdown-item" (click)="selectTeam(undefined)">{{internalUser.name}}</div>
-      <div class="dropdown-item" (click)="selectTeam(team)" *ngFor="let team of internalUser.teams">{{team.name}}</div>
+      <div class="dropdown-item" (click)="selectTeam(team)" *ngFor="let team of internalUser.teams">{{team.name}}</div> -->
     </div>
   </div>
 </nav>

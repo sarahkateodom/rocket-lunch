@@ -13,13 +13,22 @@
     </div>
   </div>
   <div id="memberBox" class="row px-3 py-3">
-    <div class="col" class="users">
-      <h4>Exploring Members</h4>
-      <p>
-        <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1">
-          <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
-        </span>
-      </p>
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <h4>Exploring Members</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col users">
+            <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1 float-left">
+              <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
+            </span>
+        </div>
+        <div class="col">
+          <button id="selectTeamBtn" class="btn btn-primary float-right" (click)="openExplorersModal()">Select Team</button>
+        </div>
+      </div>
     </div>
   </div>
   <button type="button" class="btn btn-info go-button mb-5 mt-2" (click)="getRestaurant()">
@@ -38,7 +47,7 @@
       </div>
     </div> -->
 </div>
-
+<app-explorers-modal #explorersModal [user]="internalUser"></app-explorers-modal>
 
 <app-footer></app-footer>
 

@@ -1,0 +1,33 @@
+<app-modal #modal class="">
+  <div class="modal-header">
+    <h5 class="modal-title">Select Team</h5>
+  </div>
+
+  <div class="modal-body" *ngIf="user">
+    <form>
+      <div class="form-row">
+        <div class="form-group required col-8">
+          <select class="form-control" name="selectedTeam" [(ngModel)]="selectedTeamId">
+            <option [value]="undefined">- Just Me -</option>
+            <option *ngFor="let team of user.teams" [value]="team.id">{{ team.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- <div class="separator"> Or </div>
+
+      <div class="form-row">
+        <h6>Add Another Friend</h6>
+        <div class="form-group required col-4">
+          <input type="text" name="email" class="form-control" placeholder="email" [(ngModel)]="selectedEmail">
+        </div>
+      </div>-->
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addExplorers()">Add Explorers</button>
+  </div>
+</app-modal>

@@ -19,6 +19,7 @@ import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-logi
 import { ProfileComponent } from './components/profile/profile.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { NopesModalComponent } from './components/nopes-modal/nopes-modal.component';
+import { ExplorersModalComponent } from './explorers-modal/explorers-modal.component';
 
  
 let config = new AuthServiceConfig([
@@ -44,6 +45,7 @@ export function provideConfig() {
     ProfileComponent,
     TeamModalComponent,
     NopesModalComponent,
+    ExplorersModalComponent,
   ],
   imports: [
     BrowserModule,

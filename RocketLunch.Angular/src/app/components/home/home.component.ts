@@ -7,6 +7,7 @@ import { MealTime } from '../../models/enums/MealTime';
 import { RestaurantSearch } from 'src/app/models/restaurant-search';
 import { EventService } from 'src/app/services/event.service';
 import { Team } from 'src/app/models/team';
+import { ExplorersModalComponent } from 'src/app/explorers-modal/explorers-modal.component';
 
 @Component({
   selector: 'home',
@@ -14,6 +15,7 @@ import { Team } from 'src/app/models/team';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  @ViewChild(ExplorersModalComponent, { static: true }) explorersModal: ExplorersModalComponent;
   restaurant: any;
   goSrc: string;
   goSrcs: string[];
@@ -113,6 +115,10 @@ export class HomeComponent implements OnInit {
 
   public excludeUser(user: User, index: number){
 
+  }
+
+  openExplorersModal() {
+    setTimeout(() => this.explorersModal.show(), 33);
   }
 
   // toggleMeal() {

@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
   public loading: boolean = true;
   public internalUser: User;
-  
-  constructor(private service: LunchLadyService, private eventService: EventService, private authService: AuthService, private router: Router) { 
+
+  constructor(private service: LunchLadyService, private eventService: EventService, private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit {
         this.loading = false;
       }, err => {
         this.loading = false;
-      });  
+      });
   }
 
   selectTeam(team: Team) {
