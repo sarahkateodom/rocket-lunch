@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
     this.eventService.teamSelected$.subscribe(selectedTeam => {
       this.selectedTeam = selectedTeam;
       if (!selectedTeam) {
-        this.users = [];
+        this.users = [this.internalUser];
         return;
       }
 
@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit {
         this.lunchLady.getCurrentUser()
           .subscribe(i => {
             this.internalUser = i;
+            this.users.push(i);
             this.zip = this.internalUser.zip;
             this.getRestaurant();
           }, err => {
