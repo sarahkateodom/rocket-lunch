@@ -13,7 +13,7 @@
     </div>
   </div>
   <div id="memberBox" class="row px-3 py-3">
-    <div class="col">
+    <div *ngIf="internalUser" class="col">
       <div class="row">
         <div class="col">
           <h4>Exploring Members</h4>
@@ -29,6 +29,9 @@
           <button id="selectTeamBtn" class="btn btn-primary float-right" (click)="openExplorersModal()">Select Team</button>
         </div>
       </div>
+    </div>
+    <div *ngIf="!internalUser" class="col justify-content-md-center">
+      <h6>Sign in for a customized experience!</h6>
     </div>
   </div>
   <button type="button" class="btn btn-info go-button mb-5 mt-2" (click)="getRestaurant()">
