@@ -57,7 +57,10 @@ export class TeamModalComponent implements OnInit {
     addUser() {
         if (this.selectedTeam && this.userToAddEmail) {
             this.lunchService.addUserToTeam(this.userToAddEmail, this.selectedTeam.id)
-                .subscribe(user => this.users.push(user));
+                .subscribe(user => {
+                    this.users.push(user);
+                    this.userToAddEmail = '';
+                });
         }
     }
 
