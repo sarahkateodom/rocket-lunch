@@ -67,7 +67,9 @@ export class HomeComponent implements OnInit {
 
     this.eventService.userLoggedIn$.subscribe(user => {
       console.log('Login Event Subscription:', user)
-      this.users = [user];
+      this.internalUser = user;
+      this.zip = this.internalUser.zip;
+      this.users = [this.internalUser];
     });
   }
 
