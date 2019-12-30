@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using RocketLunch.domain.contracts;
 using RocketLunch.domain.dtos;
@@ -138,10 +139,26 @@ namespace RocketLunch.tests.units.domain.services
             var target = new TeamService(repo.Object);
 
             // act
-            await target.AddUserToTeamAsync(teamId, email);
+            await Assert.ThrowsAsync<NotFoundException>(async() => await target.AddUserToTeamAsync(teamId, email));
 
             // assert
             repo.Verify(x => x.AddUserToTeamAsync(userId, teamId), Times.Never);
+        }
+
+        [Fact]
+        public async void TeamService_AddUserToTeamAsync_ThrowsNotFoundExceptionWhenUserDoesNotExist()
+        {
+            // arrange
+            int teamId = 32;
+            string email = "dogs@cats.com";
+
+            var repo = new Mock<IRepository>();
+            repo.Setup(r => r.GetUserByEmailAsync(email)).ReturnsAsync((UserWithTeamsDto)null);
+
+            var target = new TeamService(repo.Object);
+
+            // act & assert
+            await Assert.ThrowsAsync<NotFoundException>(async() => await target.AddUserToTeamAsync(teamId, email));
         }
 
         [Fact]

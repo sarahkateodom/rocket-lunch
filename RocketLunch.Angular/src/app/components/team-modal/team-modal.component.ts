@@ -17,6 +17,8 @@ export class TeamModalComponent implements OnInit {
     public selectedTeam: Team;
     public users: User[] = [];
     public userToAddEmail: string = '';
+    public errorMessage: string;
+
     constructor(private lunchService: LunchLadyService) { }
 
     ngOnInit(): void {
@@ -25,6 +27,7 @@ export class TeamModalComponent implements OnInit {
     }
 
     show() {
+        this.errorMessage = '';
         if (!this.team) {
             this.selectedTeam = new Team();
             this.selectedTeam.zip = this.user ? this.user.zip : '';
@@ -46,20 +49,27 @@ export class TeamModalComponent implements OnInit {
     }
 
     createTeam() {
+        this.errorMessage = '';
         if (this.selectedTeam && this.selectedTeam.name && this.selectedTeam.zip) {
-            this.lunchService.createTeam(this.user.id, this.selectedTeam).subscribe(team => {
-                this.user.teams.push(team);
-                this.hide();
-            });
+            this.lunchService.createTeam(this.user.id, this.selectedTeam)
+                .subscribe(team => {
+                    this.user.teams.push(team);
+                    this.hide();
+                }, err => {
+                    this.errorMessage = err.error;
+                });
         }
     }
 
     addUser() {
+        this.errorMessage = '';
         if (this.selectedTeam && this.userToAddEmail) {
             this.lunchService.addUserToTeam(this.userToAddEmail, this.selectedTeam.id)
                 .subscribe(user => {
                     this.users.push(user);
                     this.userToAddEmail = '';
+                }, err => {
+                    this.errorMessage = `${this.userToAddEmail} is not an existing RocketLunch user.`;
                 });
         }
     }

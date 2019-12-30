@@ -19,7 +19,7 @@ namespace RocketLunch.domain.services
         public async Task<UserDto> AddUserToTeamAsync(int teamId, string email)
         {
             var user = await this.repository.GetUserByEmailAsync(email).ConfigureAwait(false);
-            if(user == null) return null;
+            if (user == null) throw new NotFoundException($"{email} is not an existing RocketLunch user.");
             await this.repository.AddUserToTeamAsync(user.Id, teamId).ConfigureAwait(false);
             return user;
         }
@@ -27,7 +27,7 @@ namespace RocketLunch.domain.services
         public async Task<TeamDto> CreateTeamAsync(int userId, CreateTeamDto dto)
         {
             if (dto == null) throw new ArgumentNullException();
-            if (await this.repository.TeamNameExistsAsync(dto.Name).ConfigureAwait(false)) throw new BadRequestException("Team name exists");
+            if (await this.repository.TeamNameExistsAsync(dto.Name).ConfigureAwait(false)) throw new BadRequestException("Team name already exists.");
 
             var newTeam = new TeamDto
             {
@@ -41,7 +41,7 @@ namespace RocketLunch.domain.services
 
         public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)
         {
-            return await this.repository.GetUsersOfTeamAsync(teamId).ConfigureAwait(false) ?? throw new NotFoundException("Team not found");
+            return await this.repository.GetUsersOfTeamAsync(teamId).ConfigureAwait(false) ?? throw new NotFoundException("Team not found.");
         }
 
         public async Task RemoveUserFromTeamAsync(int teamId, int userId)
