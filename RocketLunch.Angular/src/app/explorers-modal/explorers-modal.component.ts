@@ -12,7 +12,7 @@ import { Team } from '../models/team';
 })
 export class ExplorersModalComponent implements OnInit {
 
-  constructor(private service: LunchLadyService, private eventService: EventService) { }
+  constructor(private eventService: EventService) { }
 
   @ViewChild(ModalComponent, { static: true }) modal: ModalComponent;
   @Input() user: User;

@@ -8,12 +8,13 @@ import { of } from 'rxjs';
 import { LunchLadyService } from 'src/app/services/lunch-lady.service';
 import { User } from 'src/app/models/user';
 import { Restaurant } from 'src/app/models/restaurant';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
   let mockLunchService: any;
+  let mockRouter: any;
 
   beforeEach(async(() => {
     mockLunchService = jasmine.createSpyObj('LunchLadyService', ['updateuser', 'getRestaurants', 'getUser'])
@@ -21,11 +22,14 @@ describe('ProfileComponent', () => {
     mockLunchService.getRestaurants.and.returnValue(of([]));
     mockLunchService.updateuser.and.returnValue(of(true));
 
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { params: of({ id: 123 }) } },
         { provide: LunchLadyService, useValue: mockLunchService },
+        { provide: Router, useValue: mockRouter },
       ],
       imports: [FormsModule]
     })

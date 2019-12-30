@@ -8,7 +8,7 @@ export const routes: Routes = [
 	{
 		path: '',
 		children: [
-			{ path: '', component: WelcomeComponent },  // default page
+			{ path: '', component: HomeComponent },  // default page, todo: Fix up UI on WelcomeComponent
 			{ path: 'welcome', component: WelcomeComponent }, 
 			{ path: 'home', component: HomeComponent }, 
 			{ path: 'too-many', component: TooManyRequestsComponent },
