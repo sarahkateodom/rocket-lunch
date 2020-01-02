@@ -3,10 +3,10 @@
     <img class="navbar-icon mr-1" src="./assets/LogoBlue.svg" alt="taco" />
     <span>Rocket Lunch</span>
   </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+  <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
-  </button>
+  </button> -->
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
@@ -16,7 +16,7 @@
   <button *ngIf="!internalUser && !loading" (click)="signIn()" class="btn btn-sm btn-outline-primary">Sign In</button>
   <div class="btn-group" *ngIf="internalUser && !loading">
     <button type="button" class="btn user-photo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img class="navbar-icon mr-1" [src]="internalUser.photoUrl" />
+      <img class="navbar-icon" [src]="internalUser.photoUrl" />
     </button>
     <div class="dropdown-menu dropdown-menu-right">
       <div routerLink="/profile/{{internalUser.id}}" class="dropdown-item">Profile</div>

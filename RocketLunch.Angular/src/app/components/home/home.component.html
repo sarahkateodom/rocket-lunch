@@ -1,32 +1,38 @@
 <navbar></navbar>
 <div class="search-banner">Exploring <strong>Lunch Places</strong> <span *ngIf="selectedTeam"> With
     <strong>{{selectedTeam.name}}</strong></span> Near <strong>{{zip}}</strong></div>
-<div class="container search-box mt-5">
+<div class="container search-box">
   <div id="resultBox" class="row justify-content-md-center">
-    <div class="col" class="go-for-lunch">
+    <div class="col go-for-lunch">
       <!-- <img *ngIf="loading" class="loading-image" src="./assets/loading.gif" alt="loading"> -->
       <!-- <div *ngIf="!loading">
         <p class="result"><span *ngIf="restaurant">{{restaurant.name}}</span></p>
       </div> -->
       <h3>Go Explore: </h3>
-      <h1 *ngIf="restaurant">{{restaurant.name}}</h1>
+      <h1 class="restaurant-suggestion">{{restaurant?.name}}</h1>
+
+      <div class="relaunch">
+        <button type="button" class="btn relaunch-button" (click)="getRestaurant()" *ngIf="restaurant">
+          ReLaunch
+        </button>
+      </div>
+
     </div>
   </div>
-  <div id="memberBox" class="row px-3 py-3">
+  <div id="memberBox" class="row px-3">
     <div *ngIf="internalUser" class="col">
       <div class="row">
         <div class="col">
-          <h4>Exploring Members</h4>
+          <h4 class="explore-members">Exploring Members
+            <button id="selectTeamBtn" class="btn btn-primary float-right" (click)="openExplorersModal()">Select Team</button>
+          </h4>
         </div>
       </div>
       <div class="row">
         <div class="col users">
-            <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1 float-left">
-              <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
-            </span>
-        </div>
-        <div class="col">
-          <button id="selectTeamBtn" class="btn btn-primary float-right" (click)="openExplorersModal()">Select Team</button>
+          <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1 float-left">
+            <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
+          </span>
         </div>
       </div>
     </div>
@@ -34,21 +40,7 @@
       <h6>Sign in for a customized experience!</h6>
     </div>
   </div>
-  <button type="button" class="btn btn-info go-button mb-5 mt-2" (click)="getRestaurant()">
-    ReLaunch
-    <!-- <img class="go-image" [src]="goSrc" alt="go"> -->
-  </button>
-  <!-- <div class="row justify-content-md-center">
-    <div class="col" class="users">
-      <p>
-        <span *ngFor="let user of users" class="badge badge-pill badge-secondary user" (click)="selectUser(user)">
-          <span>{{ user.name }} </span><span class="user-close" (click)="dismissUser(user.id)">x</span></span>
-          <span class="badge badge-pill badge-info user" (click)="openAddUserModal()">
-            <i class="fa fa-user-plus"></i> Add Eater
-          </span>
-        </p>
-      </div>
-    </div> -->
+  
 </div>
 <app-explorers-modal #explorersModal [user]="internalUser"></app-explorers-modal>
 
