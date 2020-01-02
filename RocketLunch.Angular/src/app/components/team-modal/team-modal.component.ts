@@ -69,7 +69,7 @@ export class TeamModalComponent implements OnInit {
                     this.users.push(user);
                     this.userToAddEmail = '';
                 }, err => {
-                    this.errorMessage = `${this.userToAddEmail} is not an existing RocketLunch user.`;
+                    this.errorMessage = err.error;
                 });
         }
     }

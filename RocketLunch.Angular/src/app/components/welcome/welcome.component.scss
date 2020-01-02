@@ -1,39 +1,69 @@
 .welcome-page {
+  .container {
+    background-color: white;
+    margin-top: 50px;
+    width: 95%;
 
-    img.bg {
-        /* Set rules to fill background */
-        min-height: 100%;
-        min-width: 1024px;
-          
-        /* Set up proportionate scaling */
-        width: 100%;
-        height: auto;
-          
-        /* Set up positioning */
-        position: fixed;
-        top: 0;
-        left: 0;
+    .col {
+      padding-right: 0px;
+      padding-bottom: 20px;
+
+      .title {
+        margin-top: 50px;
       }
 
-      @media screen and (max-width: 1024px) { /* Specific to this particular image */
-        img.bg {
-          left: 50%;
-          margin-left: -512px;   /* 50% */
-        }
+      .rocket-cloud {
+        padding-top: 5px;
+        max-width: 90%;
+      }
+
+      .separator {
+        border: 0;
+        height: 1%;
+        background-image: linear-gradient(to right, #a1e3f6, #1e81ce);
+        width: 50%;
+        margin-top: 30px;
       }
 
       .search-btn {
-        position: absolute;
-        top: 60%;
-        left: 19%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        background-image: linear-gradient(to right, #a1e3f6, #1E81CE);
+        background-image: linear-gradient(to right, #a1e3f6, #1e81ce);
         color: white;
         font-size: 20px;
-        padding: 12px 40px;
         border: none;
         cursor: pointer;
         border-radius: 27px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+        margin-top: 30px;
+        width: 30%;
+      }
+
+      @media screen and (max-width: 1024px) {
+        .search-btn {
+          font-size: 16px;
+          width: 60%;
+          margin-top: 10px;
+        }
+
+        .separator {
+          width: 90%;
+          margin-top: 10px;
+        }
+
+        .title {
+          width: 100%;
+          margin-top:20px;
+        }
+      }
     }
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
 }
