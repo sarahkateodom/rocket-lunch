@@ -345,6 +345,65 @@ namespace RocketLunch.tests.units.data
         }
 
         [Fact]
+        public async void LunchRepository_GetTeamAsync_ReturnsSpecifiedTeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            TeamEntity team = context.Teams.Add(new TeamEntity()
+            {
+                Name = "Tahra Dactyls",
+                Zip = "90210",
+            }).Entity;
+            await context.SaveChangesAsync();
+
+            // act
+            TeamDto result = await target.GetTeamAsync(team.Id);
+
+            // assert
+            Assert.Equal(team.Name, result.Name);
+            Assert.Equal(team.Zip, result.Zip);
+        }
+
+        [Fact]
+        public async void LunchRepository_GetTeamAsync_ReturnsNullIfTeamDoesNotExist()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+
+            // act
+            TeamDto result = await target.GetTeamAsync(8888);
+
+            // assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async void LunchRepository_UpdateTeamAsync_UpdatesTeam()
+        {
+            // arrange
+            LunchContext context = GetContext();
+            LunchRepository target = new LunchRepository(context);
+            const string Name = "bob's team";
+            const string Zip = "90210";
+            const string NewName = "fanny's team";
+            const string NewZip = "00501";
+
+            int id = await target.CreateTeamAsync(Name, Zip);
+            await target.UpdateTeamAsync(id, NewName, NewZip);
+            
+            // act
+
+            var result = context.Teams.Where( u => u.Id == id).Single();
+        
+            // assert
+            Assert.Equal(NewName, result.Name);
+            Assert.Equal(NewZip, result.Zip);
+
+        }
+        
+        [Fact]
         public async void LunchRepository_TeamNameExistsAsync_ReturnsFalseWhenTeamDoesNotExist()
         {
             // arrange

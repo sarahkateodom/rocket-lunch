@@ -103,6 +103,45 @@ namespace RocketLunch.tests.units.domain.services
         }
 
         [Fact]
+        public async void TeamService_UpdateTeamAsync_CallsRepositoryUpdateTeam()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(r => r.GetTeamAsync(It.IsAny<int>())).ReturnsAsync(new TeamDto());
+            TeamService target = new TeamService(mockRepo.Object);
+            int teamId = 1;
+            TeamUpdateDto dto = new TeamUpdateDto
+            {
+                Name = "Anne Telohps",
+                Zip = "90210"
+            };
+
+            // act
+            var result = await target.UpdateTeamAsync(teamId, dto);
+
+            // assert
+            mockRepo.Verify(r => r.UpdateTeamAsync(teamId, dto.Name, dto.Zip), Times.Once);
+        }
+
+        [Fact]
+        public async void TeamService_UpdateTeamAsync_ThrowsNotFoundWhenTeamDoesNotExist()
+        {
+            // arrange
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            mockRepo.Setup(r => r.GetTeamAsync(It.IsAny<int>())).ReturnsAsync((TeamDto)null);
+            TeamService target = new TeamService(mockRepo.Object);
+            int teamId = 1;
+            TeamUpdateDto dto = new TeamUpdateDto
+            {
+                Name = "Anne Telohps",
+                Zip = "90210"
+            };
+
+            // act & assert
+            await Assert.ThrowsAsync<NotFoundException>(async () => await target.UpdateTeamAsync(teamId, dto));
+        }
+        
+        [Fact]
         public async void TeamService_AddUserToTeamAsync_CallRepo()
         {
             // arrange

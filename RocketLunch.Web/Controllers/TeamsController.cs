@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -25,6 +26,15 @@ namespace RocketLunch.web.controllers
         public async Task<ObjectResult> CreateTeam(int userId, [FromBody] CreateTeamDto teamDto)
         {
             return new OkObjectResult(await this.teamsService.CreateTeamAsync(userId, teamDto));
+        }
+
+        [HttpPut]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Update existing Team.", typeof(bool))]
+        [Route("api/teams/{teamId}")]
+        public async Task<ObjectResult> UpdateTeam(int teamId, TeamUpdateDto dto)
+        {
+            var result = await teamsService.UpdateTeamAsync(teamId, dto);
+            return new OkObjectResult(result);
         }
 
         [HttpPost]

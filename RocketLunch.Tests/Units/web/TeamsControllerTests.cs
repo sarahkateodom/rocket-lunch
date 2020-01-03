@@ -37,6 +37,25 @@ namespace RocketLunch.tests.web
         }
 
         [Fact]
+        public async void TeamsController_UpdateTeam_ReturnsOkAndCallsTeamService()
+        {
+            // Arrange
+            Mock<IManageTeams> mockTeamService = new Mock<IManageTeams>();
+            mockTeamService.Setup(s => s.UpdateTeamAsync(It.IsAny<int>(), It.IsAny<TeamUpdateDto>())).ReturnsAsync(true);
+            var target = new TeamsController(mockTeamService.Object);
+            TeamUpdateDto dto = new TeamUpdateDto();
+            int teamId = 1;
+
+            // Act
+            var result = await target.UpdateTeam(1, dto);
+
+            //Assert
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(true, result.Value);
+            mockTeamService.Verify(v => v.UpdateTeamAsync(teamId, dto), Times.Once);
+        }
+
+        [Fact]
         public async void TeamsController_AddUserToTeam_ReturnOkAndCallsTeamService()
         {
             // arrange

@@ -43,6 +43,20 @@ namespace RocketLunch.data
             return team.Id;
         }
 
+        public async Task<TeamDto> GetTeamAsync(int id)
+        {
+           TeamEntity teamEntity = await _lunchContext.Teams.SingleOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            return MaptoTeamDto(teamEntity);
+        }
+        
+        public async Task UpdateTeamAsync(int id, string name, string zip)
+        {
+            TeamEntity currentTeam = await _lunchContext.Teams.FirstOrDefaultAsync( t => t.Id == id).ConfigureAwait(false);
+            currentTeam.Name = name;
+            currentTeam.Zip = zip;
+            await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
         public async Task<UserDto> CreateUserAsync(string googleId, string email, string name, string photoUrl)
         {
             UserEntity newUser = (await _lunchContext.Users.AddAsync(new UserEntity
@@ -148,6 +162,7 @@ namespace RocketLunch.data
 
         private TeamDto MaptoTeamDto(TeamEntity team)
         {
+            if (team == null) return null;
             return new TeamDto
             {
                 Id = team.Id,
@@ -156,6 +171,6 @@ namespace RocketLunch.data
             };
         }
 
-
+        
     }
 }

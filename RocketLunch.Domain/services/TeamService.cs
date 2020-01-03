@@ -39,6 +39,14 @@ namespace RocketLunch.domain.services
             return newTeam;
         }
 
+        public async Task<bool> UpdateTeamAsync(int teamId, TeamUpdateDto dto)
+        {
+            if ( await this.repository.GetTeamAsync(teamId) == null) throw new NotFoundException("Team not found");
+            await repository.UpdateTeamAsync(teamId, dto.Name, dto.Zip).ConfigureAwait(false);
+            return true;
+            
+        }
+
         public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)
         {
             return await this.repository.GetUsersOfTeamAsync(teamId).ConfigureAwait(false) ?? throw new NotFoundException("Team not found.");
