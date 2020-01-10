@@ -77,14 +77,19 @@
         background-color: white;
         color: #834c98;
         font-weight: lighter;
+        cursor: pointer;
 
         .user-close {
           margin-left: 5px;
-          cursor: pointer;
         }
       }
       .user:hover {
+        // background-color: #e6c0e8;
+      }
+
+      .excluded {
         background-color: #e6c0e8;
+        text-decoration: line-through;
       }
     }
 

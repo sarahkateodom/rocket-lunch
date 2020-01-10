@@ -13,7 +13,7 @@
             </p>
             <div *ngIf="editingZip" class="form-row">
               <div class="col col-2 input-group">
-                <input type="text" class="form-control" placeholder="Zip" [(ngModel)]="user.zip">
+                <input type="text" class="form-control" placeholder="Zip" [(ngModel)]="user.zip" (keyup.enter)="updateUser();toggleEditZip()">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="updateUser();toggleEditZip()">
                     <span class="fa fa-check"></span></button>

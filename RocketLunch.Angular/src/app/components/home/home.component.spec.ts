@@ -10,6 +10,7 @@ import { HttpService } from '../../services/http.service';
 import { ModalComponent } from '../modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user';
+import { RestaurantSearch } from 'src/app/models/restaurant-search';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -20,7 +21,7 @@ describe('HomeComponent', () => {
     { id: 2, name: "Pam Dabare", nopes: ['fsad', ';lkj'] } as User,
   ] as User[];
 
- 
+
   beforeEach(async(() => {
     mockLunchService = jasmine.createSpyObj('LunchLadyService', ['getRestaurant', 'getUsers', 'getRestaurants', 'createUserSession', 'updateUserSession', 'updateuser', 'getCurrentUser'])
     mockLunchService.getRestaurant.and.returnValue(of(new Restaurant()));
@@ -31,7 +32,7 @@ describe('HomeComponent', () => {
     mockLunchService.createUserSession.and.returnValue(of("12324124-123123-123123"));
     mockLunchService.updateUserSession.and.returnValue(of(true));
     mockLunchService.updateuser.and.returnValue(of(true));
-      
+
     TestBed.configureTestingModule({
       declarations: [HomeComponent, ModalComponent],
       providers: [
@@ -40,9 +41,9 @@ describe('HomeComponent', () => {
       ],
       imports: [FormsModule]
     })
-    .overrideTemplate(
-      HomeComponent,
-      "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
+      .overrideTemplate(
+        HomeComponent,
+        "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>")
       .compileComponents();
   }));
 
@@ -93,7 +94,51 @@ describe('HomeComponent', () => {
       // assert
       expect(component.sessionId).not.toBe(undefined);
     });
+    it('excludes excludedUserIds from search', () => {
+      // arrange
+      component.sessionId = 123;
+      component.restaurant = undefined;
+      component.users = [...users];
+      component.excludedUserIds = [users[0].id];
 
-    
+      let expectedOptions = new RestaurantSearch();
+      expectedOptions.zip = component.zip;
+      expectedOptions.userIds = [users[1].id];
+
+
+      // act
+      component.getRestaurant();
+
+      // assert
+      expect(mockLunchService.getRestaurant).toHaveBeenCalledWith(component.sessionId, expectedOptions);
+    });
+
+  });
+
+  describe('toggleUserExclusion', () => {
+    it('adds selected userId to excludedUserIds collection if not excluded', () => {
+      // protec
+      component.excludedUserIds = [];
+      let userId = users[0].id
+
+      // attac
+      component.toggleUserExclusion(userId, 0);
+
+      // snac
+      expect(component.excludedUserIds).toContain(userId);
+    });
+
+    it('removes selected userId to the excludedUserIds collection if excluded', () => {
+      // protec
+      let userId = users[0].id
+      component.excludedUserIds = [userId];
+
+      // attac
+      component.toggleUserExclusion(userId, 0);
+
+      // snac
+      expect(component.excludedUserIds).not.toContain(userId);
+    });
+
   });
 });

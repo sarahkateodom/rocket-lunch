@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   goSrcs: string[];
   internalUser: User;
   users: User[] = [];
+  excludedUserIds: number[] = [];
   selectedUser: User;
   selectedTeam: Team;
   restaurants: Restaurant[] = [];
@@ -107,7 +108,8 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     let searchOptions = new RestaurantSearch();
     searchOptions.zip = this.zip;
-    searchOptions.userIds = !this.users ? [this.internalUser.id] : this.users.map(u => u.id);
+    let searchUsers = this.users.filter(u => this.excludedUserIds.indexOf(u.id) == -1);
+    searchOptions.userIds = !this.users ? [this.internalUser.id] : searchUsers.map(u => u.id);
 
     if (!this.sessionId) {
       this.sessionId = UUID.UUID();
@@ -120,8 +122,17 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  public excludeUser(user: User, index: number){
+  public toggleUserExclusion(userId: number, index: number) {
+    let excludedUserIndex = this.getExcludedUserIndex(userId);
+    
+    if (excludedUserIndex >= 0)
+      this.excludedUserIds.splice(excludedUserIndex, 1);
+    else
+      this.excludedUserIds.push(userId);
+  }
 
+  public getExcludedUserIndex(userId: number) {
+    return this.excludedUserIds.indexOf(userId);
   }
 
   openExplorersModal() {

@@ -30,8 +30,12 @@
       </div>
       <div class="row">
         <div class="col users">
-          <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1 float-left">
-            <span>{{user.name}} </span><span class="user-close" (click)="excludeUser(user, i, $event)">x</span>
+          <span *ngFor="let user of users; let i = index" class="badge badge-pill badge-secondary user mr-1 float-left" [class.excluded]="getExcludedUserIndex(user.id) >= 0">
+            <span (click)="toggleUserExclusion(user.id, i)">
+              <span>{{user.name}} </span>
+              <!-- <span *ngIf="!isExcludedUser(user.id)" class="user-close">x</span>
+              <span *ngIf="isExcludedUser(user.id)" class="user-close">+</span> -->
+            </span>
           </span>
         </div>
       </div>
