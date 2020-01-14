@@ -3,23 +3,21 @@
         <h5 class="modal-title">Eat with friends!</h5>
     </div>
 
-    <div class="modal-body" *ngIf="selectedTeam">
+    <div class="modal-body">
         <form>
-            <div class="form-row">
+            <div class="form-row" *ngIf="selectedTeam">
                 <div class="form-group required col-8">
                     <input type="text" name="team-name" class="form-control" placeholder="Team Name"
-                        [(ngModel)]="selectedTeam.name">
+                    #nameField [(ngModel)]="selectedTeam.name">
                 </div>
                 <div class="form-group required col-4">
                     <input type="text" name="team-zip" class="form-control" placeholder="Zip"
-                        [(ngModel)]="selectedTeam.zip">
+                    #zipField [(ngModel)]="selectedTeam.zip" >
                 </div>
             </div>
         </form>
 
-
-
-        <div *ngIf="team">
+        <div *ngIf="existingTeam">
             <hr>
             <h5>Add Users</h5>
             <div class="form-row">
@@ -34,7 +32,7 @@
             <div class="form-row ml-1">
                 <div class="col" class="users">
                     <p>
-                        <span *ngFor="let user of filteredUsers(); let i = index" class="badge badge-pill badge-secondary user mr-1">
+                        <span *ngFor="let user of filterUsers(); let i = index" class="badge badge-pill badge-secondary user mr-1">
                             <span>{{ user.name }} </span><span class="user-close" (click)="removeUserFromTeam(user.id, i)">x</span>
                         </span>
                     </p>
@@ -47,6 +45,6 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="hide()">Close</button>
-        <button *ngIf="!team" type="button" class="btn btn-primary" (click)="createTeam()">Create Team</button>
+        <button *ngIf="!existingTeam" type="button" class="btn btn-primary" (click)="createTeam()">Create Team</button>
     </div>
 </app-modal>

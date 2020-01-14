@@ -75,6 +75,11 @@ export class LunchLadyService {
     let url = `/api/users/${userId}/teams`;
     return this.http.post(url, team).pipe(map(res => <Team>res));
   }
+
+  public updateTeam(team: Team): Observable<boolean> {
+    let url = `/api/teams/${team.id}`;
+    return this.http.put(url, team).pipe(map(res => <boolean>res));
+  }
   
   public addUserToTeam(email: string, teamId: number): Observable<User> {
       let url = `/api/users/${email}/teams/${teamId}`;

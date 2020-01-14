@@ -13,7 +13,9 @@ export class ModalComponent {
 
     public show(): void {
         this.visible = true;
-        setTimeout(() => this.visibleAnimate = true, 100);
+        setTimeout(() => {
+            this.visibleAnimate = true;
+        }, 100);
     }
 
     public hide(): void {
@@ -22,8 +24,8 @@ export class ModalComponent {
     }
 
     public onContainerClicked(event: MouseEvent): void {
-        if ((<HTMLElement>event.target).classList.contains('modal')) {
-            this.hide();
-        }
+        // if ((<HTMLElement>event.target).classList.contains('modal')) {
+        //     this.hide();
+        // }
     }
 }

@@ -16,6 +16,9 @@ export class EventService {
     public loggedInUser = new Subject<User>();
     userLoggedIn$ = this.loggedInUser.asObservable();
 
+    public updatedUserTeam = new Subject<Team>();
+    updatedUserTeam$ = this.updatedUserTeam.asObservable();
+
     setSelectedTeam(team: Team) {
         console.log('setSelectedTeam', team);
         this.selectedTeam.next(team);
@@ -28,5 +31,9 @@ export class EventService {
     userLoggedIn(user: User) {
         console.log('Login Event:', user);
         this.loggedInUser.next(user);
+    }
+
+    updateUserTeam(team: Team) {
+        this.updatedUserTeam.next(team)
     }
 }

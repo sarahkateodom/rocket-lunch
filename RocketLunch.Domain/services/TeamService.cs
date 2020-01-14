@@ -41,10 +41,14 @@ namespace RocketLunch.domain.services
 
         public async Task<bool> UpdateTeamAsync(int teamId, TeamUpdateDto dto)
         {
-            if ( await this.repository.GetTeamAsync(teamId) == null) throw new NotFoundException("Team not found");
+            var existingTeam = await this.repository.GetTeamAsync(teamId);
+            if (existingTeam == null) throw new NotFoundException("Team not found");
+            if (existingTeam.Name != dto.Name)
+                if (await this.repository.TeamNameExistsAsync(dto.Name).ConfigureAwait(false)) throw new BadRequestException("Team name already exists.");
+            
             await repository.UpdateTeamAsync(teamId, dto.Name, dto.Zip).ConfigureAwait(false);
             return true;
-            
+
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersOfTeamAsync(int teamId)

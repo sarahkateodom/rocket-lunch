@@ -31,7 +31,7 @@ namespace RocketLunch.web.controllers
         [HttpPut]
         [SwaggerResponse((int)HttpStatusCode.OK, "Update existing Team.", typeof(bool))]
         [Route("api/teams/{teamId}")]
-        public async Task<ObjectResult> UpdateTeam(int teamId, TeamUpdateDto dto)
+        public async Task<ObjectResult> UpdateTeam(int teamId, [FromBody] TeamUpdateDto dto)
         {
             var result = await teamsService.UpdateTeamAsync(teamId, dto);
             return new OkObjectResult(result);

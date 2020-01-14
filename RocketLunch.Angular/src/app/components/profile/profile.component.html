@@ -13,9 +13,11 @@
             </p>
             <div *ngIf="editingZip" class="form-row">
               <div class="col col-2 input-group">
-                <input type="text" class="form-control" placeholder="Zip" [(ngModel)]="user.zip" (keyup.enter)="updateUser();toggleEditZip()">
+                <input type="text" class="form-control" placeholder="Zip" [(ngModel)]="user.zip"
+                  (keyup.enter)="updateUser();toggleEditZip()">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="updateUser();toggleEditZip()">
+                  <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                    (click)="updateUser();toggleEditZip()">
                     <span class="fa fa-check"></span></button>
                 </div>
               </div>
@@ -68,7 +70,7 @@
     </div>
   </div>
 </div>
-<app-team-modal #teamModal [user]="user" [team]="team"></app-team-modal>
+<app-team-modal #teamModal [user]="user" [existingTeam]="team"></app-team-modal>
 <app-nopes-modal #nopesModal [user]="user"></app-nopes-modal>
 
 <app-footer></app-footer>

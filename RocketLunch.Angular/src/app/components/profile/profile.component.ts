@@ -7,6 +7,7 @@ import { User } from 'src/app/models/user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamModalComponent } from '../team-modal/team-modal.component';
 import { Team } from 'src/app/models/team';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,29 +20,42 @@ export class ProfileComponent implements OnInit {
   restaurants: Restaurant[];
   selectedRestaurantId: string;
   user: User;
+  userId: number;
   loading = true;
   subscription;
   team: Team;
   editingZip: boolean = false;
 
-  constructor(private lunchLady: LunchLadyService, private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(private lunchLady: LunchLadyService, private eventService: EventService, private activatedRoute: ActivatedRoute, private router: Router) {
     this.team = undefined;
   }
 
   ngOnInit() {
     this.subscription = this.activatedRoute.params.subscribe(params => {
-      let userId = +params['id']; // (+) converts string 'id' to a number
-      this.lunchLady.getUser(userId)
-        .subscribe(x => {
-          this.user = x;
-          if (!this.user.nopes) this.user.nopes = [];
-          console.log('Profile user', this.user);
-          this.getRestaurants();
-        }, err => {
-          this.router.navigate(['/'])
-        });
+      this.userId = +params['id']; // (+) converts string 'id' to a number
+      let getUserResponse = this.getUser();
+      getUserResponse.subscribe(x => this.getRestaurants());
     });
 
+    this.eventService.updatedUserTeam$.subscribe(updatedTeam => {
+      debugger;
+      let teamIndex = this.user.teams.findIndex(x => x.id == updatedTeam.id);
+      this.user.teams[teamIndex] = Object.assign(new Team(), updatedTeam);
+    });
+
+  }
+
+  getUser() {
+    let getUserResponse = this.lunchLady.getUser(this.userId);
+    getUserResponse
+      .subscribe(x => {
+        this.user = x;
+        if (!this.user.nopes) this.user.nopes = [];
+      }, err => {
+        this.router.navigate(['/'])
+      });
+
+    return getUserResponse;
   }
 
   getRestaurants() {

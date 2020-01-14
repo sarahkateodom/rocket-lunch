@@ -12,6 +12,19 @@
         ],
         "description": "test method for angular"
 	},
+	"yoda": {
+        "prefix": "yoda",
+        "body": [
+			"it('should $1', () => {",
+			"\t// Protec ",
+			"\t$2",
+			"\t// Attac",
+			"\t",
+			"\t// Eat frog for snac",
+			"});"
+        ],
+        "description": "test method for angular"
+	},
 	"desc": {
         "prefix": "desc",
         "body": [
