@@ -62,11 +62,11 @@ namespace RocketLunch.domain.services
 
         private async Task<YelpResultDto> GetYelpRestaurantsAsync(int offset, SearchOptions options)
         {
-            string openAt = "";
-            if (options.Meal != MealTime.all)
-            {
-                openAt = "&open_at=" + DateTime.Now.Date.AddHours(options.Meal.GetHoursFromMidnight()).GetUnixTime().ToString();
-            }
+            // string openAt = "";
+            // if (options.Meal != MealTime.all)
+            // {
+            //     openAt = "&open_at=" + DateTime.Now.Date.AddHours(options.Meal.GetHoursFromMidnight()).GetUnixTime().ToString();
+            // }
             string categories = "categories=restaurants";
             // if (options.Category != Category.restaurants)
             // {
@@ -87,7 +87,7 @@ namespace RocketLunch.domain.services
                 Thread.Sleep(201);
                 if (!YelpService.client.DefaultRequestHeaders.Any(x => x.Key == "Authorization"))
                     YelpService.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
-                message = YelpService.client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&limit=50&sort_by=best_match&offset={offset}{openAt}").Result; //categories search is OR 
+                message = YelpService.client.GetAsync($"https://api.yelp.com/v3/businesses/search?{categories}{location}&limit=50&sort_by=best_match&offset={offset}").Result; //categories search is OR 
             } while (message.StatusCode == System.Net.HttpStatusCode.TooManyRequests || (int)message.StatusCode >= 500);
             var content = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<YelpResultDto>(content);

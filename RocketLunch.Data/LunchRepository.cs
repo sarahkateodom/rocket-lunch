@@ -133,7 +133,7 @@ namespace RocketLunch.data
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private UserWithTeamsDto MapToUserWithTeamsDto(UserEntity user)
+        private static UserWithTeamsDto MapToUserWithTeamsDto(UserEntity user)
         {
             if (user == null) return null;
             return new UserWithTeamsDto
@@ -148,7 +148,7 @@ namespace RocketLunch.data
             };
         }
 
-        private UserDto MapToUserDto(UserEntity user)
+        private static UserDto MapToUserDto(UserEntity user)
         {
             if (user == null) return null;
             return new UserDto
@@ -162,7 +162,7 @@ namespace RocketLunch.data
             };
         }
 
-        private TeamDto MaptoTeamDto(TeamEntity team)
+        private static TeamDto MaptoTeamDto(TeamEntity team)
         {
             if (team == null) return null;
             return new TeamDto

@@ -6,3 +6,5 @@ npm-debug.log
 .envrc
 */package-lock.json
 appsettings.Development.json
+.fake
+.ionide
