@@ -8,6 +8,7 @@ stack: cflinuxfs3
 services:
   - RocketRedis
   - clvt-config-svr
+  - rocketDb
 timeout: 180
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1

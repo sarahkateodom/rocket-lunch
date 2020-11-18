@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/RocketLunch.Web/bin/Debug/netcoreapp2.2/RocketLunch.Web.dll",
+            "program": "${workspaceFolder}/RocketLunch.Web/bin/Debug/netcoreapp3.1/RocketLunch.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/RocketLunch.Web",
             "stopAtEntry": false,

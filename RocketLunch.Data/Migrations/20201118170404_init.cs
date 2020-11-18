@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using MySql.Data.EntityFrameworkCore.Metadata;
 
-namespace RocketLunch.data.Migrations
+namespace RocketLunch.Data.Migrations
 {
-    public partial class AddingTeamsToRepository : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,13 +12,31 @@ namespace RocketLunch.data.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     name = table.Column<string>(nullable: true),
                     zip = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_teams", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    google_id = table.Column<string>(nullable: true),
+                    name = table.Column<string>(nullable: true),
+                    email = table.Column<string>(nullable: true),
+                    photo_url = table.Column<string>(nullable: true),
+                    nopes = table.Column<string>(nullable: true),
+                    zip = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,6 +76,9 @@ namespace RocketLunch.data.Migrations
 
             migrationBuilder.DropTable(
                 name: "teams");
+
+            migrationBuilder.DropTable(
+                name: "users");
         }
     }
 }

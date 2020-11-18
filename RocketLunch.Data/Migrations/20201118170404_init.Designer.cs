@@ -3,35 +3,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RocketLunch.data;
 
-namespace RocketLunch.data.Migrations
+namespace RocketLunch.Data.Migrations
 {
     [DbContext(typeof(LunchContext))]
-    [Migration("20191217202614_AddingTeamsToRepository")]
-    partial class AddingTeamsToRepository
+    [Migration("20201118170404_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("RocketLunch.data.entities.TeamEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnType("text");
 
                     b.Property<string>("Zip")
-                        .HasColumnName("zip");
+                        .HasColumnName("zip")
+                        .HasColumnType("text");
 
                     b.HasKey("Id")
                         .HasName("pk_teams");
@@ -44,27 +44,31 @@ namespace RocketLunch.data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnName("email");
+                        .HasColumnName("email")
+                        .HasColumnType("text");
 
                     b.Property<string>("GoogleId")
-                        .HasColumnName("google_id");
+                        .HasColumnName("google_id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnType("text");
 
                     b.Property<string>("Nopes")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("nopes")
-                        .HasDefaultValue("[]");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhotoUrl")
-                        .HasColumnName("photo_url");
+                        .HasColumnName("photo_url")
+                        .HasColumnType("text");
 
                     b.Property<string>("Zip")
-                        .HasColumnName("zip");
+                        .HasColumnName("zip")
+                        .HasColumnType("text");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
@@ -75,10 +79,12 @@ namespace RocketLunch.data.Migrations
             modelBuilder.Entity("RocketLunch.data.entities.UserTeamEntity", b =>
                 {
                     b.Property<int>("TeamId")
-                        .HasColumnName("team_id");
+                        .HasColumnName("team_id")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
-                        .HasColumnName("user_id");
+                        .HasColumnName("user_id")
+                        .HasColumnType("int");
 
                     b.HasKey("TeamId", "UserId")
                         .HasName("pk_user_teams");
@@ -92,16 +98,18 @@ namespace RocketLunch.data.Migrations
             modelBuilder.Entity("RocketLunch.data.entities.UserTeamEntity", b =>
                 {
                     b.HasOne("RocketLunch.data.entities.TeamEntity", "Team")
-                        .WithMany()
+                        .WithMany("TeamUsers")
                         .HasForeignKey("TeamId")
                         .HasConstraintName("fk_user_teams_teams_team_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RocketLunch.data.entities.UserEntity", "User")
-                        .WithMany()
+                        .WithMany("UserTeams")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_user_teams_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -8,7 +8,7 @@ namespace RocketLunch.data
 {
     public class LunchContext : DbContext
     {
-        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseNpgsql("User ID=admin;Password=admin;Host=localhost;Port=5433;Database=rocketlunch").Options)
+        public LunchContext() : this(new DbContextOptionsBuilder<LunchContext>().UseMySQL("Server=localhost;Database=rocketlunch;Uid=admin;Pwd=admin;Port=3306").Options)
         {
 
         }
@@ -40,18 +40,12 @@ namespace RocketLunch.data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserEntity>()
-                .Property(r => r.Nopes)
-                .HasDefaultValue("[]");
-
-            modelBuilder.Entity<UserEntity>()
                 .Property(p => p.Id)
-                .ValueGeneratedOnAdd()
-                .UseNpgsqlIdentityByDefaultColumn();
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<TeamEntity>()
                 .Property(p => p.Id)
-                .ValueGeneratedOnAdd()
-                .UseNpgsqlIdentityByDefaultColumn();
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<UserTeamEntity>()
                 .HasKey(p => new { p.TeamId, p.UserId });

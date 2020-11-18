@@ -65,6 +65,7 @@ namespace RocketLunch.data
                 Email = email,
                 Name = name,
                 PhotoUrl = photoUrl,
+                Nopes = "[]"
             }).ConfigureAwait(false)).Entity;
 
             await _lunchContext.SaveChangesAsync().ConfigureAwait(false);
@@ -79,10 +80,11 @@ namespace RocketLunch.data
 
         public async Task<IEnumerable<string>> GetNopesAsync(IEnumerable<int> userIds)
         {
-            var selectedNopes = await _lunchContext.Users.Join(userIds,
-                        users => users.Id,
-                        incoming => incoming,
-                        (users, incoming) => users.Nopes).ToListAsync().ConfigureAwait(false);
+            var selectedNopes = await _lunchContext.Users.Where(x => userIds.Contains(x.Id)).Select(x => x.Nopes).ToListAsync();
+            // var selectedNopes = await _lunchContext.Users.Join(userIds,
+            //             users => users.Id,
+            //             incoming => incoming,
+            //             (users, incoming) => users.Nopes).ToListAsync().ConfigureAwait(false);
             return selectedNopes
                 .SelectMany(u => JsonConvert.DeserializeObject<IEnumerable<string>>(u))
                 .Distinct();

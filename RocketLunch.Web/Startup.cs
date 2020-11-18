@@ -61,6 +61,7 @@ namespace RocketLunch.web
             services.AddSingleton<IChaos, RandomService>();
 
 
+            string connectionString = null;
             string vcapServices = Configuration["VCAP_SERVICES"];
             if (vcapServices != null)
             {
@@ -79,6 +80,10 @@ namespace RocketLunch.web
                     option.InstanceName = "RocketRedis";
                     option.ConfigurationOptions = redisConfig;
                 });
+
+                var mysql = vcap.mysql[0].credentials;
+                connectionString = $"Server={mysql.hostname};Database={mysql.name};Uid={mysql.username};Pwd={mysql.password};Port={mysql.port}";
+                Console.WriteLine(connectionString);
             }
             else
             {
@@ -94,8 +99,9 @@ namespace RocketLunch.web
             services.AddTransient<IRestaurantCache, RestaurantCache>();
 
 
-            string connectionString = Configuration["POSTGRESDB"];
-            services.AddDbContext<LunchContext>(options => options.UseNpgsql(Configuration["POSTGRESDB"]));
+            if(connectionString is null)
+                connectionString = Configuration["POSTGRESDB"]; 
+            services.AddDbContext<LunchContext>(options => options.UseMySQL(connectionString));
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -121,6 +127,11 @@ namespace RocketLunch.web
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "wwwroot/app";
+            });
 
         }
 
@@ -149,20 +160,27 @@ namespace RocketLunch.web
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseDefaultFiles();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{*anything}",
-                    defaults: new { controller = "Home", action = "Index" });
+                endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "wwwroot/app";
             });
         }
         internal class vcapservices
         {
             [JsonProperty("p-redis")]
             public Redis[] redis { get; set; }
+            [JsonProperty("p.mysql")]
+            public MySql[] mysql { get; set; }
 
         }
 
@@ -175,6 +193,18 @@ namespace RocketLunch.web
         {
             public string host { get; set; }
             public string password { get; set; }
+            public string port { get; set; }
+        }
+
+        internal class MySql {
+            public MySqlCreds credentials { get; set; }
+        }
+
+        internal class MySqlCreds {
+            public string hostname { get; set; }
+            public string name { get; set; }
+            public string password { get; set; }
+            public string username { get; set; }
             public string port { get; set; }
         }
     }
